@@ -41,6 +41,7 @@ public class LocWeatherFrag extends Fragment {
         super.onActivityCreated(savedInstanceState);
         recyclerView = view.findViewById(R.id.RecyclerViewList);
         recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
