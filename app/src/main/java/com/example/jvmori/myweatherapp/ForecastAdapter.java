@@ -47,7 +47,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
         String dayDate = String.format("%s %s, %s", date[0], date[1], dayData);
         String minTemp = forecast.get(i).getTempLow();
         String highTemp = forecast.get(i).getTempHigh();
-        String minMax = String.format("%s / %s", highTemp, minTemp);
+        String minMax = String.format("%s° / %s°", highTemp, minTemp);
 
         viewHolder.day.setText(dayDate);
         viewHolder.minMaxTemp.setText(minMax);
