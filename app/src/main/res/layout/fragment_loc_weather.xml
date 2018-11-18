@@ -20,17 +20,61 @@
 
             <LinearLayout
                 android:id="@+id/current"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/ivMainIcon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:src="@drawable/sunny" />
+
+                <TextView
+                    android:id="@+id/tvMainCurrTemp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="16°"
+                    android:textColor="#fff"
+                    android:textSize="80sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/current">
+
+                <TextView
+                    android:id="@+id/tvDescriptionMain"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:src="@mipmap/ic_launcher" />
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Mostly Sunny"
+                    android:textColor="#fff"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/tvMinMaxMain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="25dp"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:text="17° / 10°"
+                    android:textColor="#fff"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -38,12 +82,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/current"
-                app:layout_constraintVertical_bias="1.0">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/RecyclerViewList"

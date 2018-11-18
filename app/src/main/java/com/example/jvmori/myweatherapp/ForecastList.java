@@ -26,9 +26,5 @@ public class ForecastList extends Application
         forecasts.add(new Forecast("12 Nov 2018", "Mon", "26", "19", "Breezy"));
         forecasts.add(new Forecast("12 Nov 2018", "Mon", "26", "19", "Breezy"));
         forecasts.add(new Forecast("12 Nov 2018", "Mon", "26", "19", "Breezy"));
-        forecasts.add(new Forecast("12 Nov 2018", "Mon", "26", "19", "Breezy"));
-        forecasts.add(new Forecast("12 Nov 2018", "Mon", "26", "19", "Breezy"));
-        forecasts.add(new Forecast("12 Nov 2018", "Mon", "26", "19", "Breezy"));
-        forecasts.add(new Forecast("12 Nov 2018", "Mon", "26", "19", "Breezy"));
     }
 }
