@@ -1,7 +1,9 @@
 package com.example.jvmori.myweatherapp;
 
 
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +15,11 @@ import android.view.ViewGroup;
 import com.example.jvmori.myweatherapp.ForecastAdapter;
 import com.example.jvmori.myweatherapp.ForecastList;
 import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.data.Forecast;
+import com.example.jvmori.myweatherapp.data.Locations;
+
+import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,11 +29,11 @@ public class LocWeatherFrag extends Fragment {
     View view;
     RecyclerView recyclerView;
     RecyclerView.Adapter myAdapter;
+    private ArrayList<Forecast> forecasts;
 
     public LocWeatherFrag() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,16 +43,24 @@ public class LocWeatherFrag extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        super.onActivityCreated(savedInstanceState);
         recyclerView = view.findViewById(R.id.RecyclerViewList);
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        myAdapter = new ForecastAdapter(ForecastList.forecasts, getContext());
+        myAdapter = new ForecastAdapter(getForecasts(), getContext());
         recyclerView.setAdapter(myAdapter);
     }
+
+    public ArrayList<Forecast> getForecasts(){
+        return forecasts;
+    }
+
+    public void setForecasts(ArrayList<Forecast> forecasts){
+        this.forecasts = forecasts;
+    }
+
 }
