@@ -1,0 +1,5 @@
+<resources>
+    <style name="MyActionBarWidgetTheme" parent="@android:style/Theme.Holo">
+    <item name="android:textColorHint">#50ffffff</item>
+</style>
+</resources>
