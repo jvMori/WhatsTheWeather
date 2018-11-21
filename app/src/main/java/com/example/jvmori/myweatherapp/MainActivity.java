@@ -1,10 +1,12 @@
 package com.example.jvmori.myweatherapp;
 
+import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -16,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout layoutDots;
     int mDotCount;
     ImageView[] dots;
+    ImageView ivSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +27,19 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = findViewById(R.id.ViewPager);
         layoutDots = findViewById(R.id.layoutDots);
+        ivSearch = findViewById(R.id.ivSearch);
+        ivSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SearchActivity(view);
+            }
+        });
         SetData();
+    }
+
+    private void SearchActivity(View view){
+        Intent intent = new Intent(this, SearchActivity.class);
+        startActivity(intent);
     }
 
     private void SetData(){
