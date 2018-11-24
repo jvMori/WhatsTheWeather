@@ -1,4 +1,4 @@
-package com.example.jvmori.myweatherapp.data;
+package com.example.jvmori.myweatherapp.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;

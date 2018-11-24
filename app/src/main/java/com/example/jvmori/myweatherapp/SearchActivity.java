@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.example.jvmori.myweatherapp.data.LocationAdapter;
+
 public class SearchActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;

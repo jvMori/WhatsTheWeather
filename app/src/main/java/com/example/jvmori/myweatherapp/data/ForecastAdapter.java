@@ -1,4 +1,4 @@
-package com.example.jvmori.myweatherapp;
+package com.example.jvmori.myweatherapp.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,7 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.jvmori.myweatherapp.data.Forecast;
+import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.model.Forecast;
 
 import java.util.ArrayList;
 

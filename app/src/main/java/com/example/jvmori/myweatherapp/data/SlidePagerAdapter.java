@@ -1,16 +1,14 @@
-package com.example.jvmori.myweatherapp;
+package com.example.jvmori.myweatherapp.data;
 
 import android.content.Context;
-import android.location.Location;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.example.jvmori.myweatherapp.data.Locations;
+import com.example.jvmori.myweatherapp.model.LocWeatherFrag;
+import com.example.jvmori.myweatherapp.model.Locations;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SlidePagerAdapter extends FragmentStatePagerAdapter
 {

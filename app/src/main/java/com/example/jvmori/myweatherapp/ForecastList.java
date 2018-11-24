@@ -1,11 +1,10 @@
 package com.example.jvmori.myweatherapp;
 
 import android.app.Application;
-import android.support.v4.app.Fragment;
 
-import com.example.jvmori.myweatherapp.data.CurrentWeather;
-import com.example.jvmori.myweatherapp.data.Forecast;
-import com.example.jvmori.myweatherapp.data.Locations;
+import com.example.jvmori.myweatherapp.model.CurrentWeather;
+import com.example.jvmori.myweatherapp.model.Forecast;
+import com.example.jvmori.myweatherapp.model.Locations;
 
 import java.util.ArrayList;
 

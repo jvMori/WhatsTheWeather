@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.example.jvmori.myweatherapp.data.SlidePagerAdapter;
+
 
 public class MainActivity extends AppCompatActivity {
 

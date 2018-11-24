@@ -1,4 +1,4 @@
-package com.example.jvmori.myweatherapp;
+package com.example.jvmori.myweatherapp.data;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.jvmori.myweatherapp.data.Locations;
+import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.model.Locations;
 
 import java.util.ArrayList;
 
