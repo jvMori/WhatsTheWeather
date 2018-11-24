@@ -47,6 +47,10 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
            String currTemp = locations.get(i).getCurrentWeather().getCurrentTemp();
            //ivMarker visibility depends on geolocation --> add later
            //ivIcon depends on weather description or icon code --> add later
+
+        viewHolder.tvCityName.setText(cityName);
+        viewHolder.tvCurrentTemp.setText(currTemp);
+
     }
 
     @Override

@@ -26,6 +26,7 @@ public class WeatherData
 {
     private ArrayList<Locations> locations;
     public WeatherData(){
+        //get from Prefs, if empty create new one
         locations = new ArrayList<>();
     }
 
@@ -58,19 +59,19 @@ public class WeatherData
                             for (int i = 0; i < forecasts.length(); i++) {
                                 JSONObject forecast = forecasts.getJSONObject(i);
                                 String date, foreCode, day, tempHigh, tempLow, desc;
-                                if (i == 0){
+                                if (i <= 0){
                                     currMinTemp = forecast.getString("low");
                                     currMaxTemp = forecast.getString("high");
+                                }else{
+                                    date = forecast.getString("date");
+                                    foreCode = forecast.getString("code");
+                                    day = forecast.getString("day");
+                                    tempHigh = forecast.getString("high");
+                                    tempLow = forecast.getString("low");
+                                    desc = forecast.getString("text");
+                                    Forecast forecastItem = new Forecast(date, foreCode, day, tempHigh, tempLow, desc);
+                                    forecastArrayList.add(forecastItem);
                                 }
-
-                                date = forecast.getString("date");
-                                foreCode = forecast.getString("code");
-                                day = forecast.getString("day");
-                                tempHigh = forecast.getString("high");
-                                tempLow = forecast.getString("low");
-                                desc = forecast.getString("text");
-                                Forecast forecastItem = new Forecast(date, foreCode, day, tempHigh, tempLow, desc);
-                                forecastArrayList.add(forecastItem);
                             }
 
                             CurrentWeather currentWeather = new CurrentWeather(location, code, currTemp, description, currMinTemp, currMaxTemp);

@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         setUiViewPager();
     }
 
+
     void setUiViewPager(){
         mDotCount = slidePagerAdapter.getCount();
         dots = new ImageView[mDotCount];

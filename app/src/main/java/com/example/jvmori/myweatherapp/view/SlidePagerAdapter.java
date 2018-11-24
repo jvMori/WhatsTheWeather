@@ -23,6 +23,7 @@ public class SlidePagerAdapter extends FragmentStatePagerAdapter
         fragments = new Fragment[data.size()];
     }
 
+
     @Override
     public Fragment getItem(int i) {
         Fragment fragment = null;
@@ -30,6 +31,7 @@ public class SlidePagerAdapter extends FragmentStatePagerAdapter
 
         LocWeatherFrag locWeatherFrag = new LocWeatherFrag();
         locWeatherFrag.setForecasts(item.getForecasts());
+        locWeatherFrag.setDataInfos(data, i);
         fragment = locWeatherFrag;
 
         if (fragments[i] == null){

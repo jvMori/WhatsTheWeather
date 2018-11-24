@@ -22,6 +22,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
         this.forecast = forecast;
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView ivIcon;
         TextView day, minMaxTemp;
@@ -52,6 +53,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
 
         viewHolder.day.setText(dayDate);
         viewHolder.minMaxTemp.setText(minMax);
+
+
     }
 
     @Override
