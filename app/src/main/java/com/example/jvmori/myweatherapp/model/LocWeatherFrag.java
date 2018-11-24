@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.jvmori.myweatherapp.R;
-import com.example.jvmori.myweatherapp.data.ForecastAdapter;
+import com.example.jvmori.myweatherapp.view.ForecastAdapter;
 
 import java.util.ArrayList;
 

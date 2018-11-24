@@ -1,4 +1,4 @@
-package com.example.jvmori.myweatherapp.data;
+package com.example.jvmori.myweatherapp.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

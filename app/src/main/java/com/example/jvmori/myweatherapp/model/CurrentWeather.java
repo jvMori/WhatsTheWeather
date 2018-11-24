@@ -3,17 +3,27 @@ package com.example.jvmori.myweatherapp.model;
 public class CurrentWeather
 {
     private String city;
+    private  String code;
     private String currentTemp;
     private String description;
     private String minTemp;
     private String maxTemp;
 
-    public CurrentWeather(String city, String currentTemp, String description, String minTemp, String maxTemp) {
+    public CurrentWeather(String city, String code, String currentTemp, String description, String minTemp, String maxTemp) {
         this.city = city;
+        this.code = code;
         this.currentTemp = currentTemp;
         this.description = description;
         this.minTemp = minTemp;
         this.maxTemp = maxTemp;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getCity() {

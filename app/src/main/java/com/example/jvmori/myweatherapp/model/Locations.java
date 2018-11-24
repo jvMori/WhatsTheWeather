@@ -5,21 +5,15 @@ import java.util.ArrayList;
 
 public class Locations implements Serializable
 {
-    private int id;
+    private String id;
     private CurrentWeather currentWeather;
     private ArrayList<Forecast> forecasts;
 
-    public Locations(int id, CurrentWeather currentWeather, ArrayList<Forecast> forecasts) {
-        this.id = id;
-        this.currentWeather = currentWeather;
-        this.forecasts = forecasts;
-    }
-
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

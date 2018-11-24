@@ -10,7 +10,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.example.jvmori.myweatherapp.data.SlidePagerAdapter;
+import com.example.jvmori.myweatherapp.data.WeatherData;
+import com.example.jvmori.myweatherapp.model.Locations;
+import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
+import com.example.jvmori.myweatherapp.view.SlidePagerAdapter;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -36,7 +41,14 @@ public class MainActivity extends AppCompatActivity {
                 SearchActivity(view);
             }
         });
-        SetData();
+
+        WeatherData weatherData = new WeatherData();
+        weatherData.getResponse(new WeatherAsyncResponse() {
+            @Override
+            public void processFinished(ArrayList<Locations> locationsData) {
+                SetData(locationsData);
+            }
+        }, "Cracow");
     }
 
     private void SearchActivity(View view){
@@ -44,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void SetData(){
-        slidePagerAdapter = new SlidePagerAdapter(this, getSupportFragmentManager(), ForecastList.locList);
+    private void SetData(ArrayList<Locations> data){
+        slidePagerAdapter = new SlidePagerAdapter(this, getSupportFragmentManager(), data);
         viewPager.setAdapter(slidePagerAdapter);
         setUiViewPager();
     }

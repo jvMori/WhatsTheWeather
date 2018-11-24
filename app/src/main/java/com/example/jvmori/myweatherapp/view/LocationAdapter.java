@@ -1,4 +1,4 @@
-package com.example.jvmori.myweatherapp.data;
+package com.example.jvmori.myweatherapp.view;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;

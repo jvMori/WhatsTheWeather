@@ -2,37 +2,21 @@ package com.example.jvmori.myweatherapp;
 
 import android.app.Application;
 
+import com.example.jvmori.myweatherapp.data.WeatherData;
 import com.example.jvmori.myweatherapp.model.CurrentWeather;
 import com.example.jvmori.myweatherapp.model.Forecast;
 import com.example.jvmori.myweatherapp.model.Locations;
+import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 
 import java.util.ArrayList;
 
-public class ForecastList extends Application
+public class ForecastList
 {
     public static CurrentWeather currentWeather;
     public static ArrayList<Forecast> forecasts;
     public static ArrayList<Locations> locList;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        currentWeather = new CurrentWeather("Kraków", "20", "Mostly sunny", "10", "20");
 
-        this.forecasts = new ArrayList<>();
-        forecasts.add(new Forecast("12 Nov 2018", "Mon", "26", "19", "Breezy"));
-        forecasts.add(new Forecast("12 Nov 2018", "Mon", "26", "19", "Breezy"));
-        forecasts.add(new Forecast("12 Nov 2018", "Mon", "26", "19", "Breezy"));
-        forecasts.add(new Forecast("12 Nov 2018", "Mon", "26", "19", "Breezy"));
-        forecasts.add(new Forecast("12 Nov 2018", "Mon", "26", "19", "Breezy"));
-        forecasts.add(new Forecast("12 Nov 2018", "Mon", "26", "19", "Breezy"));
-        forecasts.add(new Forecast("12 Nov 2018", "Mon", "26", "19", "Breezy"));
-        forecasts.add(new Forecast("12 Nov 2018", "Mon", "26", "19", "Breezy"));
 
-        locList = new ArrayList<>();
-        locList.add(new Locations(0, currentWeather, forecasts));
-        locList.add(new Locations(1, currentWeather, forecasts));
-        locList.add(new Locations(2, currentWeather, forecasts));
 
-    }
 }

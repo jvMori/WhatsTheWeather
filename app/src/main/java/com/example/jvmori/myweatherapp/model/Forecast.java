@@ -3,17 +3,27 @@ package com.example.jvmori.myweatherapp.model;
 public class Forecast
 {
     private String date;
+    private  String code;
     private String day;
     private String tempHigh;
     private String tempLow;
     private String description;
 
-    public Forecast(String date, String day, String tempHigh, String tempLow, String description) {
+    public Forecast(String date, String code, String day, String tempHigh, String tempLow, String description) {
         this.date = date;
+        this.code = code;
         this.day = day;
         this.tempHigh = tempHigh;
         this.tempLow = tempLow;
         this.description = description;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getDate() {
