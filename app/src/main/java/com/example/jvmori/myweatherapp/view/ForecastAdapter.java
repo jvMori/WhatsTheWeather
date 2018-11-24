@@ -11,15 +11,17 @@ import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.model.Forecast;
+import com.example.jvmori.myweatherapp.utils.SetImage;
 
 import java.util.ArrayList;
 
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHolder>
 {
     private ArrayList<Forecast> forecast;
-
+    private  Context context;
     public ForecastAdapter(ArrayList<Forecast> forecast, Context context) {
         this.forecast = forecast;
+        this.context = context;
     }
 
 
@@ -53,6 +55,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
 
         viewHolder.day.setText(dayDate);
         viewHolder.minMaxTemp.setText(minMax);
+        String code = forecast.get(i).getCode();
+        SetImage.setImageView(context, code,  viewHolder.ivIcon);
 
 
     }

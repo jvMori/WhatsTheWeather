@@ -10,10 +10,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.utils.SetImage;
 import com.example.jvmori.myweatherapp.view.ForecastAdapter;
+import com.example.jvmori.myweatherapp.view.Icon;
+
 
 import java.util.ArrayList;
 
@@ -30,6 +34,7 @@ public class LocWeatherFrag extends Fragment {
     int index;
 
     TextView mainTemp, minMaxTemp, desc;
+    ImageView ivIcon;
 
     public LocWeatherFrag() {
         // Required empty public constructor
@@ -47,6 +52,7 @@ public class LocWeatherFrag extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mainTemp = view.findViewById(R.id.tvMainCurrTemp);
         minMaxTemp = view.findViewById(R.id.tvMinMaxMain);
+        ivIcon = view.findViewById(R.id.ivMainIcon);
         desc = view.findViewById(R.id.tvDescriptionMain);
         recyclerView = view.findViewById(R.id.RecyclerViewList);
 
@@ -84,6 +90,8 @@ public class LocWeatherFrag extends Fragment {
         minMaxTemp.setText(minMax);
 
         //set Icon Here
+        String code = locations.get(index).getCurrentWeather().getCode();
+        SetImage.setImageView(this.getContext(), code, ivIcon);
     }
 
 }

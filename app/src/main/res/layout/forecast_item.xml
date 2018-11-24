@@ -27,7 +27,7 @@
                 android:layout_height="50dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="15dp"
-                app:srcCompat="@drawable/sunny" />
+                app:srcCompat="@drawable/ic_31" />
 
             <TextView
                 android:id="@+id/tvDayForecast"
