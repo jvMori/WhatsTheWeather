@@ -1,5 +1,6 @@
 package com.example.jvmori.myweatherapp.view;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,9 +18,11 @@ import java.util.ArrayList;
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder>
 {
     private ArrayList<Locations> locations;
+    private Context ctx;
 
-    public LocationAdapter(ArrayList<Locations> locations) {
+    public LocationAdapter(ArrayList<Locations> locations, Context ctx) {
         this.locations = locations;
+        this.ctx = ctx;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -44,15 +47,14 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull LocationAdapter.ViewHolder viewHolder, int i) {
-           String cityName = locations.get(i).getCurrentWeather().getCity();
-           String currTemp = locations.get(i).getCurrentWeather().getCurrentTemp();
-           //ivMarker visibility depends on geolocation --> add later
-           //ivIcon depends on weather description or icon code --> add later
+        String cityName = locations.get(i).getCurrentWeather().getCity();
+        String currTemp = locations.get(i).getCurrentWeather().getCurrentTemp();
+        //ivMarker visibility depends on geolocation --> add later
+        String code = locations.get(i).getCurrentWeather().getCode();
 
-
-
+        SetImage.setImageView(ctx, code, viewHolder.ivIcon);
         viewHolder.tvCityName.setText(cityName);
-        viewHolder.tvCurrentTemp.setText(currTemp);
+        viewHolder.tvCurrentTemp.setText(String.format("%s°", currTemp));
 
     }
 

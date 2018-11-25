@@ -24,11 +24,7 @@ import java.util.List;
 
 public class WeatherData
 {
-    private ArrayList<Locations> locations;
-    public WeatherData(){
-        //get from Prefs, if empty create new one
-        locations = new ArrayList<>();
-    }
+    private Locations locItem;
 
     public void getResponse(final WeatherAsyncResponse callback, String location)
     {
@@ -50,7 +46,7 @@ public class WeatherData
 
                             tempUnit = channel.getJSONObject("units").getString("temperature");
 
-                            location = channel.getString("location");
+                            location = channel.getJSONObject("location").getString("city");
                             currTemp =condition.getString("temp");
                             description = condition.getString("text");
                             code = condition.getString("code");
@@ -75,25 +71,18 @@ public class WeatherData
                             }
 
                             CurrentWeather currentWeather = new CurrentWeather(location, code, currTemp, description, currMinTemp, currMaxTemp);
-                            Locations locItem = new Locations();
+
+                            locItem = new Locations();
                             locItem.setId(location);
                             locItem.setCurrentWeather(currentWeather);
                             locItem.setForecasts(forecastArrayList);
 
-//                            int index = containsName(locations, locItem.getId());
-//                            if ( locations.size() == 0 || index == -1)
-//                                locations.add(locItem);
-//                            else {
-//                                locations.set(index, locItem);
-//                            }
-
-                            locations.add(locItem);
                         }
                         catch (JSONException e)
                         {
                             e.printStackTrace();
                         }
-                        if (callback != null) callback.processFinished(locations);
+                        if (callback != null) callback.processFinished(locItem);
                     }
                 },
                 new Response.ErrorListener() {

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
+    public static ArrayList<Locations> locations;
 
     private SlidePagerAdapter slidePagerAdapter;
     private ViewPager viewPager;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //load saved locations
+
         viewPager = findViewById(R.id.ViewPager);
         layoutDots = findViewById(R.id.layoutDots);
         ivSearch = findViewById(R.id.ivSearch);
@@ -42,13 +45,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        WeatherData weatherData = new WeatherData();
-        weatherData.getResponse(new WeatherAsyncResponse() {
-            @Override
-            public void processFinished(ArrayList<Locations> locationsData) {
-                SetData(locationsData);
-            }
-        }, "Cracow");
+        if (locations == null || locations.isEmpty()){
+            locations = new ArrayList<>(); //create new one or load from prefs
+            WeatherData weatherData = new WeatherData();
+            weatherData.getResponse(new WeatherAsyncResponse() {
+                @Override
+                public void processFinished(Locations locationData) {
+                    locations.add(locationData); //add new one if already doesn't exist
+                    SetData(locations);
+                }
+            }, "Cracow");
+        }else{
+            SetData(locations);
+        }
+
     }
 
     private void SearchActivity(View view){

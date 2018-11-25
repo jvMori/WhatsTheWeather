@@ -17,7 +17,8 @@
         android:clickable="true"
         app:srcCompat="@drawable/back" />
 
-    <SearchView
+    <android.support.v7.widget.SearchView
+        android:id="@+id/searchField"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_marginLeft="20dp"
@@ -26,7 +27,7 @@
         android:background="@drawable/search_bg_rounded"
         android:searchIcon="@drawable/search_transparent">
 
-    </SearchView>
+    </android.support.v7.widget.SearchView>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvSearch"

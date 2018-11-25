@@ -6,5 +6,5 @@ import java.util.ArrayList;
 
 public interface WeatherAsyncResponse
 {
-    void processFinished(ArrayList<Locations> locationsData);
+    void processFinished(Locations locationData);
 }
