@@ -9,9 +9,12 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jvmori.myweatherapp.data.WeatherData;
 import com.example.jvmori.myweatherapp.model.Locations;
+import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
 import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.view.SlidePagerAdapter;
 
@@ -26,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout layoutDots;
     int mDotCount;
     ImageView[] dots;
-    ImageView ivSearch;
+    ImageView ivSearch, ivMarker;
+    TextView tvLocalization;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +39,11 @@ public class MainActivity extends AppCompatActivity {
 
         //load saved locations
 
+        tvLocalization = findViewById(R.id.tvLocalization);
         viewPager = findViewById(R.id.ViewPager);
         layoutDots = findViewById(R.id.layoutDots);
         ivSearch = findViewById(R.id.ivSearch);
+        ivMarker = findViewById(R.id.ivMarker);
         ivSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,9 +59,12 @@ public class MainActivity extends AppCompatActivity {
                 public void processFinished(Locations locationData) {
                     locations.add(locationData); //add new one if already doesn't exist
                     SetData(locations);
-                }
-            }, "Cracow");
-        }else{
+                    }}, new OnErrorResponse() {
+                @Override
+                public void displayErrorMessage(String message) {
+                    Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                    }}, "Cracow");
+        } else {
             SetData(locations);
         }
 
@@ -72,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
         setUiViewPager();
     }
 
-
     void setUiViewPager(){
         mDotCount = slidePagerAdapter.getCount();
         dots = new ImageView[mDotCount];
@@ -88,8 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
             layoutDots.addView(dots[i], layoutParams);
         }
-        dots[0].setImageResource(R.drawable.dotactive);
-
+        dots[viewPager.getCurrentItem()].setImageResource(R.drawable.dotactive);
         viewPager.addOnPageChangeListener(changeListener);
     }
 
@@ -102,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onPageSelected(int i) {
             changeActiveDot(i);
+            changeActiveCityName(i);
+            geoLocMarkerVisibility(i);
         }
 
         @Override
@@ -115,5 +124,17 @@ public class MainActivity extends AppCompatActivity {
             dots[i].setImageResource(R.drawable.dotinactive);
         }
         dots[position].setImageResource(R.drawable.dotactive);
+    }
+
+    private void changeActiveCityName(int position){
+        tvLocalization.setText(locations.get(position).getId());
+    }
+
+    private void geoLocMarkerVisibility(int position){
+        if (position == 0)
+            ivMarker.setVisibility(View.VISIBLE);
+        else{
+            ivMarker.setVisibility(View.INVISIBLE);
+        }
     }
 }

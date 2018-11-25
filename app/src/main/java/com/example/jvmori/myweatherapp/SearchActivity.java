@@ -12,8 +12,11 @@ import android.widget.Toast;
 
 import com.example.jvmori.myweatherapp.data.WeatherData;
 import com.example.jvmori.myweatherapp.model.Locations;
+import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
 import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.view.LocationAdapter;
+
+import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -39,11 +42,10 @@ public class SearchActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                Toast.makeText(SearchActivity.this, searchView.getQuery().toString().trim(), Toast.LENGTH_SHORT).show();
-
                 searchWeather(searchView.getQuery().toString().trim());
-
                 searchView.setQuery("", false);
+                searchView.clearFocus();
+                searchView.setIconified(true);
                 return false;
             }
 
@@ -71,13 +73,28 @@ public class SearchActivity extends AppCompatActivity {
         weatherData.getResponse(new WeatherAsyncResponse() {
             @Override
             public void processFinished(Locations locationData) {
-                MainActivity.locations.add(locationData);
-                myAdapter.notifyDataSetChanged();
+                if (containsName(MainActivity.locations, locationData.getId()) == -1){
+                    MainActivity.locations.add(locationData);
+                    myAdapter.notifyDataSetChanged();
+                }
                 BackToMainActivity();
+            }
+        }, new OnErrorResponse() {
+            @Override
+            public void displayErrorMessage(String message) {
+                Toast.makeText(SearchActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         }, location);
 
     }
 
-
+    public int containsName(final List<Locations> list, final String name){
+        if (list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i) != null && list.get(i).getId().equals(name))
+                    return i;
+            }
+        }
+        return -1;
+    }
 }
