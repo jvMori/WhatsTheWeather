@@ -33,7 +33,7 @@ public class SearchActivity extends AppCompatActivity {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BackToMainActivity();
+                BackToMainActivity(MainActivity.locations.size() - 1);
             }
         });
         searchView = findViewById(R.id.searchField);
@@ -63,8 +63,9 @@ public class SearchActivity extends AppCompatActivity {
         recyclerView.setAdapter(myAdapter);
     }
 
-    void BackToMainActivity(){
+    void BackToMainActivity(int position){
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("position",position);
         startActivity(intent);
     }
 
@@ -76,8 +77,10 @@ public class SearchActivity extends AppCompatActivity {
                 if (containsName(MainActivity.locations, locationData.getId()) == -1){
                     MainActivity.locations.add(locationData);
                     myAdapter.notifyDataSetChanged();
+                }else{
+                    Toast.makeText(SearchActivity.this, "City already exist!", Toast.LENGTH_SHORT).show();
                 }
-                BackToMainActivity();
+                BackToMainActivity(MainActivity.locations.size() -1);
             }
         }, new OnErrorResponse() {
             @Override

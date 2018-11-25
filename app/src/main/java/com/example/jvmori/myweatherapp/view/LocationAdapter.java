@@ -49,7 +49,11 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     public void onBindViewHolder(@NonNull LocationAdapter.ViewHolder viewHolder, int i) {
         String cityName = locations.get(i).getCurrentWeather().getCity();
         String currTemp = locations.get(i).getCurrentWeather().getCurrentTemp();
-        //ivMarker visibility depends on geolocation --> add later
+        if(i == 0){
+            viewHolder.ivMarker.setVisibility(View.VISIBLE);
+        }else{
+            viewHolder.ivMarker.setVisibility(View.INVISIBLE);
+        }
         String code = locations.get(i).getCurrentWeather().getCode();
 
         SetImage.setImageView(ctx, code, viewHolder.ivIcon);

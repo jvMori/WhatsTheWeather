@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     private void SetData(ArrayList<Locations> data){
         slidePagerAdapter = new SlidePagerAdapter(this, getSupportFragmentManager(), data);
         viewPager.setAdapter(slidePagerAdapter);
+        viewPager.setCurrentItem(getIntent().getIntExtra("position",0));
         setUiViewPager();
     }
 
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
             layoutDots.addView(dots[i], layoutParams);
         }
         dots[viewPager.getCurrentItem()].setImageResource(R.drawable.dotactive);
+        changeActiveCityName(viewPager.getCurrentItem());
         viewPager.addOnPageChangeListener(changeListener);
     }
 
