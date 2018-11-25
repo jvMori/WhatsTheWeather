@@ -18,6 +18,8 @@ import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
 import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.view.SlidePagerAdapter;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 
 

@@ -1,6 +1,8 @@
 package com.example.jvmori.myweatherapp.model;
 
-public class CurrentWeather
+import java.io.Serializable;
+
+public class CurrentWeather implements Serializable
 {
     private String city;
     private  String code;
