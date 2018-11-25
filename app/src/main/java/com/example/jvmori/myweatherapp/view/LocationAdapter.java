@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.model.Locations;
+import com.example.jvmori.myweatherapp.utils.ItemClicked;
 import com.example.jvmori.myweatherapp.utils.SetImage;
 
 import java.util.ArrayList;
@@ -19,10 +20,12 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 {
     private ArrayList<Locations> locations;
     private Context ctx;
+    private ItemClicked itemClicked;
 
     public LocationAdapter(ArrayList<Locations> locations, Context ctx) {
         this.locations = locations;
         this.ctx = ctx;
+        itemClicked = (ItemClicked) ctx;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -34,6 +37,14 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             tvCurrentTemp = itemView.findViewById(R.id.tvCurrTempLocItem);
             ivMarker = itemView.findViewById(R.id.ivLocationMarker);
             ivIcon = itemView.findViewById(R.id.ivIconLocItem);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Locations tag = (Locations) view.getTag();
+                    itemClicked.onItemClicked(locations.indexOf(tag));
+                }
+            });
         }
     }
 
@@ -47,6 +58,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull LocationAdapter.ViewHolder viewHolder, int i) {
+        viewHolder.itemView.setTag(locations.get(i));
         String cityName = locations.get(i).getCurrentWeather().getCity();
         String currTemp = locations.get(i).getCurrentWeather().getCurrentTemp();
         if(i == 0){

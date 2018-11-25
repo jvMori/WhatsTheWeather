@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         }
         dots[viewPager.getCurrentItem()].setImageResource(R.drawable.dotactive);
         changeActiveCityName(viewPager.getCurrentItem());
+        geoLocMarkerVisibility(viewPager.getCurrentItem());
         viewPager.addOnPageChangeListener(changeListener);
     }
 

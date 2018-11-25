@@ -12,13 +12,14 @@ import android.widget.Toast;
 
 import com.example.jvmori.myweatherapp.data.WeatherData;
 import com.example.jvmori.myweatherapp.model.Locations;
+import com.example.jvmori.myweatherapp.utils.ItemClicked;
 import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
 import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.view.LocationAdapter;
 
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements ItemClicked{
 
     RecyclerView recyclerView;
     RecyclerView.Adapter myAdapter;
@@ -99,5 +100,10 @@ public class SearchActivity extends AppCompatActivity {
             }
         }
         return -1;
+    }
+
+    @Override
+    public void onItemClicked(int index) {
+        BackToMainActivity(index);
     }
 }
