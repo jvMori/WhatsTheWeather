@@ -5,6 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,8 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jvmori.myweatherapp.data.WeatherData;
+import com.example.jvmori.myweatherapp.model.CurrentLocation;
 import com.example.jvmori.myweatherapp.model.Locations;
 import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
+import com.example.jvmori.myweatherapp.utils.OnLocationRetrieve;
 import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.view.SlidePagerAdapter;
 
@@ -23,7 +26,7 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnLocationRetrieve {
     public static ArrayList<Locations> locations;
 
     private SlidePagerAdapter slidePagerAdapter;
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView[] dots;
     ImageView ivSearch, ivMarker;
     TextView tvLocalization;
+    CurrentLocation currentLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,17 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (locations == null || locations.isEmpty()){
             locations = new ArrayList<>(); //create new one or load from prefs
-            WeatherData weatherData = new WeatherData();
-            weatherData.getResponse(new WeatherAsyncResponse() {
-                @Override
-                public void processFinished(Locations locationData) {
-                    locations.add(locationData); //add new one if already doesn't exist
-                    SetData(locations);
-                    }}, new OnErrorResponse() {
-                @Override
-                public void displayErrorMessage(String message) {
-                    Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-                    }}, "Cracow");
+            currentLocation = new CurrentLocation(this, this);
+
         } else {
             SetData(locations);
         }
@@ -141,5 +136,20 @@ public class MainActivity extends AppCompatActivity {
         else{
             ivMarker.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    public void OnLocationChanged(String cityName) {
+        WeatherData weatherData = new WeatherData();
+        weatherData.getResponse(new WeatherAsyncResponse() {
+            @Override
+            public void processFinished(Locations locationData) {
+                locations.add(locationData); //add new one if already doesn't exist
+                SetData(locations);
+            }}, new OnErrorResponse() {
+            @Override
+            public void displayErrorMessage(String message) {
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+            }}, cityName);
     }
 }
