@@ -21,13 +21,13 @@ import java.util.Locale;
 public class CurrentLocation implements LocationListener {
 
     private Context context;
-    private OnLocationRetrieve onLocationRetrieve;
+    private OnLocationRetrieve callback;
     private Activity activity;
     private LocationManager locationManager;
 
-    public CurrentLocation(Context context, Activity activity) {
+    public CurrentLocation(Context context, Activity activity, OnLocationRetrieve callback) {
         this.context = context;
-        this.onLocationRetrieve = (OnLocationRetrieve) context;
+        this.callback = callback;
         this.activity = activity;
         this.locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
 
@@ -39,14 +39,15 @@ public class CurrentLocation implements LocationListener {
         }
 
         Location lastLoc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (lastLoc != null)
-            onLocationRetrieve.OnLocationChanged(getCity(lastLoc));
+        if (lastLoc != null && this.callback != null)
+            callback.OnLocationChanged(getCity(lastLoc));
     }
 
     @Override
     public void onLocationChanged(Location location) {
        String city = getCity(location);
-       onLocationRetrieve.OnLocationChanged(city);
+       if (this.callback != null)
+           callback.OnLocationChanged(city);
     }
 
     @Override
@@ -69,11 +70,10 @@ public class CurrentLocation implements LocationListener {
         double longitude = location.getLongitude();
 
         Geocoder geocoder = new Geocoder(this.context, Locale.getDefault());
-        String cityName;
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses != null && addresses.size() > 0)
-                return cityName = addresses.get(0).getAddressLine(0);
+                return addresses.get(0).getAddressLine(0);
         } catch (IOException e) {
             e.printStackTrace();
         }

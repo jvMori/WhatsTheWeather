@@ -18,6 +18,7 @@ import com.example.jvmori.myweatherapp.model.CurrentLocation;
 import com.example.jvmori.myweatherapp.model.Locations;
 import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
 import com.example.jvmori.myweatherapp.utils.OnLocationRetrieve;
+import com.example.jvmori.myweatherapp.utils.SaveManager;
 import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.view.SlidePagerAdapter;
 
@@ -26,8 +27,9 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity implements OnLocationRetrieve {
+public class MainActivity extends AppCompatActivity {
     public static ArrayList<Locations> locations;
+    private static ArrayList<String> locationsSaved;
 
     private SlidePagerAdapter slidePagerAdapter;
     private ViewPager viewPager;
@@ -37,13 +39,12 @@ public class MainActivity extends AppCompatActivity implements OnLocationRetriev
     ImageView ivSearch, ivMarker;
     TextView tvLocalization;
     CurrentLocation currentLocation;
+    SaveManager saveManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //load saved locations
 
         tvLocalization = findViewById(R.id.tvLocalization);
         viewPager = findViewById(R.id.ViewPager);
@@ -57,14 +58,36 @@ public class MainActivity extends AppCompatActivity implements OnLocationRetriev
             }
         });
 
+        //load from prefs
+
+
         if (locations == null || locations.isEmpty()){
-            locations = new ArrayList<>(); //create new one or load from prefs
-            currentLocation = new CurrentLocation(this, this);
+            locations = new ArrayList<>();
+            currentLocation = new CurrentLocation(this, this, new OnLocationRetrieve() {
+                @Override
+                public void OnLocationChanged(String cityName) {
+                   getWeather(cityName);
+                }
+            });
 
         } else {
             SetData(locations);
         }
 
+    }
+
+    private void getWeather(String cityName){
+        WeatherData weatherData = new WeatherData();
+        weatherData.getResponse(new WeatherAsyncResponse() {
+            @Override
+            public void processFinished(Locations locationData) {
+                locations.add(locationData); //add new one if already doesn't exist
+                SetData(locations);
+            }}, new OnErrorResponse() {
+            @Override
+            public void displayErrorMessage(String message) {
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+            }}, cityName);
     }
 
     private void SearchActivity(View view){
@@ -138,18 +161,4 @@ public class MainActivity extends AppCompatActivity implements OnLocationRetriev
         }
     }
 
-    @Override
-    public void OnLocationChanged(String cityName) {
-        WeatherData weatherData = new WeatherData();
-        weatherData.getResponse(new WeatherAsyncResponse() {
-            @Override
-            public void processFinished(Locations locationData) {
-                locations.add(locationData); //add new one if already doesn't exist
-                SetData(locations);
-            }}, new OnErrorResponse() {
-            @Override
-            public void displayErrorMessage(String message) {
-                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-            }}, cityName);
-    }
 }
