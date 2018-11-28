@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.jvmori.myweatherapp.data.WeatherData;
 import com.example.jvmori.myweatherapp.model.CurrentLocation;
 import com.example.jvmori.myweatherapp.model.Locations;
+import com.example.jvmori.myweatherapp.utils.Contains;
 import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
 import com.example.jvmori.myweatherapp.utils.OnLocationRetrieve;
 import com.example.jvmori.myweatherapp.utils.SaveManager;
@@ -28,8 +29,10 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
+    public static final String savedLocations = "SAVED_LOC";
     public static ArrayList<Locations> locations;
     private static ArrayList<String> locationsSaved;
+    public static SaveManager saveManager;
 
     private SlidePagerAdapter slidePagerAdapter;
     private ViewPager viewPager;
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView ivSearch, ivMarker;
     TextView tvLocalization;
     CurrentLocation currentLocation;
-    SaveManager saveManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,24 +62,42 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //load from prefs
-
-
-        if (locations == null || locations.isEmpty()){
+        saveManager = new SaveManager(this, "Locations");
+        locationsSaved = saveManager.getArrayList(savedLocations);
+        if (locations == null){
             locations = new ArrayList<>();
+        }
+        if (locationsSaved == null || locationsSaved.isEmpty())
+        {
             currentLocation = new CurrentLocation(this, this, new OnLocationRetrieve() {
                 @Override
-                public void OnLocationChanged(String cityName) {
-                   getWeather(cityName);
-                }
+                public void OnLocationChanged(String cityName) { getWeather(cityName); }
             });
+            saveManager.saveList(locations, savedLocations);
 
         } else {
-            SetData(locations);
+            //SetData(locations);
+            for (final String loc: locationsSaved) {
+                WeatherData weatherData = new WeatherData();
+                weatherData.getResponse(new WeatherAsyncResponse() {
+                    @Override
+                    public void processFinished(Locations locationData) {
+                        if (Contains.containsName(locations, loc) == -1){
+                            locations.add(locationData);
+                        }
+                        SetData(locations);
+                    }}, new OnErrorResponse() {
+                    @Override
+                    public void displayErrorMessage(String message) {
+                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                    }}, loc);
+            }
+
         }
 
     }
 
-    private void getWeather(String cityName){
+    private void getWeather(final String cityName){
         WeatherData weatherData = new WeatherData();
         weatherData.getResponse(new WeatherAsyncResponse() {
             @Override

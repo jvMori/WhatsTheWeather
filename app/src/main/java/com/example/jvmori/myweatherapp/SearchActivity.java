@@ -1,5 +1,6 @@
 package com.example.jvmori.myweatherapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,8 +13,10 @@ import android.widget.Toast;
 
 import com.example.jvmori.myweatherapp.data.WeatherData;
 import com.example.jvmori.myweatherapp.model.Locations;
+import com.example.jvmori.myweatherapp.utils.Contains;
 import com.example.jvmori.myweatherapp.utils.ItemClicked;
 import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
+import com.example.jvmori.myweatherapp.utils.SaveManager;
 import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.view.LocationAdapter;
 
@@ -75,8 +78,9 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
         weatherData.getResponse(new WeatherAsyncResponse() {
             @Override
             public void processFinished(Locations locationData) {
-                if (containsName(MainActivity.locations, locationData.getId()) == -1){
+                if (Contains.containsName(MainActivity.locations, locationData.getId()) == -1){
                     MainActivity.locations.add(locationData);
+                    MainActivity.saveManager.saveList(MainActivity.locations, MainActivity.savedLocations);
                     myAdapter.notifyDataSetChanged();
                 }else{
                     Toast.makeText(SearchActivity.this, "City already exist!", Toast.LENGTH_SHORT).show();
@@ -92,15 +96,7 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
 
     }
 
-    public int containsName(final List<Locations> list, final String name){
-        if (list.size() > 0) {
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i) != null && list.get(i).getId().equals(name))
-                    return i;
-            }
-        }
-        return -1;
-    }
+
 
     @Override
     public void onItemClicked(int index) {
