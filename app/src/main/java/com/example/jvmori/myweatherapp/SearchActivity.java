@@ -1,6 +1,5 @@
 package com.example.jvmori.myweatherapp;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,11 +15,9 @@ import com.example.jvmori.myweatherapp.model.Locations;
 import com.example.jvmori.myweatherapp.utils.Contains;
 import com.example.jvmori.myweatherapp.utils.ItemClicked;
 import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
-import com.example.jvmori.myweatherapp.utils.SaveManager;
 import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.view.LocationAdapter;
 
-import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements ItemClicked{
 
@@ -95,7 +92,6 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
         }, location);
 
     }
-
 
 
     @Override

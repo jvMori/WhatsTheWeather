@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     TextView tvLocalization;
     CurrentLocation currentLocation;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,39 +60,49 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //load from prefs
         saveManager = new SaveManager(this, "Locations");
         locationsSaved = saveManager.getArrayList(savedLocations);
+
         if (locations == null){
             locations = new ArrayList<>();
-        }
-        if (locationsSaved == null || locationsSaved.isEmpty())
-        {
             currentLocation = new CurrentLocation(this, this, new OnLocationRetrieve() {
                 @Override
-                public void OnLocationChanged(String cityName) { getWeather(cityName); }
+                public void OnLocationChanged(String cityName) {
+                    getWeather(cityName);
+                }
             });
-            saveManager.saveList(locations, savedLocations);
-
-        } else {
-            //SetData(locations);
-            for (final String loc: locationsSaved) {
-                WeatherData weatherData = new WeatherData();
-                weatherData.getResponse(new WeatherAsyncResponse() {
-                    @Override
-                    public void processFinished(Locations locationData) {
-                        if (Contains.containsName(locations, loc) == -1){
-                            locations.add(locationData);
-                        }
-                        SetData(locations);
-                    }}, new OnErrorResponse() {
-                    @Override
-                    public void displayErrorMessage(String message) {
-                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-                    }}, loc);
-            }
-
+        }else{
+            SetData(locations);
         }
+
+
+//        if (locationsSaved == null || locationsSaved.isEmpty())
+//        {
+//            currentLocation = new CurrentLocation(this, this, new OnLocationRetrieve() {
+//                @Override
+//                public void OnLocationChanged(String cityName) { getWeather(cityName); }
+//            });
+//            saveManager.saveList(locations, savedLocations);
+//
+//        } else {
+//            //SetData(locations);
+//            for (final String loc: locationsSaved) {
+//                WeatherData weatherData = new WeatherData();
+//                weatherData.getResponse(new WeatherAsyncResponse() {
+//                    @Override
+//                    public void processFinished(Locations locationData) {
+//                        if (Contains.containsName(locations, loc) == -1){
+//                            locations.add(locationData);
+//                        }
+//                        SetData(locations);
+//                    }}, new OnErrorResponse() {
+//                    @Override
+//                    public void displayErrorMessage(String message) {
+//                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+//                    }}, loc);
+//            }
+//
+//        }
 
     }
 
@@ -102,8 +111,10 @@ public class MainActivity extends AppCompatActivity {
         weatherData.getResponse(new WeatherAsyncResponse() {
             @Override
             public void processFinished(Locations locationData) {
-                locations.add(locationData); //add new one if already doesn't exist
-                SetData(locations);
+                if (Contains.containsName(locations, locationData.getId()) == -1){
+                    locations.add(locationData); //add new one if already doesn't exist
+                    SetData(locations);
+                }
             }}, new OnErrorResponse() {
             @Override
             public void displayErrorMessage(String message) {
