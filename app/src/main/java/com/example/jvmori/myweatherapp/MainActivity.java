@@ -1,6 +1,15 @@
 package com.example.jvmori.myweatherapp;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -41,7 +50,16 @@ public class MainActivity extends AppCompatActivity {
     ImageView[] dots;
     ImageView ivSearch, ivMarker;
     TextView tvLocalization;
-    CurrentLocation currentLocation;
+    LocationManager locationManager;
+    LocationListener locationListener;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            startListening();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,44 +83,56 @@ public class MainActivity extends AppCompatActivity {
 
         if (locations == null){
             locations = new ArrayList<>();
-            currentLocation = new CurrentLocation(this, this, new OnLocationRetrieve() {
-                @Override
-                public void OnLocationChanged(String cityName) {
-                    getWeather(cityName);
-                }
-            });
+
         }else{
             SetData(locations);
         }
 
+        CheckLocation(this);
+    }
 
-//        if (locationsSaved == null || locationsSaved.isEmpty())
-//        {
-//            currentLocation = new CurrentLocation(this, this, new OnLocationRetrieve() {
-//                @Override
-//                public void OnLocationChanged(String cityName) { getWeather(cityName); }
-//            });
-//            saveManager.saveList(locations, savedLocations);
-//
-//        } else {
-//            //SetData(locations);
-//            for (final String loc: locationsSaved) {
-//                WeatherData weatherData = new WeatherData();
-//                weatherData.getResponse(new WeatherAsyncResponse() {
-//                    @Override
-//                    public void processFinished(Locations locationData) {
-//                        if (Contains.containsName(locations, loc) == -1){
-//                            locations.add(locationData);
-//                        }
-//                        SetData(locations);
-//                    }}, new OnErrorResponse() {
-//                    @Override
-//                    public void displayErrorMessage(String message) {
-//                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-//                    }}, loc);
-//            }
-//
-//        }
+    private void startListening(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE );
+    }
+
+    private void CheckLocation(final Context context){
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                String city = CurrentLocation.getCity(location, context);
+                getWeather(city);
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+        else {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3600, 5000, locationListener);
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location != null){
+                String city = CurrentLocation.getCity(location, context);
+                getWeather(city);
+            }
+        }
 
     }
 
