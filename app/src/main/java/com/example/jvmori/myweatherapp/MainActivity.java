@@ -101,8 +101,7 @@ public class MainActivity extends AppCompatActivity {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                String city = CurrentLocation.getCity(location, context);
-                getWeather(city);
+               FindWeatherForLocation(location, context);
             }
 
             @Override
@@ -129,13 +128,17 @@ public class MainActivity extends AppCompatActivity {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3600, 5000, locationListener);
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (location != null){
-                String city = CurrentLocation.getCity(location, context);
-                getWeather(city);
+                FindWeatherForLocation(location, this);
             }
         }
 
     }
 
+    private  void FindWeatherForLocation(Location location, Context context){
+        String city = CurrentLocation.getCity(location, context);
+        if (city != null)
+            getWeather(city);
+    }
     private void getWeather(final String cityName){
         WeatherData weatherData = new WeatherData();
         weatherData.getResponse(new WeatherAsyncResponse() {
@@ -165,6 +168,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void setUiViewPager(){
+        int oldDots = layoutDots.getChildCount();
+        if (oldDots>0){
+            for (int j = 0; j < oldDots; j++) {
+                layoutDots.removeViewAt(j);
+            }
+        }
+
         mDotCount = slidePagerAdapter.getCount();
         dots = new ImageView[mDotCount];
 
