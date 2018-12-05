@@ -12,32 +12,24 @@ import java.util.Set;
 
 public class SaveManager
 {
-    private SharedPreferences pref;
-
-    public SaveManager(Context context, String prefName){
-        this.pref = context.getSharedPreferences(prefName, Context.MODE_PRIVATE);
-    }
-
-    public String getValue(String key){
-        return pref.getString(key, null);
-    }
-
-    public void saveValue(String key, String value){
-        pref.edit().putString(key, value).apply();
-    }
-
-    public void saveList(ArrayList<Locations> arrayList, String name){
-        Set<String> set = new HashSet<>();
-        for (Locations loc : arrayList) {
-            set.add(loc.getId());
-        }
-        pref.edit().putStringSet(name, set).apply();
-    }
-
-    public ArrayList<String> getArrayList(String name){
+    public static void saveToList(SharedPreferences pref, Locations location, String name){
+        SharedPreferences.Editor editor = pref.edit();
         Set<String> set = pref.getStringSet(name, null);
-        if (set != null)
+        if (set == null)
+            set = new HashSet<>();
+        else
+            set.add(location.getId());
+        editor.putStringSet(name, set);
+        editor.apply();
+        editor.commit();
+    }
+
+    public static ArrayList<String> getArrayList(SharedPreferences pref, String name){
+        Set<String> set = pref.getStringSet(name, null);
+        if (set != null && set.size() > 0)
             return new ArrayList<>(set);
         else return null;
     }
+
+
 }

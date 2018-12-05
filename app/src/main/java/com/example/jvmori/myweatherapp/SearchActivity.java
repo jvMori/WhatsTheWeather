@@ -1,6 +1,9 @@
 package com.example.jvmori.myweatherapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +18,7 @@ import com.example.jvmori.myweatherapp.model.Locations;
 import com.example.jvmori.myweatherapp.utils.Contains;
 import com.example.jvmori.myweatherapp.utils.ItemClicked;
 import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
+import com.example.jvmori.myweatherapp.utils.SaveManager;
 import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.view.LocationAdapter;
 
@@ -25,6 +29,7 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
     RecyclerView.Adapter myAdapter;
     ImageView backBtn;
     SearchView searchView;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +61,8 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
             }
         });
 
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
         recyclerView = findViewById(R.id.rvSearch);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -77,7 +84,7 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
             public void processFinished(Locations locationData) {
                 if (Contains.containsName(MainActivity.locations, locationData.getId()) == -1){
                     MainActivity.locations.add(locationData);
-                    MainActivity.saveManager.saveList(MainActivity.locations, MainActivity.savedLocations);
+                    SaveManager.saveToList(sharedPreferences, locationData, MainActivity.savedLocations);
                     myAdapter.notifyDataSetChanged();
                 }else{
                     Toast.makeText(SearchActivity.this, "City already exist!", Toast.LENGTH_SHORT).show();

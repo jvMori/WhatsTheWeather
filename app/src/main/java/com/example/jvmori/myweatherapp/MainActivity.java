@@ -3,10 +3,12 @@ package com.example.jvmori.myweatherapp;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -14,7 +16,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutCompat;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,12 +28,9 @@ import com.example.jvmori.myweatherapp.model.CurrentLocation;
 import com.example.jvmori.myweatherapp.model.Locations;
 import com.example.jvmori.myweatherapp.utils.Contains;
 import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
-import com.example.jvmori.myweatherapp.utils.OnLocationRetrieve;
 import com.example.jvmori.myweatherapp.utils.SaveManager;
 import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.view.SlidePagerAdapter;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 
@@ -52,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvLocalization;
     LocationManager locationManager;
     LocationListener locationListener;
+    SharedPreferences sharedPreferences;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -78,15 +77,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        saveManager = new SaveManager(this, "Locations");
-        locationsSaved = saveManager.getArrayList(savedLocations);
-
         if (locations == null){
             locations = new ArrayList<>();
-
         }else{
             SetData(locations);
         }
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        locationsSaved = SaveManager.getArrayList(sharedPreferences, savedLocations);
 
         CheckLocation(this);
     }
@@ -140,20 +138,24 @@ public class MainActivity extends AppCompatActivity {
             getWeather(city);
     }
     private void getWeather(final String cityName){
-        WeatherData weatherData = new WeatherData();
-        weatherData.getResponse(new WeatherAsyncResponse() {
-            @Override
-            public void processFinished(Locations locationData) {
-                if (Contains.containsName(locations, locationData.getId()) == -1){
-                    locations.add(locationData); //add new one if already doesn't exist
-                    SetData(locations);
+            WeatherData weatherData = new WeatherData();
+            weatherData.getResponse(new WeatherAsyncResponse() {
+                @Override
+                public void processFinished(Locations locationData) {
+                    if (Contains.containsName(locations, locationData.getId()) == -1) {
+                        locations.add(locationData);
+                        SaveManager.saveToList(sharedPreferences, locationData, savedLocations);
+                        SetData(locations);
+                    }
                 }
-            }}, new OnErrorResponse() {
-            @Override
-            public void displayErrorMessage(String message) {
-                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-            }}, cityName);
-    }
+            }, new OnErrorResponse() {
+                @Override
+                public void displayErrorMessage(String message) {
+                    Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                }
+            }, cityName);
+        }
+
 
     private void SearchActivity(View view){
         Intent intent = new Intent(this, SearchActivity.class);
@@ -232,5 +234,6 @@ public class MainActivity extends AppCompatActivity {
             ivMarker.setVisibility(View.INVISIBLE);
         }
     }
+
 
 }
