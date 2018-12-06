@@ -77,21 +77,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (locations == null){
-            locations = new ArrayList<>();
-        }else{
-            SetData(locations);
-        }
-
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        locationsSaved = SaveManager.getArrayList(sharedPreferences, savedLocations);
-
+        locations = SaveManager.loadData(this);
         CheckLocation(this);
+
+        if (locations.size() > 0)
+            SetData(locations);
+
+
     }
 
     private void startListening(){
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE );
+            assert locationManager != null;
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3600, 5000, locationListener);
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location != null){
+                FindWeatherForLocation(location, this);
+            }
+        }
+
     }
 
     private void CheckLocation(final Context context){
@@ -134,9 +139,11 @@ public class MainActivity extends AppCompatActivity {
 
     private  void FindWeatherForLocation(Location location, Context context){
         String city = CurrentLocation.getCity(location, context);
+
         if (city != null)
             getWeather(city);
     }
+
     private void getWeather(final String cityName){
             WeatherData weatherData = new WeatherData();
             weatherData.getResponse(new WeatherAsyncResponse() {
@@ -144,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
                 public void processFinished(Locations locationData) {
                     if (Contains.containsName(locations, locationData.getId()) == -1) {
                         locations.add(locationData);
-                        SaveManager.saveToList(sharedPreferences, locationData, savedLocations);
                         SetData(locations);
                     }
                 }

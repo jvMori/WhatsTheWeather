@@ -30,10 +30,13 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
     ImageView backBtn;
     SearchView searchView;
     SharedPreferences sharedPreferences;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        context = this;
         setContentView(R.layout.activity_search);
         backBtn = findViewById(R.id.backBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -84,7 +87,8 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
             public void processFinished(Locations locationData) {
                 if (Contains.containsName(MainActivity.locations, locationData.getId()) == -1){
                     MainActivity.locations.add(locationData);
-                    SaveManager.saveToList(sharedPreferences, locationData, MainActivity.savedLocations);
+                    //SaveManager.saveToList(sharedPreferences, locationData, MainActivity.savedLocations);
+                    SaveManager.saveData(context, MainActivity.locations);
                     myAdapter.notifyDataSetChanged();
                 }else{
                     Toast.makeText(SearchActivity.this, "City already exist!", Toast.LENGTH_SHORT).show();
