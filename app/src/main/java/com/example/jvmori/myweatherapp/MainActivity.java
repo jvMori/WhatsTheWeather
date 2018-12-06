@@ -36,11 +36,7 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
-    public static final String savedLocations = "SAVED_LOC";
     public static ArrayList<Locations> locations;
-    private static ArrayList<String> locationsSaved;
-    public static SaveManager saveManager;
-
     private SlidePagerAdapter slidePagerAdapter;
     private ViewPager viewPager;
     LinearLayout layoutDots;
@@ -50,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvLocalization;
     LocationManager locationManager;
     LocationListener locationListener;
-    SharedPreferences sharedPreferences;
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -128,11 +124,7 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
         else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3600, 5000, locationListener);
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (location != null){
-                FindWeatherForLocation(location, this);
-            }
+           startListening();
         }
 
     }
@@ -140,8 +132,12 @@ public class MainActivity extends AppCompatActivity {
     private  void FindWeatherForLocation(Location location, Context context){
         String city = CurrentLocation.getCity(location, context);
 
-        if (city != null)
+        if (locations.size() > 0 && city != null && city == locations.get(0).getId())
+            return;
+
+        if (city != null && locations.size() == 0)
             getWeather(city);
+
     }
 
     private void getWeather(final String cityName){
