@@ -45,6 +45,15 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
                     itemClicked.onItemClicked(locations.indexOf(tag));
                 }
             });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Locations tag = (Locations) view.getTag();
+                    itemClicked.onLongPress(locations.indexOf(tag));
+                    return true;
+                }
+            });
         }
     }
 

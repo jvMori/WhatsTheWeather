@@ -3,7 +3,6 @@ package com.example.jvmori.myweatherapp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,9 +34,9 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         context = this;
         setContentView(R.layout.activity_search);
+
         backBtn = findViewById(R.id.backBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,6 +44,7 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
                 BackToMainActivity(MainActivity.locations.size() - 1);
             }
         });
+
         searchView = findViewById(R.id.searchField);
         String hint = (String) getText(R.string.search_hint);
         searchView.setQueryHint(hint);
@@ -63,8 +63,6 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
                 return false;
             }
         });
-
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         recyclerView = findViewById(R.id.rvSearch);
         recyclerView.setHasFixedSize(true);
@@ -87,7 +85,6 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
             public void processFinished(Locations locationData) {
                 if (Contains.containsName(MainActivity.locations, locationData.getId()) == -1){
                     MainActivity.locations.add(locationData);
-                    //SaveManager.saveToList(sharedPreferences, locationData, MainActivity.savedLocations);
                     SaveManager.saveData(context, MainActivity.locations);
                     myAdapter.notifyDataSetChanged();
                 }else{
@@ -109,4 +106,12 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
     public void onItemClicked(int index) {
         BackToMainActivity(index);
     }
+
+    @Override
+    public void onLongPress(int index) {
+        MainActivity.locations.remove(index);
+        SaveManager.saveData(context, MainActivity.locations);
+        myAdapter.notifyDataSetChanged();
+    }
+
 }
