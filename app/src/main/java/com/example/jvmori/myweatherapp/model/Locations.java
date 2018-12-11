@@ -6,6 +6,16 @@ import java.util.ArrayList;
 public class Locations implements Serializable
 {
     private String id;
+
+    public long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    private long updateTime;
     private CurrentWeather currentWeather;
     private ArrayList<Forecast> forecasts;
 

@@ -3,12 +3,10 @@ package com.example.jvmori.myweatherapp;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -33,10 +31,13 @@ import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.view.SlidePagerAdapter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
     public static ArrayList<Locations> locations;
+    private  static ArrayList<String> tempLoc;
     private SlidePagerAdapter slidePagerAdapter;
     private ViewPager viewPager;
     LinearLayout layoutDots;
@@ -74,12 +75,32 @@ public class MainActivity extends AppCompatActivity {
         });
 
         locations = SaveManager.loadData(this);
-        CheckLocation(this);
-
-        if (locations.size() > 0)
+        if (locations.size() > 0 && ShouldBeWeatherDataUpdate()){
+            UpdateWeather();
+        }
+        else if (locations.size() > 0){
             SetData(locations);
+        }
+
+        CheckLocation(this);
+    }
+
+    private void UpdateWeather(){
+        tempLoc = new ArrayList<>();
+        for (int i = 0; i < locations.size(); i++) {
+            tempLoc.add(locations.get(i).getId());
+        }
+        locations.clear();
+        for (String loc : tempLoc) {
+            getWeather(loc);
+        }
+    }
 
 
+    private boolean ShouldBeWeatherDataUpdate(){
+        Calendar calendar = Calendar.getInstance();
+        long currTime = calendar.getTimeInMillis();
+        return currTime - locations.get(0).getUpdateTime() > 3600000;
     }
 
     private void startListening(){
@@ -147,7 +168,10 @@ public class MainActivity extends AppCompatActivity {
                 public void processFinished(Locations locationData) {
                     if (Contains.containsName(locations, locationData.getId()) == -1) {
                         locations.add(locationData);
-                        SetData(locations);
+                        if (tempLoc != null && locations.size() == tempLoc.size())
+                            SetData(locations);
+                        else if (tempLoc == null)
+                            SetData(locations);
                     }
                 }
             }, new OnErrorResponse() {
