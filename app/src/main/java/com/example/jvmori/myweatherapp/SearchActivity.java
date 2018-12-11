@@ -28,7 +28,6 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
     RecyclerView.Adapter myAdapter;
     ImageView backBtn;
     SearchView searchView;
-    SharedPreferences sharedPreferences;
     Context context;
 
     @Override

@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvLocalization;
     LocationManager locationManager;
     LocationListener locationListener;
+    SwipeRefreshLayout swipeRefreshLayout;
 
 
     @Override
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        swipeRefreshLayout = findViewById(R.id.swipeLayout);
         tvLocalization = findViewById(R.id.tvLocalization);
         viewPager = findViewById(R.id.ViewPager);
         layoutDots = findViewById(R.id.layoutDots);
@@ -71,6 +74,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 SearchActivity(view);
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                UpdateWeather();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
