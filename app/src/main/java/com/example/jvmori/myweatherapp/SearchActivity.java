@@ -36,13 +36,13 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
         context = this;
         setContentView(R.layout.activity_search);
 
-        backBtn = findViewById(R.id.backBtn);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                BackToMainActivity(MainActivity.locations.size() - 1);
-            }
-        });
+        //backBtn = findViewById(R.id.backBtn);
+//        backBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                BackToMainActivity(MainActivity.locations.size() - 1);
+//            }
+//        });
 
         searchView = findViewById(R.id.searchField);
         String hint = (String) getText(R.string.search_hint);

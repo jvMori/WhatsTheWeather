@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                UpdateWeather();
+                UpdateCurrentWeather();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -94,6 +94,24 @@ public class MainActivity extends AppCompatActivity {
         }
 
         CheckLocation(this);
+    }
+
+    private void UpdateCurrentWeather(){
+        final int currentItem =  viewPager.getCurrentItem();
+        String currentLocation = locations.get(currentItem).getId();
+        WeatherData weatherData = new WeatherData();
+        weatherData.getResponse(new WeatherAsyncResponse() {
+            @Override
+            public void processFinished(Locations locationData) {
+                locations.set(currentItem, locationData);
+                slidePagerAdapter.notifyDataSetChanged();
+            }
+        }, new OnErrorResponse() {
+            @Override
+            public void displayErrorMessage(String message) {
+                Toast.makeText(MainActivity.this, "Wrong City Name!", Toast.LENGTH_SHORT).show();
+            }
+        }, currentLocation);
     }
 
     private void UpdateWeather(){
@@ -174,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getWeather(final String cityName){
             WeatherData weatherData = new WeatherData();
-            weatherData.getResponse(new WeatherAsyncResponse() {
+            weatherData.getResponse( new WeatherAsyncResponse() {
                 @Override
                 public void processFinished(Locations locationData) {
                     if (Contains.containsName(locations, locationData.getId()) == -1) {

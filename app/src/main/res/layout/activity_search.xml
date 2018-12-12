@@ -8,15 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".SearchActivity">
 
-    <ImageView
-        android:id="@+id/backBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="10dp"
-        android:clickable="true"
-        app:srcCompat="@drawable/back" />
-
     <android.support.v7.widget.SearchView
         android:id="@+id/searchField"
         android:layout_width="match_parent"
