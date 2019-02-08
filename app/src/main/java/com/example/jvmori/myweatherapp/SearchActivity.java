@@ -2,14 +2,9 @@ package com.example.jvmori.myweatherapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.view.View;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.jvmori.myweatherapp.data.WeatherData;
@@ -20,6 +15,10 @@ import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
 import com.example.jvmori.myweatherapp.utils.SaveManager;
 import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.view.LocationAdapter;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 public class SearchActivity extends AppCompatActivity implements ItemClicked{

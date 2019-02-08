@@ -2,7 +2,6 @@ package com.example.jvmori.myweatherapp.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,8 @@ import com.example.jvmori.myweatherapp.utils.ItemClicked;
 import com.example.jvmori.myweatherapp.utils.SetImage;
 
 import java.util.ArrayList;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder>
 {

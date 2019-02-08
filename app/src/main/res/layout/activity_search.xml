@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     tools:context=".SearchActivity">
 
-    <android.support.v7.widget.SearchView
+    <SearchView
         android:id="@+id/searchField"
         android:layout_width="match_parent"
         android:layout_height="55dp"
@@ -18,9 +18,9 @@
         android:background="@drawable/search_bg_rounded"
         android:searchIcon="@drawable/search_transparent">
 
-    </android.support.v7.widget.SearchView>
+    </SearchView>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

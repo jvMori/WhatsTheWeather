@@ -3,6 +3,7 @@ package com.example.jvmori.myweatherapp.architectureComponents.data.db.entity;
 
 import com.google.gson.annotations.SerializedName;
 
+import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -12,7 +13,7 @@ public class CurrentWeather {
     public int id = 0;
     @SerializedName("cloud")
     private Long mCloud;
-    @SerializedName("condition")
+    @SerializedName("condition") @Embedded(prefix = "condition_")
     private Condition mCondition;
     @SerializedName("feelslike_c")
     private Double mFeelslikeC;

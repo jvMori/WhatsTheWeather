@@ -8,13 +8,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -40,8 +34,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager.widget.ViewPager;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 //
 //        CheckLocation(this);
         final TextView textView = findViewById(R.id.textView);
-        WeatherRepository weatherRepository = WeatherRepository.getInstance(this);
+        WeatherRepository weatherRepository = WeatherRepository.getInstance(this.getApplication());
         weatherRepository.currentWeatherLiveData().observe(lifecycleOwner, new Observer<CurrentWeather>() {
             @Override
             public void onChanged(CurrentWeather currentWeather) {
