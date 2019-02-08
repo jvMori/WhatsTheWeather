@@ -1,5 +1,6 @@
 package com.example.jvmori.myweatherapp.architectureComponents.data;
 
+import android.app.Application;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -23,9 +24,9 @@ public class WeatherRepository
     private WeatherDao weatherDao;
     private WeatherNetworkDataSource weatherNetworkDataSource;
 
-    private WeatherRepository (Context context){
+    private WeatherRepository (Application application){
         this.weatherNetworkDataSource = new WeatherNetworkDataSourceImpl();
-        this.weatherDao = WeatherDatabase.getInstance(context.getApplicationContext()).weatherDao();
+        this.weatherDao = WeatherDatabase.getInstance(application.getApplicationContext()).weatherDao();
         weatherNetworkDataSource.currentWeather.observeForever(new Observer<CurrentWeatherResponse>() {
             @Override
             public void onChanged(CurrentWeatherResponse newCurrentWeatherResponse) {
@@ -45,7 +46,7 @@ public LiveData<CurrentWeather> currentWeatherLiveData() {
     }
     return null;
 }
-    public synchronized static WeatherRepository getInstance(Context context){
+    public synchronized static WeatherRepository getInstance(Application context){
         if (instance == null){
             synchronized (LOCK){
                 instance = new WeatherRepository(context);
