@@ -34,6 +34,8 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
@@ -100,13 +102,13 @@ public class MainActivity extends AppCompatActivity {
 //        CheckLocation(this);
         final TextView textView = findViewById(R.id.textView);
         WeatherRepository weatherRepository = WeatherRepository.getInstance(this.getApplication());
-        weatherRepository.currentWeatherLiveData().observe(lifecycleOwner, new Observer<CurrentWeather>() {
+        MediatorLiveData<CurrentWeather> weather = new MediatorLiveData<>();
+        weather.addSource(weatherRepository.currentWeatherLiveData(), new Observer<CurrentWeather>() {
             @Override
             public void onChanged(CurrentWeather currentWeather) {
                 textView.setText(currentWeather.toString());
             }
         });
-
     }
 
     private void UpdateCurrentWeather() {

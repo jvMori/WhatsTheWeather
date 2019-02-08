@@ -11,6 +11,7 @@ import java.time.ZonedDateTime;
 import java.util.concurrent.ExecutionException;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
@@ -34,7 +35,14 @@ public class WeatherRepository
     }
 
 public LiveData<CurrentWeather> currentWeatherLiveData() {
-   return null;
+    final MediatorLiveData<CurrentWeather> data = new MediatorLiveData<>();
+    data.addSource(weatherNetworkDataSource.fetchWeather("London", "en"), new Observer<CurrentWeatherResponse>() {
+        @Override
+        public void onChanged(CurrentWeatherResponse currentWeatherResponse) {
+            data.postValue(currentWeatherResponse.getCurrent());
+        }
+    });
+    return data;
 }
     public synchronized static WeatherRepository getInstance(Application context){
         if (instance == null){
