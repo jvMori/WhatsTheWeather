@@ -5,6 +5,7 @@ import com.example.jvmori.myweatherapp.architectureComponents.data.network.respo
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import io.reactivex.Observer;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -21,24 +22,19 @@ public class WeatherNetworkDataSourceImpl implements WeatherNetworkDataSource{
         service.getCurrentWeather(location, lang)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<CurrentWeatherResponse>() {
+                .subscribe(new SingleObserver<CurrentWeatherResponse>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(CurrentWeatherResponse currentWeatherResponse) {
+                    public void onSuccess(CurrentWeatherResponse currentWeatherResponse) {
                         _currentWeather.postValue(currentWeatherResponse);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
 
                     }
                 });
