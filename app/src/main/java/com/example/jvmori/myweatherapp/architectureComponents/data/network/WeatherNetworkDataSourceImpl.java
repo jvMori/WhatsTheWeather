@@ -1,18 +1,36 @@
 package com.example.jvmori.myweatherapp.architectureComponents.data.network;
 
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
-
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class WeatherNetworkDataSourceImpl implements WeatherNetworkDataSource{
+    private MutableLiveData<CurrentWeatherResponse> _currentWeather = new MutableLiveData<>();
 
-    public Observable<CurrentWeatherResponse> fetchWeather(String location, String lang){
+    public LiveData<CurrentWeatherResponse> currentWeather(){
+        return _currentWeather;
+    }
+
+    public void fetchWeather(String location, String lang){
         ApixuApi service = ApixuApiCall.init();
-        return service.getCurrentWeather(location, lang)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread());
+        service.getCurrentWeather(location, lang).enqueue(new Callback<CurrentWeatherResponse>() {
+            @Override
+            public void onResponse(Call<CurrentWeatherResponse> call, Response<CurrentWeatherResponse> response) {
+                if (!response.isSuccessful()){
+                    return;
+                }
+                if (response.body() != null)
+                     _currentWeather.postValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<CurrentWeatherResponse> call, Throwable t) {
+
+            }
+        });
+
     }
 }
