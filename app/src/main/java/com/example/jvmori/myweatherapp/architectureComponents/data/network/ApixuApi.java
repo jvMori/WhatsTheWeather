@@ -2,7 +2,7 @@ package com.example.jvmori.myweatherapp.architectureComponents.data.network;
 
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
 
-import retrofit2.Call;
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
@@ -10,5 +10,5 @@ import retrofit2.http.Query;
 public interface ApixuApi
 {
     @GET("current.json")
-    Call<CurrentWeatherResponse> getCurrentWeather(@Query("q") String location, @Query("lang") String language);
+    Observable<CurrentWeatherResponse> getCurrentWeather(@Query("q") String location, @Query("lang") String language);
 }

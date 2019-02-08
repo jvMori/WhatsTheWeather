@@ -1,5 +1,7 @@
 package com.example.jvmori.myweatherapp.architectureComponents.data.network;
 
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+
 import java.io.IOException;
 
 import okhttp3.HttpUrl;
@@ -39,6 +41,7 @@ public class ApixuApiCall
                 .client(okHttpClient)
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
                 .create(ApixuApi.class);
     }
