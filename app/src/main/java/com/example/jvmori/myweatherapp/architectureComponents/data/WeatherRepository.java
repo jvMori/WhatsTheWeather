@@ -1,17 +1,19 @@
 package com.example.jvmori.myweatherapp.architectureComponents.data;
 
+import android.content.Context;
+import android.os.AsyncTask;
+
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSource;
+import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSourceImpl;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
 
 import java.time.ZonedDateTime;
+import java.util.concurrent.ExecutionException;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import io.reactivex.Completable;
-import io.reactivex.Observable;
-import io.reactivex.functions.Action;
-
-
 
 public class WeatherRepository
 {
@@ -21,10 +23,9 @@ public class WeatherRepository
     private WeatherDao weatherDao;
     private WeatherNetworkDataSource weatherNetworkDataSource;
 
-    private WeatherRepository (WeatherNetworkDataSource weatherNetworkDataSource,
-                               WeatherDao weatherDao){
-        this.weatherNetworkDataSource = weatherNetworkDataSource;
-        this.weatherDao = weatherDao;
+    private WeatherRepository (Context context){
+        this.weatherNetworkDataSource = new WeatherNetworkDataSourceImpl();
+        this.weatherDao = WeatherDatabase.getInstance(context.getApplicationContext()).weatherDao();
         weatherNetworkDataSource.currentWeather.observeForever(new Observer<CurrentWeatherResponse>() {
             @Override
             public void onChanged(CurrentWeatherResponse newCurrentWeatherResponse) {
@@ -34,36 +35,20 @@ public class WeatherRepository
         });
     }
 
-//    public LiveData<CurrentWeather> getCurrentWeather(String localization, String lang){
-//        final MutableLiveData<CurrentWeather> data = new MutableLiveData<>();
-//       if (initWeatherData() != null)
-//           initWeatherData().subscribe(new io.reactivex.Observer<CurrentWeatherResponse>() {
-//               @Override
-//               public void onSubscribe(Disposable d) {
-//
-//               }
-//
-//               @Override
-//               public void onNext(CurrentWeatherResponse currentWeatherResponse) {
-//                   data.postValue(currentWeatherResponse.getCurrent());
-//               }
-//
-//               @Override
-//               public void onError(Throwable e) {
-//
-//               }
-//
-//               @Override
-//               public void onComplete() {
-//
-//               }
-//           })
-//    }
-
-    public synchronized static WeatherRepository getInstance(WeatherNetworkDataSource weatherNetworkDataSource, WeatherDao weatherDao){
+public LiveData<CurrentWeather> currentWeatherLiveData() {
+    try {
+        return new  InitWeatherAsyncTask(this, weatherDao).execute().get();
+    } catch (ExecutionException e) {
+        e.printStackTrace();
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+    public synchronized static WeatherRepository getInstance(Context context){
         if (instance == null){
             synchronized (LOCK){
-                instance = new WeatherRepository(weatherNetworkDataSource, weatherDao);
+                instance = new WeatherRepository(context);
             }
         }
         return instance;
@@ -83,4 +68,19 @@ public class WeatherRepository
         ZonedDateTime thirtyMinutesAgo = ZonedDateTime.now().minusMinutes(30);
         return lastFetchedTime.isBefore(thirtyMinutesAgo);
     }
+
+   public static class InitWeatherAsyncTask extends AsyncTask<Void, Void, LiveData<CurrentWeather>>{
+        WeatherRepository weatherRepository;
+        WeatherDao weatherDao;
+        InitWeatherAsyncTask(WeatherRepository weatherRepository, WeatherDao weatherDao){
+            this.weatherRepository = weatherRepository;
+            this.weatherDao = weatherDao;
+        }
+
+       @Override
+       protected LiveData<CurrentWeather> doInBackground(Void... voids) {
+           weatherRepository.initWeatherData();
+           return weatherDao.getWeather();
+       }
+   }
 }

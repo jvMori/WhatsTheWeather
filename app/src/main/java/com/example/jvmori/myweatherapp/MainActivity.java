@@ -22,6 +22,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherDao;
+import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherRepository;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
+import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSource;
+import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSourceImpl;
 import com.example.jvmori.myweatherapp.data.WeatherData;
 import com.example.jvmori.myweatherapp.model.CurrentLocation;
 import com.example.jvmori.myweatherapp.model.Locations;
@@ -35,10 +40,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+
 
 public class MainActivity extends AppCompatActivity {
     public static ArrayList<Locations> locations;
-    private  static ArrayList<String> tempLoc;
+    private static ArrayList<String> tempLoc;
     private SlidePagerAdapter slidePagerAdapter;
     private ViewPager viewPager;
     LinearLayout layoutDots;
@@ -49,12 +57,13 @@ public class MainActivity extends AppCompatActivity {
     LocationManager locationManager;
     LocationListener locationListener;
     SwipeRefreshLayout swipeRefreshLayout;
+    LifecycleOwner lifecycleOwner;
 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             startListening();
         }
     }
@@ -63,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        lifecycleOwner = (LifecycleOwner) this;
         swipeRefreshLayout = findViewById(R.id.swipeLayout);
         tvLocalization = findViewById(R.id.tvLocalization);
         viewPager = findViewById(R.id.ViewPager);
@@ -85,19 +94,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        locations = SaveManager.loadData(this);
-        if (locations.size() > 0 && ShouldBeWeatherDataUpdate()){
-            UpdateWeather();
-        }
-        else if (locations.size() > 0){
-            SetData(locations);
-        }
+//        locations = SaveManager.loadData(this);
+//        if (locations.size() > 0 && ShouldBeWeatherDataUpdate()){
+//            UpdateWeather();
+//        }
+//        else if (locations.size() > 0){
+//            SetData(locations);
+//        }
+//
+//        CheckLocation(this);
+        final TextView textView = findViewById(R.id.textView);
+        WeatherRepository weatherRepository = WeatherRepository.getInstance(this);
+        weatherRepository.currentWeatherLiveData().observe(lifecycleOwner, new Observer<CurrentWeather>() {
+            @Override
+            public void onChanged(CurrentWeather currentWeather) {
+                textView.setText(currentWeather.toString());
+            }
+        });
 
-        CheckLocation(this);
     }
 
-    private void UpdateCurrentWeather(){
-        final int currentItem =  viewPager.getCurrentItem();
+    private void UpdateCurrentWeather() {
+        final int currentItem = viewPager.getCurrentItem();
         String currentLocation = locations.get(currentItem).getId();
         WeatherData weatherData = new WeatherData();
         weatherData.getResponse(new WeatherAsyncResponse() {
@@ -114,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         }, currentLocation);
     }
 
-    private void UpdateWeather(){
+    private void UpdateWeather() {
         tempLoc = new ArrayList<>();
         for (int i = 0; i < locations.size(); i++) {
             tempLoc.add(locations.get(i).getId());
@@ -126,31 +144,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private boolean ShouldBeWeatherDataUpdate(){
+    private boolean ShouldBeWeatherDataUpdate() {
         Calendar calendar = Calendar.getInstance();
         long currTime = calendar.getTimeInMillis();
         return currTime - locations.get(0).getUpdateTime() > 3600000;
     }
 
-    private void startListening(){
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE );
+    private void startListening() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
             assert locationManager != null;
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3600, 5000, locationListener);
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (location != null){
+            if (location != null) {
                 FindWeatherForLocation(location, this);
             }
         }
 
     }
 
-    private void CheckLocation(final Context context){
+    private void CheckLocation(final Context context) {
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-               FindWeatherForLocation(location, context);
+                FindWeatherForLocation(location, context);
             }
 
             @Override
@@ -169,17 +187,15 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
-        else {
-           startListening();
+        } else {
+            startListening();
         }
 
     }
 
-    private  void FindWeatherForLocation(Location location, Context context){
+    private void FindWeatherForLocation(Location location, Context context) {
         String city = CurrentLocation.getCity(location, context);
 
         if (locations.size() > 0 && city != null && city == locations.get(0).getId())
@@ -190,43 +206,43 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void getWeather(final String cityName){
-            WeatherData weatherData = new WeatherData();
-            weatherData.getResponse( new WeatherAsyncResponse() {
-                @Override
-                public void processFinished(Locations locationData) {
-                    if (Contains.containsName(locations, locationData.getId()) == -1) {
-                        locations.add(locationData);
-                        if (tempLoc != null && locations.size() == tempLoc.size())
-                            SetData(locations);
-                        else if (tempLoc == null)
-                            SetData(locations);
-                    }
+    private void getWeather(final String cityName) {
+        WeatherData weatherData = new WeatherData();
+        weatherData.getResponse(new WeatherAsyncResponse() {
+            @Override
+            public void processFinished(Locations locationData) {
+                if (Contains.containsName(locations, locationData.getId()) == -1) {
+                    locations.add(locationData);
+                    if (tempLoc != null && locations.size() == tempLoc.size())
+                        SetData(locations);
+                    else if (tempLoc == null)
+                        SetData(locations);
                 }
-            }, new OnErrorResponse() {
-                @Override
-                public void displayErrorMessage(String message) {
-                    Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-                }
-            }, cityName);
-        }
+            }
+        }, new OnErrorResponse() {
+            @Override
+            public void displayErrorMessage(String message) {
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        }, cityName);
+    }
 
 
-    private void SearchActivity(View view){
+    private void SearchActivity(View view) {
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
     }
 
-    private void SetData(ArrayList<Locations> data){
+    private void SetData(ArrayList<Locations> data) {
         slidePagerAdapter = new SlidePagerAdapter(this, getSupportFragmentManager(), data);
         viewPager.setAdapter(slidePagerAdapter);
-        viewPager.setCurrentItem(getIntent().getIntExtra("position",0));
+        viewPager.setCurrentItem(getIntent().getIntExtra("position", 0));
         setUiViewPager();
     }
 
-    void setUiViewPager(){
+    void setUiViewPager() {
         int oldDots = layoutDots.getChildCount();
-        if (oldDots>0){
+        if (oldDots > 0) {
             for (int j = 0; j < oldDots; j++) {
                 layoutDots.removeViewAt(j);
             }
@@ -241,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
             dots[i].setLayoutParams(layoutParams);
-            layoutParams.setMargins(5,0,5,0);
+            layoutParams.setMargins(5, 0, 5, 0);
             layoutParams.gravity = Gravity.CENTER;
 
             layoutDots.addView(dots[i], layoutParams);
@@ -271,21 +287,21 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private void changeActiveDot(int position){
+    private void changeActiveDot(int position) {
         for (int i = 0; i < mDotCount; i++) {
             dots[i].setImageResource(R.drawable.dotinactive);
         }
         dots[position].setImageResource(R.drawable.dotactive);
     }
 
-    private void changeActiveCityName(int position){
+    private void changeActiveCityName(int position) {
         tvLocalization.setText(locations.get(position).getId());
     }
 
-    private void geoLocMarkerVisibility(int position){
+    private void geoLocMarkerVisibility(int position) {
         if (position == 0)
             ivMarker.setVisibility(View.VISIBLE);
-        else{
+        else {
             ivMarker.setVisibility(View.INVISIBLE);
         }
     }
