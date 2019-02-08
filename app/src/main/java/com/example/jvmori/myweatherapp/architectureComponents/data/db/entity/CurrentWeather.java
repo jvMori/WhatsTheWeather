@@ -3,8 +3,13 @@ package com.example.jvmori.myweatherapp.architectureComponents.data.db.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class CurrentWeather {
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+@Entity(tableName="current_weather")
+public class CurrentWeather {
+    @PrimaryKey (autoGenerate = false)
+    public int id = 0;
     @SerializedName("cloud")
     private Long mCloud;
     @SerializedName("condition")
