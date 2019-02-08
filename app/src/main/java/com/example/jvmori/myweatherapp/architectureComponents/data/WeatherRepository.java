@@ -1,12 +1,10 @@
 package com.example.jvmori.myweatherapp.architectureComponents.data;
 
 import android.app.Application;
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSource;
-import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSourceImpl;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
 
 import java.time.ZonedDateTime;
@@ -25,26 +23,18 @@ public class WeatherRepository
     private WeatherNetworkDataSource weatherNetworkDataSource;
 
     private WeatherRepository (Application application){
-        this.weatherNetworkDataSource = new WeatherNetworkDataSourceImpl();
+        this.weatherNetworkDataSource = new WeatherNetworkDataSource();
         this.weatherDao = WeatherDatabase.getInstance(application.getApplicationContext()).weatherDao();
-        weatherNetworkDataSource.currentWeather.observeForever(new Observer<CurrentWeatherResponse>() {
+        weatherNetworkDataSource.fetchWeather("London", "en").observeForever(new Observer<CurrentWeatherResponse>() {
             @Override
-            public void onChanged(CurrentWeatherResponse newCurrentWeatherResponse) {
-                    if (newCurrentWeatherResponse != null)
-                        persistFetchedCurrentWeather(newCurrentWeatherResponse);
+            public void onChanged(CurrentWeatherResponse currentWeatherResponse) {
+                persistFetchedCurrentWeather(currentWeatherResponse);
             }
         });
     }
 
 public LiveData<CurrentWeather> currentWeatherLiveData() {
-    try {
-        return new  InitWeatherAsyncTask(this, weatherDao).execute().get();
-    } catch (ExecutionException e) {
-        e.printStackTrace();
-    } catch (InterruptedException e) {
-        e.printStackTrace();
-    }
-    return null;
+   return null;
 }
     public synchronized static WeatherRepository getInstance(Application context){
         if (instance == null){
