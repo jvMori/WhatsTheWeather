@@ -28,12 +28,12 @@ public class WeatherRepository
         this.executors = executors;
         this.weatherNetworkDataSource = new WeatherNetworkDataSourceImpl();
         this.weatherDao = WeatherDatabase.getInstance(application.getApplicationContext()).weatherDao();
-//        weatherNetworkDataSource.currentWeather().observeForever(currentWeatherResponse ->
-//                persistFetchedCurrentWeather(currentWeatherResponse));
+        weatherNetworkDataSource.currentWeather().observeForever(this::persistFetchedCurrentWeather);
     }
 
 public LiveData<CurrentWeatherResponse> getCurrentWeather() {
-  return weatherNetworkDataSource.fetchWeather("London", "en");
+   return weatherNetworkDataSource.fetchWeather("London", "en");
+    //return weatherDao.getWeather();
 }
     public synchronized static WeatherRepository getInstance(Application context, AppExecutors executors){
         if (instance == null){
