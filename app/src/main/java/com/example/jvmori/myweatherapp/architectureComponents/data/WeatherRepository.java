@@ -10,50 +10,70 @@ import com.example.jvmori.myweatherapp.architectureComponents.data.network.Weath
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
 
 import java.time.ZonedDateTime;
+import java.util.concurrent.ExecutionException;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import io.reactivex.Observable;
 
-public class WeatherRepository
-{
+public class WeatherRepository {
     private static final Object LOCK = new Object();
     private static WeatherRepository instance;
     private WeatherDao weatherDao;
     private WeatherNetworkDataSourceImpl weatherNetworkDataSource;
     private AppExecutors executors;
 
-    private WeatherRepository (Application application, AppExecutors executors){
+    private WeatherRepository(Application application, AppExecutors executors) {
         this.executors = executors;
         this.weatherNetworkDataSource = new WeatherNetworkDataSourceImpl();
         this.weatherDao = WeatherDatabase.getInstance(application.getApplicationContext()).weatherDao();
-        weatherNetworkDataSource.currentWeather().observeForever(this::persistFetchedCurrentWeather);
+        weatherNetworkDataSource.currentWeather().observeForever(currentWeatherResponse ->
+                persistFetchedCurrentWeather(currentWeatherResponse));
     }
 
-public LiveData<CurrentWeatherResponse> getCurrentWeather() {
-   return weatherNetworkDataSource.fetchWeather("London", "en");
-    //return weatherDao.getWeather();
-}
-    public synchronized static WeatherRepository getInstance(Application context, AppExecutors executors){
-        if (instance == null){
-            synchronized (LOCK){
+    public LiveData<CurrentWeather> getCurrentWeather() throws ExecutionException, InterruptedException {
+        //return weatherNetworkDataSource.fetchWeather("London", "en");
+        //return weatherDao.getWeather();
+        new InvokeAsyncTask(this).execute().get();
+        LiveData<CurrentWeather> weather = weatherDao.getWeather();
+        return weatherDao.getWeather();
+    }
+
+    public static class InvokeAsyncTask extends AsyncTask<Void, Void, Void> {
+        WeatherRepository weatherRepository;
+
+        InvokeAsyncTask(WeatherRepository weatherRepository) {
+            this.weatherRepository = weatherRepository;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            weatherRepository.initWeatherData();
+            return null;
+        }
+    }
+
+    public synchronized static WeatherRepository getInstance(Application context, AppExecutors executors) {
+        if (instance == null) {
+            synchronized (LOCK) {
                 instance = new WeatherRepository(context, executors);
             }
         }
         return instance;
     }
 
-    private void persistFetchedCurrentWeather(final CurrentWeatherResponse currentWeatherResponse){
+    private void persistFetchedCurrentWeather(final CurrentWeatherResponse currentWeatherResponse) {
         executors.diskIO().execute(() -> weatherDao.insert(currentWeatherResponse.getCurrent()));
     }
 
-   private synchronized void initWeatherData(){
+    private synchronized void initWeatherData() {
         if (isFetchCurrentNeeded(ZonedDateTime.now().minusHours(1)))
-             weatherNetworkDataSource.fetchWeather("London", "en");
-   }
+            weatherNetworkDataSource.fetchWeather("London", "en");
+    }
 
-    private boolean isFetchCurrentNeeded(ZonedDateTime lastFetchedTime){
+    private boolean isFetchCurrentNeeded(ZonedDateTime lastFetchedTime) {
         ZonedDateTime thirtyMinutesAgo = ZonedDateTime.now().minusMinutes(30);
         return lastFetchedTime.isBefore(thirtyMinutesAgo);
     }

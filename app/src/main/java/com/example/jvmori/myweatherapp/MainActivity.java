@@ -30,6 +30,7 @@ import com.example.jvmori.myweatherapp.view.SlidePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.concurrent.ExecutionException;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -104,12 +105,18 @@ public class MainActivity extends AppCompatActivity {
 //        CheckLocation(this);
         final TextView textView = findViewById(R.id.textView);
         WeatherRepository weatherRepository = WeatherRepository.getInstance(this.getApplication(), AppExecutors.getInstance());
-        weatherRepository.getCurrentWeather().observe(lifecycleOwner, new Observer<CurrentWeatherResponse>() {
-            @Override
-            public void onChanged(CurrentWeatherResponse currentWeatherResponse) {
-                textView.setText(currentWeatherResponse.getCurrent().toString());
-            }
-        });
+        try {
+            weatherRepository.getCurrentWeather().observe(lifecycleOwner, new Observer<CurrentWeather>() {
+                @Override
+                public void onChanged(CurrentWeather currentWeather) {
+                    //textView.setText(currentWeather.toString());
+                }
+            });
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void UpdateCurrentWeather() {
