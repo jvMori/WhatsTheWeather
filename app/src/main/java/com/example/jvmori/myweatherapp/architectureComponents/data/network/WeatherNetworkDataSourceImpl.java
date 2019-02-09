@@ -1,5 +1,7 @@
 package com.example.jvmori.myweatherapp.architectureComponents.data.network;
 
+import android.util.Log;
+
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -7,7 +9,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class WeatherNetworkDataSourceImpl implements WeatherNetworkDataSource {
+public class WeatherNetworkDataSourceImpl  {
 
     private MutableLiveData<CurrentWeatherResponse> _currentWeather;
 
@@ -17,7 +19,7 @@ public class WeatherNetworkDataSourceImpl implements WeatherNetworkDataSource {
 
     public LiveData<CurrentWeatherResponse> currentWeather() { return _currentWeather; }
 
-    public void fetchWeather(String location, String lang){
+    public LiveData<CurrentWeatherResponse> fetchWeather(String location, String lang){
         _currentWeather = new MutableLiveData<>();
         ApixuApi service = ApixuApiCall.init();
         service.getCurrentWeather(location, lang).enqueue(new Callback<CurrentWeatherResponse>() {
@@ -32,8 +34,9 @@ public class WeatherNetworkDataSourceImpl implements WeatherNetworkDataSource {
 
             @Override
             public void onFailure(Call<CurrentWeatherResponse> call, Throwable t) {
-
+                Log.i("Error", "errror");
             }
         });
+        return _currentWeather;
     }
 }

@@ -12,214 +12,46 @@ public class CurrentWeather {
     @PrimaryKey (autoGenerate = false)
     public int id = 0;
     @SerializedName("cloud")
-    private Long mCloud;
+    public Long mCloud;
     @SerializedName("condition") @Embedded(prefix = "condition_")
-    private Condition mCondition;
+    public Condition mCondition;
     @SerializedName("feelslike_c")
-    private Double mFeelslikeC;
+    public Double mFeelslikeC;
     @SerializedName("feelslike_f")
-    private Long mFeelslikeF;
+    public Double mFeelslikeF;
     @SerializedName("humidity")
-    private Long mHumidity;
+    public Long mHumidity;
     @SerializedName("is_day")
-    private Long mIsDay;
+    public Long mIsDay;
     @SerializedName("last_updated")
-    private String mLastUpdated;
+    public String mLastUpdated;
     @SerializedName("last_updated_epoch")
-    private Long mLastUpdatedEpoch;
+    public Double mLastUpdatedEpoch;
     @SerializedName("precip_in")
-    private Long mPrecipIn;
+    public Double mPrecipIn;
     @SerializedName("precip_mm")
-    private Long mPrecipMm;
+    public Double mPrecipMm;
     @SerializedName("pressure_in")
-    private Double mPressureIn;
+    public Double mPressureIn;
     @SerializedName("pressure_mb")
-    private Long mPressureMb;
+    public Double mPressureMb;
     @SerializedName("temp_c")
-    private Long mTempC;
+    public Double mTempC;
     @SerializedName("temp_f")
-    private Double mTempF;
+    public Double mTempF;
     @SerializedName("uv")
-    private Long mUv;
+    public Long mUv;
     @SerializedName("vis_km")
-    private Long mVisKm;
+    public Double mVisKm;
     @SerializedName("vis_miles")
-    private Long mVisMiles;
+    public Double mVisMiles;
     @SerializedName("wind_degree")
-    private Long mWindDegree;
+    public Double mWindDegree;
     @SerializedName("wind_dir")
-    private String mWindDir;
+    public String mWindDir;
     @SerializedName("wind_kph")
-    private Double mWindKph;
+    public Double mWindKph;
     @SerializedName("wind_mph")
-    private Long mWindMph;
-
-    public Long getCloud() {
-        return mCloud;
-    }
-
-    public void setCloud(Long cloud) {
-        mCloud = cloud;
-    }
-
-    public Condition getCondition() {
-        return mCondition;
-    }
-
-    public void setCondition(Condition condition) {
-        mCondition = condition;
-    }
-
-    public Double getFeelslikeC() {
-        return mFeelslikeC;
-    }
-
-    public void setFeelslikeC(Double feelslikeC) {
-        mFeelslikeC = feelslikeC;
-    }
-
-    public Long getFeelslikeF() {
-        return mFeelslikeF;
-    }
-
-    public void setFeelslikeF(Long feelslikeF) {
-        mFeelslikeF = feelslikeF;
-    }
-
-    public Long getHumidity() {
-        return mHumidity;
-    }
-
-    public void setHumidity(Long humidity) {
-        mHumidity = humidity;
-    }
-
-    public Long getIsDay() {
-        return mIsDay;
-    }
-
-    public void setIsDay(Long isDay) {
-        mIsDay = isDay;
-    }
-
-    public String getLastUpdated() {
-        return mLastUpdated;
-    }
-
-    public void setLastUpdated(String lastUpdated) {
-        mLastUpdated = lastUpdated;
-    }
-
-    public Long getLastUpdatedEpoch() {
-        return mLastUpdatedEpoch;
-    }
-
-    public void setLastUpdatedEpoch(Long lastUpdatedEpoch) {
-        mLastUpdatedEpoch = lastUpdatedEpoch;
-    }
-
-    public Long getPrecipIn() {
-        return mPrecipIn;
-    }
-
-    public void setPrecipIn(Long precipIn) {
-        mPrecipIn = precipIn;
-    }
-
-    public Long getPrecipMm() {
-        return mPrecipMm;
-    }
-
-    public void setPrecipMm(Long precipMm) {
-        mPrecipMm = precipMm;
-    }
-
-    public Double getPressureIn() {
-        return mPressureIn;
-    }
-
-    public void setPressureIn(Double pressureIn) {
-        mPressureIn = pressureIn;
-    }
-
-    public Long getPressureMb() {
-        return mPressureMb;
-    }
-
-    public void setPressureMb(Long pressureMb) {
-        mPressureMb = pressureMb;
-    }
-
-    public Long getTempC() {
-        return mTempC;
-    }
-
-    public void setTempC(Long tempC) {
-        mTempC = tempC;
-    }
-
-    public Double getTempF() {
-        return mTempF;
-    }
-
-    public void setTempF(Double tempF) {
-        mTempF = tempF;
-    }
-
-    public Long getUv() {
-        return mUv;
-    }
-
-    public void setUv(Long uv) {
-        mUv = uv;
-    }
-
-    public Long getVisKm() {
-        return mVisKm;
-    }
-
-    public void setVisKm(Long visKm) {
-        mVisKm = visKm;
-    }
-
-    public Long getVisMiles() {
-        return mVisMiles;
-    }
-
-    public void setVisMiles(Long visMiles) {
-        mVisMiles = visMiles;
-    }
-
-    public Long getWindDegree() {
-        return mWindDegree;
-    }
-
-    public void setWindDegree(Long windDegree) {
-        mWindDegree = windDegree;
-    }
-
-    public String getWindDir() {
-        return mWindDir;
-    }
-
-    public void setWindDir(String windDir) {
-        mWindDir = windDir;
-    }
-
-    public Double getWindKph() {
-        return mWindKph;
-    }
-
-    public void setWindKph(Double windKph) {
-        mWindKph = windKph;
-    }
-
-    public Long getWindMph() {
-        return mWindMph;
-    }
-
-    public void setWindMph(Long windMph) {
-        mWindMph = windMph;
-    }
+    public Double mWindMph;
 
 }

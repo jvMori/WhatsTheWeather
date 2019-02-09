@@ -21,22 +21,19 @@ public class WeatherRepository
     private static final Object LOCK = new Object();
     private static WeatherRepository instance;
     private WeatherDao weatherDao;
-    private WeatherNetworkDataSource weatherNetworkDataSource;
+    private WeatherNetworkDataSourceImpl weatherNetworkDataSource;
     private AppExecutors executors;
 
     private WeatherRepository (Application application, AppExecutors executors){
         this.executors = executors;
         this.weatherNetworkDataSource = new WeatherNetworkDataSourceImpl();
         this.weatherDao = WeatherDatabase.getInstance(application.getApplicationContext()).weatherDao();
-        weatherNetworkDataSource.currentWeather().observeForever(currentWeatherResponse ->
-                persistFetchedCurrentWeather(currentWeatherResponse));
+//        weatherNetworkDataSource.currentWeather().observeForever(currentWeatherResponse ->
+//                persistFetchedCurrentWeather(currentWeatherResponse));
     }
 
-public LiveData<CurrentWeather> getCurrentWeather() {
-    executors.diskIO().execute(()->
-            initWeatherData()
-    );
-    return  weatherDao.getWeather();
+public LiveData<CurrentWeatherResponse> getCurrentWeather() {
+  return weatherNetworkDataSource.fetchWeather("London", "en");
 }
     public synchronized static WeatherRepository getInstance(Application context, AppExecutors executors){
         if (instance == null){

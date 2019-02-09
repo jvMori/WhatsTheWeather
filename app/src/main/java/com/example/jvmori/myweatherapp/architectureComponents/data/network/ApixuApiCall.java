@@ -35,6 +35,7 @@ public class ApixuApiCall
     public static ApixuApi init(){
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(interceptor)
+                .retryOnConnectionFailure(true)
                 .build();
         return new Retrofit.Builder()
                 .client(okHttpClient)
