@@ -20,6 +20,7 @@ import com.example.jvmori.myweatherapp.architectureComponents.AppExecutors;
 import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherRepository;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
+import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
 import com.example.jvmori.myweatherapp.data.WeatherData;
 import com.example.jvmori.myweatherapp.model.CurrentLocation;
 import com.example.jvmori.myweatherapp.model.Locations;
@@ -40,6 +41,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
@@ -104,12 +106,12 @@ public class MainActivity extends AppCompatActivity {
 //
 //        CheckLocation(this);
         final TextView textView = findViewById(R.id.textView);
-        WeatherRepository weatherRepository = WeatherRepository.getInstance(this.getApplication(), AppExecutors.getInstance());
+        CurrentWeatherViewModel viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
         try {
-            weatherRepository.getCurrentWeather().observe(lifecycleOwner, new Observer<CurrentWeather>() {
+            viewModel.getCurrentWeather().observe(this, new Observer<CurrentWeather>() {
                 @Override
                 public void onChanged(CurrentWeather currentWeather) {
-                    //textView.setText(currentWeather.toString());
+                    textView.setText(currentWeather.toString());
                 }
             });
         } catch (ExecutionException e) {

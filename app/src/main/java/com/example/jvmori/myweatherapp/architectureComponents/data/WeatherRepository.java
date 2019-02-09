@@ -34,10 +34,7 @@ public class WeatherRepository {
     }
 
     public LiveData<CurrentWeather> getCurrentWeather() throws ExecutionException, InterruptedException {
-        //return weatherNetworkDataSource.fetchWeather("London", "en");
-        //return weatherDao.getWeather();
         new InvokeAsyncTask(this).execute().get();
-        LiveData<CurrentWeather> weather = weatherDao.getWeather();
         return weatherDao.getWeather();
     }
 
