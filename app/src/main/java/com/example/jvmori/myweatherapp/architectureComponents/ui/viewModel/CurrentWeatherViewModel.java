@@ -18,21 +18,20 @@ import androidx.lifecycle.Observer;
 
 public class CurrentWeatherViewModel extends AndroidViewModel {
     private WeatherRepository weatherRepository;
-    private MediatorLiveData<CurrentWeather> currentWeather;
-    private MutableLiveData<CurrentWeather> _currentWeather;
+    private MediatorLiveData<CurrentWeather> currentWeatherLiveData;
 
     public CurrentWeatherViewModel(@NonNull Application application, AppExecutors appExecutors) {
         super(application);
         weatherRepository = WeatherRepository.getInstance(application, appExecutors);
-        currentWeather = new MediatorLiveData<>();
+        currentWeatherLiveData = new MediatorLiveData<>();
     }
     public LiveData<CurrentWeather> getCurrentWeather() throws ExecutionException, InterruptedException {
-        currentWeather.addSource(weatherRepository.getCurrentWeather(), new Observer<CurrentWeather>() {
+        currentWeatherLiveData.addSource(weatherRepository.getCurrentWeather(), new Observer<CurrentWeather>() {
             @Override
             public void onChanged(CurrentWeather currentWeather) {
-                _currentWeather.postValue(currentWeather);
+                currentWeatherLiveData.postValue(currentWeather);
             }
         });
-        return _currentWeather;
+        return currentWeatherLiveData;
     }
 }
