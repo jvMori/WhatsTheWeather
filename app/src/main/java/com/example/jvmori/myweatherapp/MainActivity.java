@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jvmori.myweatherapp.architectureComponents.AppExecutors;
 import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherRepository;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
 import com.example.jvmori.myweatherapp.data.WeatherData;
@@ -101,14 +102,13 @@ public class MainActivity extends AppCompatActivity {
 //
 //        CheckLocation(this);
         final TextView textView = findViewById(R.id.textView);
-        WeatherRepository weatherRepository = WeatherRepository.getInstance(this.getApplication());
-        MediatorLiveData<CurrentWeather> weather = new MediatorLiveData<>();
-        weather.addSource(weatherRepository.currentWeatherLiveData(), new Observer<CurrentWeather>() {
-            @Override
-            public void onChanged(CurrentWeather currentWeather) {
-                textView.setText(currentWeather.toString());
-            }
-        });
+        WeatherRepository weatherRepository = WeatherRepository.getInstance(this.getApplication(), AppExecutors.getInstance());
+       weatherRepository.getCurrentWeather().observe(lifecycleOwner, new Observer<CurrentWeather>() {
+           @Override
+           public void onChanged(CurrentWeather currentWeather) {
+               textView.setText(currentWeather.toString());
+           }
+       });
     }
 
     private void UpdateCurrentWeather() {

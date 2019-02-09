@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApixuApiCall
 {
     private static final String API_KEY = "7a5ba9d2d18041f38e0135842190602";
-    private static final String BASE_URL = "https://api.apixu.com/v1/";
+    private static final String BASE_URL = "http://api.apixu.com/v1/";
 
     final static Interceptor interceptor = new Interceptor() {
         @Override
@@ -24,7 +24,7 @@ public class ApixuApiCall
             HttpUrl url = chain.request()
                     .url()
                     .newBuilder()
-                    .addQueryParameter("api_key", API_KEY)
+                    .addQueryParameter("key", API_KEY)
                     .build();
             Request request = chain.request()
                     .newBuilder().url(url).build();
