@@ -50,6 +50,10 @@ public class WeatherRepository {
         executors.diskIO().execute(() -> weatherDao.insert(currentWeather));
     }
 
+    public LiveData<CurrentWeather> getAllWeather(){
+        return weatherDao.getWeather();
+    }
+
     public LiveData<CurrentWeather> initWeatherData(final String location, String lang) {
         if (isFetchCurrentNeeded(ZonedDateTime.now().minusMinutes(60))){
             weatherNetworkDataSource.fetchWeather(location, lang).enqueue(new Callback<CurrentWeatherResponse>() {

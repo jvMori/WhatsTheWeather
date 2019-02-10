@@ -54,12 +54,13 @@ public class WeatherFragment extends Fragment {
 
     private void getCurrentWeatherView(){
         CurrentWeatherViewModel viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        viewModel.getCurrentWeather("Cracow", "en").observe(this, new Observer<CurrentWeather>() {
+        viewModel.getCurrentWeather("London", "en").observe(this, new Observer<CurrentWeather>() {
             @Override
             public void onChanged(CurrentWeather currentWeather) {
                 createCurrentWeatherUi(currentWeather);
             }
         });
+       
     }
 
     private void createCurrentWeatherUi(CurrentWeather currentWeather){

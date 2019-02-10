@@ -16,4 +16,5 @@ public interface WeatherDao
 
     @Query("select * from current_weather" )
     LiveData<CurrentWeather> getWeather();
+
 }

@@ -34,4 +34,9 @@ public class CurrentWeatherViewModel extends AndroidViewModel {
         });
         return currentWeatherLiveData;
     }
+
+    public LiveData<CurrentWeather> getAllWeather(){
+        return weatherRepository.getAllWeather();
+    }
+
 }
