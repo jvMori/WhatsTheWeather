@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     private void UpdateCurrentWeather() {
         final int currentItem = viewPager.getCurrentItem();
         String currentLocation = locations.get(currentItem).getId();

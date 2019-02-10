@@ -20,9 +20,9 @@ public class CurrentWeatherViewModel extends AndroidViewModel {
     private WeatherRepository weatherRepository;
     private MediatorLiveData<CurrentWeather> currentWeatherLiveData;
 
-    public CurrentWeatherViewModel(@NonNull Application application, AppExecutors appExecutors) {
+    public CurrentWeatherViewModel(@NonNull Application application) {
         super(application);
-        weatherRepository = WeatherRepository.getInstance(application, appExecutors);
+        weatherRepository = WeatherRepository.getInstance(application, AppExecutors.getInstance());
         currentWeatherLiveData = new MediatorLiveData<>();
     }
     public LiveData<CurrentWeather> getCurrentWeather() throws ExecutionException, InterruptedException {

@@ -2,6 +2,7 @@ package com.example.jvmori.myweatherapp.architectureComponents.data;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.jvmori.myweatherapp.architectureComponents.AppExecutors;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
@@ -17,6 +18,9 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import io.reactivex.Observable;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class WeatherRepository {
     private static final Object LOCK = new Object();
@@ -24,13 +28,13 @@ public class WeatherRepository {
     private WeatherDao weatherDao;
     private WeatherNetworkDataSourceImpl weatherNetworkDataSource;
     private AppExecutors executors;
+    private MutableLiveData<CurrentWeather> currentWeatherLiveData;
 
     private WeatherRepository(Application application, AppExecutors executors) {
         this.executors = executors;
+        currentWeatherLiveData = new MutableLiveData<>();
         this.weatherNetworkDataSource = new WeatherNetworkDataSourceImpl();
         this.weatherDao = WeatherDatabase.getInstance(application.getApplicationContext()).weatherDao();
-        weatherNetworkDataSource.currentWeather().observeForever(currentWeatherResponse ->
-                persistFetchedCurrentWeather(currentWeatherResponse));
     }
 
     public LiveData<CurrentWeather> getCurrentWeather() throws ExecutionException, InterruptedException {
@@ -61,13 +65,32 @@ public class WeatherRepository {
         return instance;
     }
 
-    private void persistFetchedCurrentWeather(final CurrentWeatherResponse currentWeatherResponse) {
-        executors.diskIO().execute(() -> weatherDao.insert(currentWeatherResponse.getCurrent()));
+    private void persistFetchedCurrentWeather(final CurrentWeather currentWeather) {
+        executors.diskIO().execute(() -> weatherDao.insert(currentWeather));
     }
 
     private synchronized void initWeatherData() {
-        if (isFetchCurrentNeeded(ZonedDateTime.now().minusHours(1)))
-            weatherNetworkDataSource.fetchWeather("London", "en");
+        if (isFetchCurrentNeeded(ZonedDateTime.now().minusHours(1))){
+            weatherNetworkDataSource.fetchWeather("London", "en").enqueue(new Callback<CurrentWeatherResponse>() {
+                @Override
+                public void onResponse(Call<CurrentWeatherResponse> call, Response<CurrentWeatherResponse> response) {
+                    if(!response.isSuccessful()){
+                        Log.i("Fail", "Response is not successful");
+                        return;
+                    }
+                    if (response.body() != null){
+                        CurrentWeather currentWeather = response.body().getCurrent();
+                        currentWeatherLiveData.postValue(currentWeather);
+                        persistFetchedCurrentWeather(currentWeather);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<CurrentWeatherResponse> call, Throwable t) {
+                    Log.i("Fail", "Failed to fetch current weather" + t.toString());
+                }
+            });
+        }
     }
 
     private boolean isFetchCurrentNeeded(ZonedDateTime lastFetchedTime) {
