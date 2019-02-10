@@ -65,7 +65,7 @@ public class WeatherRepository {
     }
 
     public LiveData<CurrentWeather> initWeatherData() {
-        if (isFetchCurrentNeeded(ZonedDateTime.now().minusHours(1))){
+        if (isFetchCurrentNeeded(ZonedDateTime.now().minusMinutes(60))){
             weatherNetworkDataSource.fetchWeather("London", "en").enqueue(new Callback<CurrentWeatherResponse>() {
                 @Override
                 public void onResponse(Call<CurrentWeatherResponse> call, Response<CurrentWeatherResponse> response) {
