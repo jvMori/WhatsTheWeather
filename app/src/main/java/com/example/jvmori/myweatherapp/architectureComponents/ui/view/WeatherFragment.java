@@ -33,7 +33,6 @@ public class WeatherFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -55,7 +54,7 @@ public class WeatherFragment extends Fragment {
 
     private void getCurrentWeatherView(){
         CurrentWeatherViewModel viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        viewModel.getCurrentWeather("Warsaw", "pl").observe(this, new Observer<CurrentWeather>() {
+        viewModel.getCurrentWeather("Cracow", "en").observe(this, new Observer<CurrentWeather>() {
             @Override
             public void onChanged(CurrentWeather currentWeather) {
                 createCurrentWeatherUi(currentWeather);
