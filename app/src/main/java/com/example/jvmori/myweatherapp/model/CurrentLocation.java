@@ -14,7 +14,7 @@ public class CurrentLocation {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
 
-        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+        Geocoder geocoder = new Geocoder(context, Locale.ENGLISH);
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses != null && addresses.size() > 0)

@@ -30,6 +30,12 @@ public class WeatherFragment extends Fragment {
     private TextView mainTemp, minMaxTemp, desc;
     private ImageView ivIcon;
     private RecyclerView recyclerView;
+    private CurrentWeather currentWeather;
+
+    public void setCurrentWeather(CurrentWeather currentWeather){
+        this.currentWeather = currentWeather;
+        createCurrentWeatherUi(currentWeather);
+    }
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -51,24 +57,6 @@ public class WeatherFragment extends Fragment {
         ivIcon = view.findViewById(R.id.ivMainIcon);
         desc = view.findViewById(R.id.tvDescriptionMain);
         recyclerView = view.findViewById(R.id.RecyclerViewList);
-        getCurrentWeatherView();
-    }
-
-    private void getCurrentWeatherView(){
-        CurrentWeatherViewModel viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        viewModel.getCurrentWeather("Cracow", "en").observe(this, new Observer<CurrentWeather>() {
-            @Override
-            public void onChanged(CurrentWeather currentWeather) {
-                createCurrentWeatherUi(currentWeather);
-            }
-        });
-        viewModel.getAllWeather().observe(this, new Observer<List<CurrentWeather>>() {
-            @Override
-            public void onChanged(List<CurrentWeather> currentWeathers) {
-                List<CurrentWeather> currentWeathers1 = currentWeathers;
-            }
-        });
-
     }
 
     private void createCurrentWeatherUi(CurrentWeather currentWeather){
@@ -86,5 +74,4 @@ public class WeatherFragment extends Fragment {
                 .error(R.drawable.ic_11)
                 .into(ivIcon);
     }
-
 }
