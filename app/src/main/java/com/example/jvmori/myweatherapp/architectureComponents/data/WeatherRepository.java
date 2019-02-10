@@ -37,11 +37,6 @@ public class WeatherRepository {
         this.weatherDao = WeatherDatabase.getInstance(application.getApplicationContext()).weatherDao();
     }
 
-    public LiveData<CurrentWeather> getCurrentWeather() throws ExecutionException, InterruptedException {
-        new InvokeAsyncTask(this).execute().get();
-        return weatherDao.getWeather();
-    }
-
     public static class InvokeAsyncTask extends AsyncTask<Void, Void, Void> {
         WeatherRepository weatherRepository;
 
@@ -69,7 +64,7 @@ public class WeatherRepository {
         executors.diskIO().execute(() -> weatherDao.insert(currentWeather));
     }
 
-    private synchronized void initWeatherData() {
+    public LiveData<CurrentWeather> initWeatherData() {
         if (isFetchCurrentNeeded(ZonedDateTime.now().minusHours(1))){
             weatherNetworkDataSource.fetchWeather("London", "en").enqueue(new Callback<CurrentWeatherResponse>() {
                 @Override
@@ -91,6 +86,10 @@ public class WeatherRepository {
                 }
             });
         }
+        else {
+            return weatherDao.getWeather();
+        }
+        return currentWeatherLiveData;
     }
 
     private boolean isFetchCurrentNeeded(ZonedDateTime lastFetchedTime) {

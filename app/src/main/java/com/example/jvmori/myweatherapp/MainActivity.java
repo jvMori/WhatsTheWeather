@@ -107,18 +107,12 @@ public class MainActivity extends AppCompatActivity {
 //        CheckLocation(this);
         final TextView textView = findViewById(R.id.textView);
         CurrentWeatherViewModel viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        try {
-            viewModel.getCurrentWeather().observe(this, new Observer<CurrentWeather>() {
-                @Override
-                public void onChanged(CurrentWeather currentWeather) {
-                    textView.setText(currentWeather.toString());
-                }
-            });
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        viewModel.getCurrentWeather().observe(this, new Observer<CurrentWeather>() {
+            @Override
+            public void onChanged(CurrentWeather currentWeather) {
+                textView.setText(currentWeather.toString());
+            }
+        });
     }
 
 
