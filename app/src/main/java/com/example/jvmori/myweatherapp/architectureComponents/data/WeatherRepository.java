@@ -37,20 +37,6 @@ public class WeatherRepository {
         this.weatherDao = WeatherDatabase.getInstance(application.getApplicationContext()).weatherDao();
     }
 
-    public static class InvokeAsyncTask extends AsyncTask<Void, Void, Void> {
-        WeatherRepository weatherRepository;
-
-        InvokeAsyncTask(WeatherRepository weatherRepository) {
-            this.weatherRepository = weatherRepository;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            weatherRepository.initWeatherData();
-            return null;
-        }
-    }
-
     public synchronized static WeatherRepository getInstance(Application context, AppExecutors executors) {
         if (instance == null) {
             synchronized (LOCK) {
@@ -64,9 +50,9 @@ public class WeatherRepository {
         executors.diskIO().execute(() -> weatherDao.insert(currentWeather));
     }
 
-    public LiveData<CurrentWeather> initWeatherData() {
+    public LiveData<CurrentWeather> initWeatherData(final String location, String lang) {
         if (isFetchCurrentNeeded(ZonedDateTime.now().minusMinutes(60))){
-            weatherNetworkDataSource.fetchWeather("London", "en").enqueue(new Callback<CurrentWeatherResponse>() {
+            weatherNetworkDataSource.fetchWeather(location, lang).enqueue(new Callback<CurrentWeatherResponse>() {
                 @Override
                 public void onResponse(Call<CurrentWeatherResponse> call, Response<CurrentWeatherResponse> response) {
                     if(!response.isSuccessful()){
@@ -75,6 +61,7 @@ public class WeatherRepository {
                     }
                     if (response.body() != null){
                         CurrentWeather currentWeather = response.body().getCurrent();
+                        currentWeather.setLocation(location);
                         currentWeatherLiveData.postValue(currentWeather);
                         persistFetchedCurrentWeather(currentWeather);
                     }

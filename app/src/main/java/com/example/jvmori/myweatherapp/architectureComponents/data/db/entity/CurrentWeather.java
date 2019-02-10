@@ -2,15 +2,16 @@
 package com.example.jvmori.myweatherapp.architectureComponents.data.db.entity;
 
 import com.google.gson.annotations.SerializedName;
-
 import androidx.room.Embedded;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName="current_weather")
+@Entity(tableName="current_weather", indices = {@Index(value = {"location"}, unique = true)})
 public class CurrentWeather {
-    @PrimaryKey (autoGenerate = false)
-    public int id = 0;
+    @PrimaryKey (autoGenerate = true)
+    public int id;
+    private String location;
     @SerializedName("cloud")
     public Long mCloud;
     @SerializedName("condition") @Embedded(prefix = "condition_")
@@ -54,4 +55,11 @@ public class CurrentWeather {
     @SerializedName("wind_mph")
     public Double mWindMph;
 
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 }
