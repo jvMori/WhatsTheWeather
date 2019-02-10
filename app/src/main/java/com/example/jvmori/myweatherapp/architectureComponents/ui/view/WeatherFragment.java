@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
+import com.squareup.picasso.Picasso;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -54,7 +55,7 @@ public class WeatherFragment extends Fragment {
 
     private void getCurrentWeatherView(){
         CurrentWeatherViewModel viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        viewModel.getCurrentWeather("London", "en").observe(this, new Observer<CurrentWeather>() {
+        viewModel.getCurrentWeather("Warsaw", "pl").observe(this, new Observer<CurrentWeather>() {
             @Override
             public void onChanged(CurrentWeather currentWeather) {
                 createCurrentWeatherUi(currentWeather);
@@ -71,6 +72,11 @@ public class WeatherFragment extends Fragment {
         mainTemp.setText(String.format("%s °C", currentWeather.mTempC.toString()));
         desc.setText(description);
         minMaxTemp.setText(minMax);
+        String url = "http:" + currentWeather.mCondition.getIcon();
+        Picasso.get()
+                .load(url)
+                .error(R.drawable.ic_11)
+                .into(ivIcon);
     }
 
 }
