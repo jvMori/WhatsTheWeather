@@ -14,6 +14,8 @@ import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.Cur
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -54,13 +56,19 @@ public class WeatherFragment extends Fragment {
 
     private void getCurrentWeatherView(){
         CurrentWeatherViewModel viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        viewModel.getCurrentWeather("London", "en").observe(this, new Observer<CurrentWeather>() {
+        viewModel.getCurrentWeather("Cracow", "en").observe(this, new Observer<CurrentWeather>() {
             @Override
             public void onChanged(CurrentWeather currentWeather) {
                 createCurrentWeatherUi(currentWeather);
             }
         });
-       
+        viewModel.getAllWeather().observe(this, new Observer<List<CurrentWeather>>() {
+            @Override
+            public void onChanged(List<CurrentWeather> currentWeathers) {
+                List<CurrentWeather> currentWeathers1 = currentWeathers;
+            }
+        });
+
     }
 
     private void createCurrentWeatherUi(CurrentWeather currentWeather){

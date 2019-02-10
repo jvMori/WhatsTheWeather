@@ -2,6 +2,8 @@ package com.example.jvmori.myweatherapp.architectureComponents.data;
 
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
 
+import java.util.List;
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
@@ -15,6 +17,8 @@ public interface WeatherDao
     void insert(CurrentWeather currentWeather);
 
     @Query("select * from current_weather" )
-    LiveData<CurrentWeather> getWeather();
+    LiveData<List<CurrentWeather>> getWeather();
 
+    @Query("select * from current_weather where location like :locationName" )
+    LiveData<CurrentWeather> getWeatherForLocation(String locationName);
 }

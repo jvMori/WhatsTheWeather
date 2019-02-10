@@ -11,6 +11,7 @@ import com.example.jvmori.myweatherapp.architectureComponents.data.network.Weath
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import androidx.lifecycle.LiveData;
@@ -50,7 +51,7 @@ public class WeatherRepository {
         executors.diskIO().execute(() -> weatherDao.insert(currentWeather));
     }
 
-    public LiveData<CurrentWeather> getAllWeather(){
+    public LiveData<List<CurrentWeather>> getAllWeather(){
         return weatherDao.getWeather();
     }
 
@@ -78,7 +79,7 @@ public class WeatherRepository {
             });
         }
         else {
-            return weatherDao.getWeather();
+            return weatherDao.getWeatherForLocation(location);
         }
         return currentWeatherLiveData;
     }

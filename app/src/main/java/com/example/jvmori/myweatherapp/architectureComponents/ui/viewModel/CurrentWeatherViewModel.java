@@ -7,6 +7,7 @@ import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherReposi
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import androidx.annotation.NonNull;
@@ -35,7 +36,7 @@ public class CurrentWeatherViewModel extends AndroidViewModel {
         return currentWeatherLiveData;
     }
 
-    public LiveData<CurrentWeather> getAllWeather(){
+    public LiveData<List<CurrentWeather>> getAllWeather(){
         return weatherRepository.getAllWeather();
     }
 
