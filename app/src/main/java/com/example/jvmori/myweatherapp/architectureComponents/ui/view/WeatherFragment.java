@@ -30,11 +30,10 @@ public class WeatherFragment extends Fragment {
     private TextView mainTemp, minMaxTemp, desc;
     private ImageView ivIcon;
     private RecyclerView recyclerView;
-    private CurrentWeather currentWeather;
+    private String city;
 
-    public void setCurrentWeather(CurrentWeather currentWeather){
-        this.currentWeather = currentWeather;
-        createCurrentWeatherUi(currentWeather);
+    public void setCurrentWeather(String city){
+        this.city = city;
     }
 
     public WeatherFragment() {
@@ -46,19 +45,31 @@ public class WeatherFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_loc_weather, container, false);
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         mainTemp = view.findViewById(R.id.tvMainCurrTemp);
         minMaxTemp = view.findViewById(R.id.tvMinMaxMain);
         ivIcon = view.findViewById(R.id.ivMainIcon);
         desc = view.findViewById(R.id.tvDescriptionMain);
         recyclerView = view.findViewById(R.id.RecyclerViewList);
+        return view;
     }
 
+    @Override
+    public void onViewCreated(@androidx.annotation.NonNull View view, @androidx.annotation.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        createView();
+    }
+
+    private void createView(){
+        CurrentWeatherViewModel viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
+        viewModel.getCurrentWeather(city, "en").observe(this, new Observer<CurrentWeather>() {
+            @Override
+            public void onChanged(CurrentWeather currentWeather) {
+                if (currentWeather != null) {
+                    createCurrentWeatherUi(currentWeather);
+                }
+            }
+        });
+    }
     private void createCurrentWeatherUi(CurrentWeather currentWeather){
         String description = currentWeather.mCondition.getText();
         String minTemp = currentWeather.mFeelslikeC.toString();

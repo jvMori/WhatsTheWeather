@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.WeatherFragment;
-import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
 import com.example.jvmori.myweatherapp.data.WeatherData;
 import com.example.jvmori.myweatherapp.model.CurrentLocation;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
@@ -26,6 +25,7 @@ import com.example.jvmori.myweatherapp.utils.Contains;
 import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
 import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.view.SlidePagerAdapter;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -36,8 +36,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
@@ -95,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         CheckLocation(this);
-        //weatherView();
 
 //        locations = SaveManager.loadData(this);
 //        if (locations.size() > 0 && ShouldBeWeatherDataUpdate()){
@@ -155,8 +152,8 @@ public class MainActivity extends AppCompatActivity {
             if (location != null) {
                 //FindWeatherForLocation(location, this);
                 //deviceLocation = CurrentLocation.getCity(location, this);
-                deviceLocation= location.getLatitude()+","+location.getLongitude();
-                weatherView();
+                deviceLocation = location.getLatitude() + "," + location.getLongitude();
+                //weatherFragmentsAdapter();
             }
         }
 
@@ -167,9 +164,9 @@ public class MainActivity extends AppCompatActivity {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                deviceLocation= location.getLatitude()+","+location.getLongitude();
+                deviceLocation = location.getLatitude() + "," + location.getLongitude();
+                weatherFragmentsAdapter(deviceLocation);
                 //deviceLocation = CurrentLocation.getCity(location, context);
-                weatherView();
             }
 
             @Override
@@ -214,10 +211,10 @@ public class MainActivity extends AppCompatActivity {
             public void processFinished(Locations locationData) {
                 if (Contains.containsName(locations, locationData.getId()) == -1) {
                     locations.add(locationData);
-                   // if (tempLoc != null && locations.size() == tempLoc.size())
-                        //SetData(locations);
-                   // else if (tempLoc == null)
-                       // SetData(locations);
+                    // if (tempLoc != null && locations.size() == tempLoc.size())
+                    //SetData(locations);
+                    // else if (tempLoc == null)
+                    // SetData(locations);
                 }
             }
         }, new OnErrorResponse() {
@@ -234,18 +231,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void weatherView() {
-        CurrentWeatherViewModel viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        viewModel.getCurrentWeather(deviceLocation, "en").observe(this, new Observer<CurrentWeather>() {
-            @Override
-            public void onChanged(CurrentWeather currentWeather) {
-                WeatherFragment weatherFragment = new WeatherFragment();
-                weatherFragment.setCurrentWeather(currentWeather);
-                List<WeatherFragment> weathers = new ArrayList<>();
-                weathers.add(weatherFragment);
-                SetupSlidePagerAdapter(weathers);
-            }
-        });
+    private void weatherFragmentsAdapter(String location) {
+        WeatherFragment weatherFragment = new WeatherFragment();
+        weatherFragment.setCurrentWeather(location);
+        List<WeatherFragment> weathers = new ArrayList<>();
+        weathers.add(weatherFragment);
+        SetupSlidePagerAdapter(weathers);
     }
 
     private void SetupSlidePagerAdapter(List<WeatherFragment> data) {
