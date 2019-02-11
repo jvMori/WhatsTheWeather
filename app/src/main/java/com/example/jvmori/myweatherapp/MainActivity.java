@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.WeatherFragment;
+import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
 import com.example.jvmori.myweatherapp.data.WeatherData;
 import com.example.jvmori.myweatherapp.model.CurrentLocation;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
@@ -36,6 +37,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     LifecycleOwner lifecycleOwner;
 
     public static String deviceLocation;
+    private List<WeatherFragment> weathers;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -71,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        weathers =  new ArrayList<>();
+
         lifecycleOwner = (LifecycleOwner) this;
         swipeRefreshLayout = findViewById(R.id.swipeLayout);
         tvLocalization = findViewById(R.id.tvLocalization);
@@ -84,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 SearchActivity(view);
             }
         });
-
+        SetupSlidePagerAdapter(weathers);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -93,6 +99,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         CheckLocation(this);
+        getWeatherFromDb();
+
+    }
+    private void getWeatherFromDb(){
+        CurrentWeatherViewModel currentWeatherViewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
+        currentWeatherViewModel.getAllWeather().observe(this, new Observer<List<CurrentWeather>>() {
+            @Override
+            public void onChanged(List<CurrentWeather> currentWeathers) {
+                for (CurrentWeather currentWeather: currentWeathers) {
+                    weatherFragmentsAdapter(null, currentWeather);
+                }
+            }
+        });
 
     }
 
@@ -153,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onLocationChanged(Location location) {
                 deviceLocation = location.getLatitude() + "," + location.getLongitude();
-                weatherFragmentsAdapter(deviceLocation);
+                //weatherFragmentsAdapter(deviceLocation);
                 //deviceLocation = CurrentLocation.getCity(location, context);
             }
 
@@ -219,12 +238,13 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void weatherFragmentsAdapter(String location) {
+    private void weatherFragmentsAdapter(String location, CurrentWeather currentWeather) {
         WeatherFragment weatherFragment = new WeatherFragment();
-        weatherFragment.setCurrentWeather(location);
-        List<WeatherFragment> weathers = new ArrayList<>();
-        weathers.add(weatherFragment);
-        SetupSlidePagerAdapter(weathers);
+        weatherFragment.setCurrentWeather(location, currentWeather);
+        if (!weathers.contains(weatherFragment)){
+            weathers.add(weatherFragment);
+            slidePagerAdapter.notifyDataSetChanged();
+        }
     }
 
     private void SetupSlidePagerAdapter(List<WeatherFragment> data) {

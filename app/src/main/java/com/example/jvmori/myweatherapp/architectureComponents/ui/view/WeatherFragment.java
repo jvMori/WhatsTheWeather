@@ -31,9 +31,11 @@ public class WeatherFragment extends Fragment {
     private ImageView ivIcon;
     private RecyclerView recyclerView;
     private String city;
+    private CurrentWeather currentWeather;
 
-    public void setCurrentWeather(String city){
+    public void setCurrentWeather(String city, CurrentWeather currentWeather){
         this.city = city;
+        this.currentWeather = currentWeather;
     }
 
     public WeatherFragment() {
@@ -56,7 +58,11 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onViewCreated(@androidx.annotation.NonNull View view, @androidx.annotation.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        createView();
+
+        if (city!= null)
+            createView();
+        else if(currentWeather != null)
+            createCurrentWeatherUi(currentWeather);
     }
 
     private void createView(){

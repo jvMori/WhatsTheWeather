@@ -29,6 +29,6 @@ public class SlidePagerAdapter extends FragmentStatePagerAdapter
 
     @Override
     public int getCount() {
-       return fragments.size();
+        return fragments.size();
     }
 }
