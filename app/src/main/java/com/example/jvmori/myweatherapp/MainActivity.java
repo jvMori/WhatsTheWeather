@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         CheckLocation(this);
-        //getWeatherFromDb();
+        getWeatherFromDb();
 
     }
 
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                             currentWeather.isDeviceLocation(),
                             currentWeather.getFetchTime()
                     );
-                    weatherFragmentsAdapter(weatherParameters);
+                    createFragmentAndUpdateAdapter(weatherParameters);
                 }
             }
         });
@@ -184,9 +184,10 @@ public class MainActivity extends AppCompatActivity {
                         true,
                         ZonedDateTime.now().minusHours(1)
                 );
-                //TODO get from db weather for device loc fetch new if needed
-                weatherFragmentsAdapter(weatherParameters);
-                getWeatherFromDb();
+               if (weathers.size() == 0)
+                   createFragmentAndUpdateAdapter(weatherParameters);
+               else
+                   updateFragmentAndAdapter(weatherParameters);
             }
 
             @Override
@@ -266,6 +267,18 @@ public class MainActivity extends AppCompatActivity {
         WeatherFragment weatherFragment = new WeatherFragment();
         weatherFragment.setWeatherParameters(weatherParameters);
         weathers.add(weatherFragment);
+        slidePagerAdapter.notifyDataSetChanged();
+    }
+
+    private void updateFragmentAndAdapter(WeatherParameters weatherParameters){
+        WeatherFragment weatherFragment = new WeatherFragment();
+        weatherFragment.setWeatherParameters(weatherParameters);
+        for (int i = 0; i < weathers.size() ; i++) {
+            if (weathers.get(i).getWeatherParameters().isDeviceLocation()){
+                weathers.set(i, weatherFragment);
+                break;
+            }
+        }
         slidePagerAdapter.notifyDataSetChanged();
     }
 

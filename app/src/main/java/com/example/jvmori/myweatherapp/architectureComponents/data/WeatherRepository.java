@@ -53,7 +53,7 @@ public class WeatherRepository {
     }
 
     public LiveData<CurrentWeather> initWeatherData(WeatherParameters weatherParameters) {
-        if (isFetchCurrentNeeded(weatherParameters.getLastFetchedTime()) || isDeviceLocationChanged()){
+        if (isFetchCurrentNeeded(weatherParameters.getLastFetchedTime()) || weatherParameters.isDeviceLocation()){
             weatherNetworkDataSource.fetchWeather(weatherParameters).enqueue(new Callback<CurrentWeatherResponse>() {
                 @Override
                 public void onResponse(Call<CurrentWeatherResponse> call, Response<CurrentWeatherResponse> response) {
@@ -86,15 +86,5 @@ public class WeatherRepository {
     private boolean isFetchCurrentNeeded(ZonedDateTime lastFetchedTime) {
         ZonedDateTime thirtyMinutesAgo = ZonedDateTime.now().minusMinutes(30);
         return lastFetchedTime.isBefore(thirtyMinutesAgo);
-    }
-
-    private boolean isDeviceLocationChanged(){
-        String location = "50.08,18.09";
-        String[] locations =  location.split(",");
-        List<Double> latLon = new ArrayList<>();
-        for (String loc: locations) {
-            latLon.add(Double.parseDouble(loc));
-        }
-        return false;
     }
 }
