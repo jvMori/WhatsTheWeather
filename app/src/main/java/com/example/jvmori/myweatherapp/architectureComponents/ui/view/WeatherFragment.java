@@ -29,8 +29,12 @@ public class WeatherFragment extends Fragment {
     private RecyclerView recyclerView;
     private WeatherParameters weatherParameters;
 
-    public void setCurrentWeather(WeatherParameters weatherParameters){
+    public void setWeatherParameters(WeatherParameters weatherParameters){
         this.weatherParameters = weatherParameters;
+    }
+
+    public WeatherParameters getWeatherParameters() {
+        return weatherParameters;
     }
 
     public WeatherFragment() {
@@ -69,6 +73,7 @@ public class WeatherFragment extends Fragment {
         });
     }
     private void createCurrentWeatherUi(CurrentWeather currentWeather){
+        weatherParameters.setLocation(currentWeather.getLocation());
         String description = currentWeather.mCondition.getText();
         String minTemp = currentWeather.mFeelslikeC.toString();
         String maxTemp = currentWeather.mHumidity.toString();

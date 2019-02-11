@@ -65,6 +65,7 @@ public class WeatherRepository {
                         CurrentWeather currentWeather = response.body().getCurrent();
                         String cityName = response.body().getLocation().getName();
                         currentWeather.setLocation(cityName);
+                        currentWeather.setDeviceLocation(weatherParameters.isDeviceLocation());
                         currentWeatherLiveData.postValue(currentWeather);
                         persistFetchedCurrentWeather(currentWeather);
                     }

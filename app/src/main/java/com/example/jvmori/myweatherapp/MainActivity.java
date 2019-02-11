@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        weathers =  new ArrayList<>();
+        weathers = new ArrayList<>();
 
         lifecycleOwner = (LifecycleOwner) this;
         swipeRefreshLayout = findViewById(R.id.swipeLayout);
@@ -104,12 +104,13 @@ public class MainActivity extends AppCompatActivity {
         //getWeatherFromDb();
 
     }
-    private void getWeatherFromDb(){
+
+    private void getWeatherFromDb() {
         CurrentWeatherViewModel currentWeatherViewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
         currentWeatherViewModel.getAllWeather().observe(this, new Observer<List<CurrentWeather>>() {
             @Override
             public void onChanged(List<CurrentWeather> currentWeathers) {
-                for (CurrentWeather currentWeather: currentWeathers) {
+                for (CurrentWeather currentWeather : currentWeathers) {
                     WeatherParameters weatherParameters = new WeatherParameters(
                             currentWeather.getLocation(),
                             currentWeather.isDeviceLocation(),
@@ -161,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
             assert locationManager != null;
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3600, 5000, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3600, 10000, locationListener);
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (location != null) {
                 //deviceLocation = CurrentLocation.getCity(location, this);
@@ -178,14 +179,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onLocationChanged(Location location) {
                 deviceLocation = location.getLatitude() + "," + location.getLongitude();
-                //weatherFragmentsAdapter(deviceLocation);
-                //deviceLocation = CurrentLocation.getCity(location, context);
                 WeatherParameters weatherParameters = new WeatherParameters(
                         deviceLocation,
                         true,
                         ZonedDateTime.now().minusHours(1)
                 );
                 weatherFragmentsAdapter(weatherParameters);
+                getWeatherFromDb();
             }
 
             @Override
@@ -251,12 +251,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void weatherFragmentsAdapter(WeatherParameters weatherParameters) {
-        WeatherFragment weatherFragment = new WeatherFragment();
-        weatherFragment.setCurrentWeather(weatherParameters);
-        if (!weathers.contains(weatherFragment)){
-            weathers.add(weatherFragment);
-            slidePagerAdapter.notifyDataSetChanged();
+        if (weathers.size() == 0)
+            createFragmentAndUpdateAdapter(weatherParameters);
+        else {
+            for (WeatherFragment weatherFrag : weathers) {
+                if (weatherFrag.getWeatherParameters().getLocation() != weatherParameters.getLocation()){
+                    createFragmentAndUpdateAdapter(weatherParameters);
+                }
+            }
         }
+    }
+    private void createFragmentAndUpdateAdapter(WeatherParameters weatherParameters){
+        WeatherFragment weatherFragment = new WeatherFragment();
+        weatherFragment.setWeatherParameters(weatherParameters);
+        weathers.add(weatherFragment);
+        slidePagerAdapter.notifyDataSetChanged();
     }
 
     private void SetupSlidePagerAdapter(List<WeatherFragment> data) {

@@ -16,7 +16,7 @@ public interface WeatherDao
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(CurrentWeather currentWeather);
 
-    @Query("select * from current_weather" )
+    @Query("select * from current_weather where isDeviceLocation like 0" )
     LiveData<List<CurrentWeather>> getWeather();
 
     @Query("select * from current_weather where location like :locationName" )
