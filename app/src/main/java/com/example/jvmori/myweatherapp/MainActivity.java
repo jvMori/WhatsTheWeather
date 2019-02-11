@@ -184,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
                         true,
                         ZonedDateTime.now().minusHours(1)
                 );
+                //TODO get from db weather for device loc fetch new if needed
                 weatherFragmentsAdapter(weatherParameters);
                 getWeatherFromDb();
             }
