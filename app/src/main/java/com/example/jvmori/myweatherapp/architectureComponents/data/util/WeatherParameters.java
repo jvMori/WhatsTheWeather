@@ -1,19 +1,26 @@
-package com.example.jvmori.myweatherapp.architectureComponents.data;
+package com.example.jvmori.myweatherapp.architectureComponents.data.util;
+
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
+
+import java.time.ZonedDateTime;
 
 public class WeatherParameters
 {
     private String location;
     private boolean isDeviceLocation;
     private String lang;
+    private ZonedDateTime lastFetchedTime;
 
-    public WeatherParameters(String location, boolean isDeviceLocation, String lang) {
+    public WeatherParameters(String location, boolean isDeviceLocation, ZonedDateTime lastFetchedTime, String lang) {
         this.location = location;
         this.isDeviceLocation = isDeviceLocation;
+        this.lastFetchedTime = lastFetchedTime;
         this.lang = lang;
     }
-    public WeatherParameters(String location, boolean isDeviceLocation) {
+    public WeatherParameters(String location, boolean isDeviceLocation, ZonedDateTime lastFetchedTime) {
         this.location = location;
         this.isDeviceLocation = isDeviceLocation;
+        this.lastFetchedTime = lastFetchedTime;
         this.lang = "en";
     }
 
@@ -39,5 +46,13 @@ public class WeatherParameters
 
     public void setLang(String lang) {
         this.lang = lang;
+    }
+
+    public ZonedDateTime getLastFetchedTime() {
+        return lastFetchedTime;
+    }
+
+    public void setLastFetchedTime(ZonedDateTime lastFetchedTime) {
+        this.lastFetchedTime = lastFetchedTime;
     }
 }

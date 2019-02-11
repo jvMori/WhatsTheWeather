@@ -1,6 +1,6 @@
 package com.example.jvmori.myweatherapp.architectureComponents.data.network;
 
-import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherParameters;
+import com.example.jvmori.myweatherapp.architectureComponents.data.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
 import retrofit2.Call;
 

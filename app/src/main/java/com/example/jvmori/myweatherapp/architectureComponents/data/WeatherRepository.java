@@ -1,26 +1,20 @@
 package com.example.jvmori.myweatherapp.architectureComponents.data;
 
 import android.app.Application;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.jvmori.myweatherapp.architectureComponents.AppExecutors;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
-import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSource;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSourceImpl;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
-import com.example.jvmori.myweatherapp.model.CurrentLocation;
+import com.example.jvmori.myweatherapp.architectureComponents.data.util.WeatherParameters;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,6 +44,7 @@ public class WeatherRepository {
     }
 
     private void persistFetchedCurrentWeather(final CurrentWeather currentWeather) {
+        currentWeather.setFetchTime(ZonedDateTime.now());
         executors.diskIO().execute(() -> weatherDao.insert(currentWeather));
     }
 
@@ -58,7 +53,7 @@ public class WeatherRepository {
     }
 
     public LiveData<CurrentWeather> initWeatherData(WeatherParameters weatherParameters) {
-        if (isFetchCurrentNeeded(ZonedDateTime.now().minusMinutes(60)) || isDeviceLocationChanged()){
+        if (isFetchCurrentNeeded(weatherParameters.getLastFetchedTime()) || isDeviceLocationChanged()){
             weatherNetworkDataSource.fetchWeather(weatherParameters).enqueue(new Callback<CurrentWeatherResponse>() {
                 @Override
                 public void onResponse(Call<CurrentWeatherResponse> call, Response<CurrentWeatherResponse> response) {

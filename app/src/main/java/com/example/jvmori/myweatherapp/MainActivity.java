@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherParameters;
+import com.example.jvmori.myweatherapp.architectureComponents.data.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.WeatherFragment;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
 import com.example.jvmori.myweatherapp.data.WeatherData;
@@ -28,6 +28,7 @@ import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
 import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.view.SlidePagerAdapter;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         CheckLocation(this);
-        getWeatherFromDb();
+        //getWeatherFromDb();
 
     }
     private void getWeatherFromDb(){
@@ -109,7 +110,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<CurrentWeather> currentWeathers) {
                 for (CurrentWeather currentWeather: currentWeathers) {
-                    WeatherParameters weatherParameters = new WeatherParameters(currentWeather.getLocation(), currentWeather.isDeviceLocation());
+                    WeatherParameters weatherParameters = new WeatherParameters(
+                            currentWeather.getLocation(),
+                            currentWeather.isDeviceLocation(),
+                            currentWeather.getFetchTime()
+                    );
                     weatherFragmentsAdapter(weatherParameters);
                 }
             }
@@ -175,6 +180,12 @@ public class MainActivity extends AppCompatActivity {
                 deviceLocation = location.getLatitude() + "," + location.getLongitude();
                 //weatherFragmentsAdapter(deviceLocation);
                 //deviceLocation = CurrentLocation.getCity(location, context);
+                WeatherParameters weatherParameters = new WeatherParameters(
+                        deviceLocation,
+                        true,
+                        ZonedDateTime.now().minusHours(1)
+                );
+                weatherFragmentsAdapter(weatherParameters);
             }
 
             @Override

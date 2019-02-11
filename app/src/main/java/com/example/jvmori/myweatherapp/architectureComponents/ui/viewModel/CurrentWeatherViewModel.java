@@ -3,19 +3,16 @@ package com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel;
 import android.app.Application;
 
 import com.example.jvmori.myweatherapp.architectureComponents.AppExecutors;
-import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherParameters;
+import com.example.jvmori.myweatherapp.architectureComponents.data.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherRepository;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
-import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 public class CurrentWeatherViewModel extends AndroidViewModel {
