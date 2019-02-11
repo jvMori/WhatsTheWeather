@@ -88,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                UpdateCurrentWeather();
-                swipeRefreshLayout.setRefreshing(false);
+                //UpdateCurrentWeather();
+                //swipeRefreshLayout.setRefreshing(false);
             }
         });
         CheckLocation(this);
@@ -150,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3600, 5000, locationListener);
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (location != null) {
-                //FindWeatherForLocation(location, this);
                 //deviceLocation = CurrentLocation.getCity(location, this);
                 deviceLocation = location.getLatitude() + "," + location.getLongitude();
                 //weatherFragmentsAdapter();
