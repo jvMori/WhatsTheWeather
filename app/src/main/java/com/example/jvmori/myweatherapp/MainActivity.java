@@ -94,16 +94,6 @@ public class MainActivity extends AppCompatActivity {
         });
         CheckLocation(this);
 
-//        locations = SaveManager.loadData(this);
-//        if (locations.size() > 0 && ShouldBeWeatherDataUpdate()){
-//            UpdateWeather();
-//        }
-//        else if (locations.size() > 0){
-//            SetData(locations);
-//        }
-//
-//        CheckLocation(this);
-
     }
 
 
@@ -135,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
             getWeather(loc);
         }
     }
-
 
     private boolean ShouldBeWeatherDataUpdate() {
         Calendar calendar = Calendar.getInstance();

@@ -9,6 +9,7 @@ import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.Cur
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSource;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSourceImpl;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
+import com.example.jvmori.myweatherapp.model.CurrentLocation;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -66,7 +67,8 @@ public class WeatherRepository {
                     }
                     if (response.body() != null){
                         CurrentWeather currentWeather = response.body().getCurrent();
-                        currentWeather.setLocation(location);
+                        String cityName = response.body().getLocation().getName();
+                        currentWeather.setLocation(cityName);
                         currentWeatherLiveData.postValue(currentWeather);
                         persistFetchedCurrentWeather(currentWeather);
                     }
