@@ -57,6 +57,7 @@ public class WeatherFragment extends Fragment {
         minMaxTemp = view.findViewById(R.id.tvMinMaxMain);
         ivIcon = view.findViewById(R.id.ivMainIcon);
         desc = view.findViewById(R.id.tvDescriptionMain);
+        errorLayout = view.findViewById(R.id.errorLayout);
         recyclerView = view.findViewById(R.id.RecyclerViewList);
         return view;
     }

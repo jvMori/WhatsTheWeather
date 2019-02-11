@@ -13,25 +13,22 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 public class CurrentWeatherViewModel extends AndroidViewModel {
     private WeatherRepository weatherRepository;
-    private MediatorLiveData<CurrentWeather> currentWeatherLiveData;
+    private MutableLiveData<CurrentWeather> currentWeatherLiveData;
+    private Application application;
 
-    public CurrentWeatherViewModel(@NonNull Application application) {
+    public CurrentWeatherViewModel(@NonNull  Application application) {
         super(application);
+        this.application = application;
         weatherRepository = WeatherRepository.getInstance(application, AppExecutors.getInstance());
-        currentWeatherLiveData = new MediatorLiveData<>();
+        currentWeatherLiveData = new MutableLiveData<>();
     }
     public LiveData<CurrentWeather> getCurrentWeather(WeatherParameters weatherParameters, WeatherRepository.OnFailure onFailure)  {
-        currentWeatherLiveData.addSource(weatherRepository.initWeatherData(weatherParameters, onFailure), new Observer<CurrentWeather>() {
-            @Override
-            public void onChanged(CurrentWeather currentWeather) {
-                currentWeatherLiveData.postValue(currentWeather);
-            }
-        });
-        return currentWeatherLiveData;
+        return weatherRepository.initWeatherData(weatherParameters, onFailure);
     }
 
     public LiveData<List<CurrentWeather>> getAllWeather(){
