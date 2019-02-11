@@ -3,6 +3,7 @@ package com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel;
 import android.app.Application;
 
 import com.example.jvmori.myweatherapp.architectureComponents.AppExecutors;
+import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherRepository;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
@@ -26,8 +27,8 @@ public class CurrentWeatherViewModel extends AndroidViewModel {
         weatherRepository = WeatherRepository.getInstance(application, AppExecutors.getInstance());
         currentWeatherLiveData = new MediatorLiveData<>();
     }
-    public LiveData<CurrentWeather> getCurrentWeather(String location, String lang)  {
-        currentWeatherLiveData.addSource(weatherRepository.initWeatherData(location, lang), new Observer<CurrentWeather>() {
+    public LiveData<CurrentWeather> getCurrentWeather(WeatherParameters weatherParameters)  {
+        currentWeatherLiveData.addSource(weatherRepository.initWeatherData(weatherParameters), new Observer<CurrentWeather>() {
             @Override
             public void onChanged(CurrentWeather currentWeather) {
                 currentWeatherLiveData.postValue(currentWeather);

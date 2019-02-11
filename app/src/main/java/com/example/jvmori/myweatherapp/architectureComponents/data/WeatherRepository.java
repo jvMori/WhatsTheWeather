@@ -57,9 +57,9 @@ public class WeatherRepository {
         return weatherDao.getWeather();
     }
 
-    public LiveData<CurrentWeather> initWeatherData(final String location, String lang) {
+    public LiveData<CurrentWeather> initWeatherData(WeatherParameters weatherParameters) {
         if (isFetchCurrentNeeded(ZonedDateTime.now().minusMinutes(60)) || isDeviceLocationChanged()){
-            weatherNetworkDataSource.fetchWeather(location, lang).enqueue(new Callback<CurrentWeatherResponse>() {
+            weatherNetworkDataSource.fetchWeather(weatherParameters).enqueue(new Callback<CurrentWeatherResponse>() {
                 @Override
                 public void onResponse(Call<CurrentWeatherResponse> call, Response<CurrentWeatherResponse> response) {
                     if(!response.isSuccessful()){
@@ -82,7 +82,7 @@ public class WeatherRepository {
             });
         }
         else {
-            return weatherDao.getWeatherForLocation(location);
+            return weatherDao.getWeatherForLocation(weatherParameters.getLocation());
         }
         return currentWeatherLiveData;
     }

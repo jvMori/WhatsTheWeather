@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
 import com.squareup.picasso.Picasso;
@@ -30,12 +31,10 @@ public class WeatherFragment extends Fragment {
     private TextView mainTemp, minMaxTemp, desc;
     private ImageView ivIcon;
     private RecyclerView recyclerView;
-    private String city;
-    private CurrentWeather currentWeather;
+    private WeatherParameters weatherParameters;
 
-    public void setCurrentWeather(String city, CurrentWeather currentWeather){
-        this.city = city;
-        this.currentWeather = currentWeather;
+    public void setCurrentWeather(WeatherParameters weatherParameters){
+        this.weatherParameters = weatherParameters;
     }
 
     public WeatherFragment() {
@@ -58,16 +57,13 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onViewCreated(@androidx.annotation.NonNull View view, @androidx.annotation.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        if (city!= null)
+        if (weatherParameters!= null)
             createView();
-        else if(currentWeather != null)
-            createCurrentWeatherUi(currentWeather);
     }
 
     private void createView(){
         CurrentWeatherViewModel viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        viewModel.getCurrentWeather(city, "en").observe(this, new Observer<CurrentWeather>() {
+        viewModel.getCurrentWeather(weatherParameters).observe(this, new Observer<CurrentWeather>() {
             @Override
             public void onChanged(CurrentWeather currentWeather) {
                 if (currentWeather != null) {

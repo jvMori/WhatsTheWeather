@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.WeatherFragment;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
 import com.example.jvmori.myweatherapp.data.WeatherData;
@@ -108,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<CurrentWeather> currentWeathers) {
                 for (CurrentWeather currentWeather: currentWeathers) {
-                    weatherFragmentsAdapter(null, currentWeather);
+                    WeatherParameters weatherParameters = new WeatherParameters(currentWeather.getLocation(), currentWeather.isDeviceLocation());
+                    weatherFragmentsAdapter(weatherParameters);
                 }
             }
         });
@@ -237,9 +239,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void weatherFragmentsAdapter(String location) {
+    private void weatherFragmentsAdapter(WeatherParameters weatherParameters) {
         WeatherFragment weatherFragment = new WeatherFragment();
-        weatherFragment.setCurrentWeather(location);
+        weatherFragment.setCurrentWeather(weatherParameters);
         if (!weathers.contains(weatherFragment)){
             weathers.add(weatherFragment);
             slidePagerAdapter.notifyDataSetChanged();
