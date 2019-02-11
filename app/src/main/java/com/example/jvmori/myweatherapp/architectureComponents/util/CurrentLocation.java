@@ -1,4 +1,4 @@
-package com.example.jvmori.myweatherapp.model;
+package com.example.jvmori.myweatherapp.architectureComponents.util;
 
 import android.content.Context;
 import android.location.Address;

@@ -1,7 +1,7 @@
 
 package com.example.jvmori.myweatherapp.architectureComponents.data.db.entity;
 
-import com.example.jvmori.myweatherapp.architectureComponents.data.util.ZoneDateTypeConverter;
+import com.example.jvmori.myweatherapp.architectureComponents.util.ZoneDateTypeConverter;
 import com.google.gson.annotations.SerializedName;
 
 import java.time.ZonedDateTime;
@@ -10,7 +10,6 @@ import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 
 @Entity(tableName="current_weather", indices = {@Index(value = {"location", "isDeviceLocation"}, unique = true)})

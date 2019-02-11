@@ -7,10 +7,9 @@ import com.example.jvmori.myweatherapp.architectureComponents.AppExecutors;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSourceImpl;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
-import com.example.jvmori.myweatherapp.architectureComponents.data.util.WeatherParameters;
+import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;

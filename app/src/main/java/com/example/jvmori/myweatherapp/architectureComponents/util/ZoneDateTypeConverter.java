@@ -1,4 +1,4 @@
-package com.example.jvmori.myweatherapp.architectureComponents.data.util;
+package com.example.jvmori.myweatherapp.architectureComponents.util;
 
 import java.time.Instant;
 import java.time.ZoneOffset;

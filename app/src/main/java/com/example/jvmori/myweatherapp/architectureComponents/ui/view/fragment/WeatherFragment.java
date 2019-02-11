@@ -1,4 +1,4 @@
-package com.example.jvmori.myweatherapp.architectureComponents.ui.view;
+package com.example.jvmori.myweatherapp.architectureComponents.ui.view.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherRepository;
-import com.example.jvmori.myweatherapp.architectureComponents.data.util.WeatherParameters;
+import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
 import com.squareup.picasso.Picasso;

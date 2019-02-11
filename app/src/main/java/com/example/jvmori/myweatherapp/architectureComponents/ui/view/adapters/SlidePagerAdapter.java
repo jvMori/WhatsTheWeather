@@ -1,10 +1,9 @@
-package com.example.jvmori.myweatherapp.view;
+package com.example.jvmori.myweatherapp.architectureComponents.ui.view.adapters;
 
 import android.content.Context;
 
-import com.example.jvmori.myweatherapp.architectureComponents.ui.view.WeatherFragment;
+import com.example.jvmori.myweatherapp.architectureComponents.ui.view.fragment.WeatherFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.fragment.app.Fragment;

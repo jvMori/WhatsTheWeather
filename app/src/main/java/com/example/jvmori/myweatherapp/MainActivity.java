@@ -16,17 +16,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.jvmori.myweatherapp.architectureComponents.data.util.WeatherParameters;
-import com.example.jvmori.myweatherapp.architectureComponents.ui.view.WeatherFragment;
+import com.example.jvmori.myweatherapp.architectureComponents.ui.view.activity.SearchActivity;
+import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
+import com.example.jvmori.myweatherapp.architectureComponents.ui.view.fragment.WeatherFragment;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
 import com.example.jvmori.myweatherapp.data.WeatherData;
-import com.example.jvmori.myweatherapp.model.CurrentLocation;
+import com.example.jvmori.myweatherapp.architectureComponents.util.CurrentLocation;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
 import com.example.jvmori.myweatherapp.model.Locations;
 import com.example.jvmori.myweatherapp.utils.Contains;
 import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
 import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
-import com.example.jvmori.myweatherapp.view.SlidePagerAdapter;
+import com.example.jvmori.myweatherapp.architectureComponents.ui.view.adapters.SlidePagerAdapter;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;

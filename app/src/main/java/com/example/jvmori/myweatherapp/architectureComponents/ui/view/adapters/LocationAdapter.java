@@ -1,4 +1,4 @@
-package com.example.jvmori.myweatherapp.view;
+package com.example.jvmori.myweatherapp.architectureComponents.ui.view.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,13 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
-import com.example.jvmori.myweatherapp.architectureComponents.ui.view.WeatherFragment;
+import com.example.jvmori.myweatherapp.architectureComponents.ui.view.fragment.WeatherFragment;
 import com.example.jvmori.myweatherapp.model.Locations;
 import com.example.jvmori.myweatherapp.utils.ItemClicked;
-import com.example.jvmori.myweatherapp.utils.SetImage;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;

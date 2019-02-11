@@ -1,4 +1,4 @@
-package com.example.jvmori.myweatherapp;
+package com.example.jvmori.myweatherapp.architectureComponents.ui.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +7,8 @@ import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.example.jvmori.myweatherapp.MainActivity;
+import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.data.WeatherData;
 import com.example.jvmori.myweatherapp.model.Locations;
 import com.example.jvmori.myweatherapp.utils.Contains;
@@ -14,7 +16,7 @@ import com.example.jvmori.myweatherapp.utils.ItemClicked;
 import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
 import com.example.jvmori.myweatherapp.utils.SaveManager;
 import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
-import com.example.jvmori.myweatherapp.view.LocationAdapter;
+import com.example.jvmori.myweatherapp.architectureComponents.ui.view.adapters.LocationAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;

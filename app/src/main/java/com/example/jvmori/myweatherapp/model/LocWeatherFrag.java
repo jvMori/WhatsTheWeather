@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.utils.SetImage;
 import com.example.jvmori.myweatherapp.view.ForecastAdapter;
-import com.example.jvmori.myweatherapp.view.Icon;
 
 
 import java.util.ArrayList;
@@ -90,7 +89,6 @@ public class LocWeatherFrag extends Fragment {
         desc.setText(description);
         minMaxTemp.setText(minMax);
 
-        //set Icon Here
         String code = locations.get(index).getCurrentWeather().getCode();
         SetImage.setImageView(this.getContext(), code, ivIcon);
     }
