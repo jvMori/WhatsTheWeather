@@ -34,15 +34,6 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.activity_search);
-
-        //backBtn = findViewById(R.id.backBtn);
-//        backBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                BackToMainActivity(MainActivity.locations.size() - 1);
-//            }
-//        });
-
         searchView = findViewById(R.id.searchField);
         String hint = (String) getText(R.string.search_hint);
         searchView.setQueryHint(hint);
@@ -66,7 +57,7 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        myAdapter = new LocationAdapter(MainActivity.locations, this);
+        myAdapter = new LocationAdapter(MainActivity.weathers, this);
         recyclerView.setAdapter(myAdapter);
     }
 

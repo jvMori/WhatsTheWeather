@@ -11,7 +11,9 @@
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:overScrollMode="never">
+        android:overScrollMode="never"
+        android:visibility="visible">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,8 +71,8 @@
                     android:id="@+id/tvMinMaxMain"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="25dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginBottom="25dp"
                     android:gravity="center"
                     android:text="17° / 10°"
                     android:textColor="#fff"
@@ -95,6 +97,22 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/errorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/textViewError"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="TextView"
+            android:textSize="22sp" />
+    </LinearLayout>
 
 
 </LinearLayout>

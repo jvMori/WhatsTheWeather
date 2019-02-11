@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     LifecycleOwner lifecycleOwner;
 
     public static String deviceLocation;
-    private List<WeatherFragment> weathers;
+    public static List<WeatherFragment> weathers;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -271,15 +271,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateFragmentAndAdapter(WeatherParameters weatherParameters){
-        WeatherFragment weatherFragment = new WeatherFragment();
-        weatherFragment.setWeatherParameters(weatherParameters);
         for (int i = 0; i < weathers.size() ; i++) {
             if (weathers.get(i).getWeatherParameters().isDeviceLocation()){
-                weathers.set(i, weatherFragment);
+                WeatherFragment fragment = (WeatherFragment) slidePagerAdapter.getItem(i);
+                fragment.setWeatherParameters(weatherParameters);
+                fragment.createView();
                 break;
             }
         }
-        slidePagerAdapter.notifyDataSetChanged();
+
     }
 
     private void SetupSlidePagerAdapter(List<WeatherFragment> data) {

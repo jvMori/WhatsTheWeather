@@ -5,9 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherRepository;
 import com.example.jvmori.myweatherapp.architectureComponents.data.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
@@ -25,13 +27,18 @@ public class WeatherFragment extends Fragment {
 
     private View view;
     private TextView mainTemp, minMaxTemp, desc;
+    private LinearLayout errorLayout;
     private ImageView ivIcon;
     private RecyclerView recyclerView;
     private WeatherParameters weatherParameters;
+    private CurrentWeather currentWeatherData;
+    private CurrentWeatherViewModel viewModel;
 
     public void setWeatherParameters(WeatherParameters weatherParameters){
         this.weatherParameters = weatherParameters;
     }
+
+    public CurrentWeather currentWeather(){return  currentWeatherData;}
 
     public WeatherParameters getWeatherParameters() {
         return weatherParameters;
@@ -57,16 +64,24 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onViewCreated(@androidx.annotation.NonNull View view, @androidx.annotation.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
         if (weatherParameters!= null)
             createView();
     }
 
-    private void createView(){
-        CurrentWeatherViewModel viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        viewModel.getCurrentWeather(weatherParameters).observe(this, new Observer<CurrentWeather>() {
+    public void createView(){
+        viewModel.getCurrentWeather(weatherParameters, new WeatherRepository.OnFailure() {
+            @Override
+            public void callback(String message) {
+                    errorLayout.setVisibility(View.VISIBLE);
+                    TextView error =  errorLayout.findViewById(R.id.textViewError);
+                    error.setText(message);
+            }
+        }).observe(this, new Observer<CurrentWeather>() {
             @Override
             public void onChanged(CurrentWeather currentWeather) {
                 if (currentWeather != null) {
+                    currentWeatherData = currentWeather;
                     createCurrentWeatherUi(currentWeather);
                 }
             }

@@ -24,8 +24,8 @@ public class CurrentWeatherViewModel extends AndroidViewModel {
         weatherRepository = WeatherRepository.getInstance(application, AppExecutors.getInstance());
         currentWeatherLiveData = new MediatorLiveData<>();
     }
-    public LiveData<CurrentWeather> getCurrentWeather(WeatherParameters weatherParameters)  {
-        currentWeatherLiveData.addSource(weatherRepository.initWeatherData(weatherParameters), new Observer<CurrentWeather>() {
+    public LiveData<CurrentWeather> getCurrentWeather(WeatherParameters weatherParameters, WeatherRepository.OnFailure onFailure)  {
+        currentWeatherLiveData.addSource(weatherRepository.initWeatherData(weatherParameters, onFailure), new Observer<CurrentWeather>() {
             @Override
             public void onChanged(CurrentWeather currentWeather) {
                 currentWeatherLiveData.postValue(currentWeather);

@@ -52,7 +52,7 @@ public class WeatherRepository {
         return weatherDao.getWeather();
     }
 
-    public LiveData<CurrentWeather> initWeatherData(WeatherParameters weatherParameters) {
+    public LiveData<CurrentWeather> initWeatherData(WeatherParameters weatherParameters, OnFailure callbackOnFailure) {
         if (isFetchCurrentNeeded(weatherParameters.getLastFetchedTime()) || weatherParameters.isDeviceLocation()){
             weatherNetworkDataSource.fetchWeather(weatherParameters).enqueue(new Callback<CurrentWeatherResponse>() {
                 @Override
@@ -74,6 +74,7 @@ public class WeatherRepository {
                 @Override
                 public void onFailure(Call<CurrentWeatherResponse> call, Throwable t) {
                     Log.i("Fail", "Failed to fetch current weather" + t.toString());
+                    callbackOnFailure.callback(t.toString());
                 }
             });
         }
@@ -81,6 +82,9 @@ public class WeatherRepository {
             return weatherDao.getWeatherForLocation(weatherParameters.getLocation());
         }
         return currentWeatherLiveData;
+    }
+    public interface OnFailure{
+        void callback(String message);
     }
 
     private boolean isFetchCurrentNeeded(ZonedDateTime lastFetchedTime) {

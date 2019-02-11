@@ -9,23 +9,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.architectureComponents.ui.view.WeatherFragment;
 import com.example.jvmori.myweatherapp.model.Locations;
 import com.example.jvmori.myweatherapp.utils.ItemClicked;
 import com.example.jvmori.myweatherapp.utils.SetImage;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder>
 {
-    private ArrayList<Locations> locations;
-    private Context ctx;
+    private List<WeatherFragment> locations;
     private ItemClicked itemClicked;
 
-    public LocationAdapter(ArrayList<Locations> locations, Context ctx) {
+    public LocationAdapter(List<WeatherFragment> locations, Context ctx) {
         this.locations = locations;
-        this.ctx = ctx;
         itemClicked = (ItemClicked) ctx;
     }
 
@@ -69,19 +70,19 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull LocationAdapter.ViewHolder viewHolder, int i) {
         viewHolder.itemView.setTag(locations.get(i));
-        String cityName = locations.get(i).getCurrentWeather().getCity();
-        String currTemp = locations.get(i).getCurrentWeather().getCurrentTemp();
+        String cityName = locations.get(i).currentWeather().getLocation();
+        String currTemp = locations.get(i).currentWeather().mTempC.toString();
         if(i == 0){
             viewHolder.ivMarker.setVisibility(View.VISIBLE);
         }else{
             viewHolder.ivMarker.setVisibility(View.INVISIBLE);
         }
-        String code = locations.get(i).getCurrentWeather().getCode();
-
-        SetImage.setImageView(ctx, code, viewHolder.ivIcon);
+        String url = "http:" + locations.get(i).currentWeather().mCondition.getIcon();
+        Picasso.get()
+                .load(url)
+                .into(viewHolder.ivIcon);
         viewHolder.tvCityName.setText(cityName);
-        viewHolder.tvCurrentTemp.setText(String.format("%s°", currTemp));
-
+        viewHolder.tvCurrentTemp.setText(String.format("%s°C", currTemp));
     }
 
     @Override

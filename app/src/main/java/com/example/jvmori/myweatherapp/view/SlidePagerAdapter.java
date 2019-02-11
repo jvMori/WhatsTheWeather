@@ -24,7 +24,7 @@ public class SlidePagerAdapter extends FragmentStatePagerAdapter
 
     @Override
     public Fragment getItem(int i) {
-       return fragments.get(i);
+        return fragments.get(i);
     }
 
     @Override
