@@ -115,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     private void UpdateCurrentWeather() {
         final int currentItem = viewPager.getCurrentItem();
         String currentLocation = locations.get(currentItem).getId();
@@ -238,9 +237,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void weatherFragmentsAdapter(String location, CurrentWeather currentWeather) {
+    private void weatherFragmentsAdapter(String location) {
         WeatherFragment weatherFragment = new WeatherFragment();
-        weatherFragment.setCurrentWeather(location, currentWeather);
+        weatherFragment.setCurrentWeather(location);
         if (!weathers.contains(weatherFragment)){
             weathers.add(weatherFragment);
             slidePagerAdapter.notifyDataSetChanged();

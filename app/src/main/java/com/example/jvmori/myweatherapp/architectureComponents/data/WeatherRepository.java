@@ -12,6 +12,7 @@ import com.example.jvmori.myweatherapp.architectureComponents.data.network.respo
 import com.example.jvmori.myweatherapp.model.CurrentLocation;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -57,7 +58,7 @@ public class WeatherRepository {
     }
 
     public LiveData<CurrentWeather> initWeatherData(final String location, String lang) {
-        if (isFetchCurrentNeeded(ZonedDateTime.now().minusMinutes(60))){
+        if (isFetchCurrentNeeded(ZonedDateTime.now().minusMinutes(60)) || isDeviceLocationChanged()){
             weatherNetworkDataSource.fetchWeather(location, lang).enqueue(new Callback<CurrentWeatherResponse>() {
                 @Override
                 public void onResponse(Call<CurrentWeatherResponse> call, Response<CurrentWeatherResponse> response) {
@@ -89,5 +90,15 @@ public class WeatherRepository {
     private boolean isFetchCurrentNeeded(ZonedDateTime lastFetchedTime) {
         ZonedDateTime thirtyMinutesAgo = ZonedDateTime.now().minusMinutes(30);
         return lastFetchedTime.isBefore(thirtyMinutesAgo);
+    }
+
+    private boolean isDeviceLocationChanged(){
+        String location = "50.08,18.09";
+        String[] locations =  location.split(",");
+        List<Double> latLon = new ArrayList<>();
+        for (String loc: locations) {
+            latLon.add(Double.parseDouble(loc));
+        }
+        return false;
     }
 }
