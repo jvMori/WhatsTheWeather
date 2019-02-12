@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class WeatherFragment extends Fragment {
 
     private View view;
-    private TextView mainTemp, minMaxTemp, desc;
+    private TextView mainTemp, feelsLike, desc, humidity, pressure;
     private LinearLayout errorLayout;
     private ImageView ivIcon;
     private RecyclerView recyclerView;
@@ -56,7 +56,9 @@ public class WeatherFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_weather, container, false);
         mainTemp = view.findViewById(R.id.tvMainCurrTemp);
-        minMaxTemp = view.findViewById(R.id.tvMinMaxMain);
+        feelsLike = view.findViewById(R.id.feelsTemp);
+        humidity = view.findViewById(R.id.Humidity);
+        pressure = view.findViewById(R.id.Pressure);
         ivIcon = view.findViewById(R.id.ivMainIcon);
         desc = view.findViewById(R.id.tvDescriptionMain);
         errorLayout = view.findViewById(R.id.errorLayout);
@@ -93,13 +95,14 @@ public class WeatherFragment extends Fragment {
     private void createCurrentWeatherUi(CurrentWeather currentWeather){
         weatherParameters.setLocation(currentWeather.getLocation());
         String description = currentWeather.mCondition.getText();
-        String minTemp = currentWeather.mFeelslikeC.toString();
-        String maxTemp = currentWeather.mHumidity.toString();
-        String minMax = String.format("%s° / %s°", maxTemp, minTemp);
+        String feelslike = "Feels like: " + currentWeather.mFeelslikeC.toString() + "°";
+        String humidityTxt= "Humidity: " + currentWeather.mHumidity.toString() + " %";
+        String pressureTxt = currentWeather.mPressureMb.toString() + " hPa";
 
-        mainTemp.setText(String.format("%s°C", currentWeather.mTempC.toString()));
         desc.setText(description);
-        minMaxTemp.setText(minMax);
+        feelsLike.setText(feelslike);
+        humidity.setText(humidityTxt);
+        pressure.setText(pressureTxt);
         String url = "http:" + currentWeather.mCondition.getIcon();
         Picasso.get()
                 .load(url)
