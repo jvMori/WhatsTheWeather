@@ -43,7 +43,7 @@ public class LocWeatherFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        view = inflater.inflate(R.layout.fragment_loc_weather, container, false);
+        view = inflater.inflate(R.layout.fragment_weather, container, false);
         return view;
     }
 

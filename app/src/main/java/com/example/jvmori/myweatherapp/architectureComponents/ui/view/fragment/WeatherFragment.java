@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherRepository;
+import com.example.jvmori.myweatherapp.architectureComponents.util.CurrentLocation;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
@@ -34,6 +35,7 @@ public class WeatherFragment extends Fragment {
     private CurrentWeather currentWeatherData;
     private CurrentWeatherViewModel viewModel;
 
+
     public void setWeatherParameters(WeatherParameters weatherParameters){
         this.weatherParameters = weatherParameters;
     }
@@ -52,7 +54,7 @@ public class WeatherFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_loc_weather, container, false);
+        view = inflater.inflate(R.layout.fragment_weather, container, false);
         mainTemp = view.findViewById(R.id.tvMainCurrTemp);
         minMaxTemp = view.findViewById(R.id.tvMinMaxMain);
         ivIcon = view.findViewById(R.id.ivMainIcon);
@@ -95,7 +97,7 @@ public class WeatherFragment extends Fragment {
         String maxTemp = currentWeather.mHumidity.toString();
         String minMax = String.format("%s° / %s°", maxTemp, minTemp);
 
-        mainTemp.setText(String.format("%s °C", currentWeather.mTempC.toString()));
+        mainTemp.setText(String.format("%s°C", currentWeather.mTempC.toString()));
         desc.setText(description);
         minMaxTemp.setText(minMax);
         String url = "http:" + currentWeather.mCondition.getIcon();

@@ -6,6 +6,7 @@ import com.example.jvmori.myweatherapp.architectureComponents.ui.view.fragment.W
 
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -30,4 +31,5 @@ public class SlidePagerAdapter extends FragmentStatePagerAdapter
     public int getCount() {
         return fragments.size();
     }
+
 }

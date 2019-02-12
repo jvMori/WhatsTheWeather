@@ -28,6 +28,7 @@ import com.example.jvmori.myweatherapp.utils.Contains;
 import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
 import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.adapters.SlidePagerAdapter;
+import com.google.android.material.tabs.TabLayout;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -53,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
     private static ArrayList<String> tempLoc;
     private SlidePagerAdapter slidePagerAdapter;
     private ViewPager viewPager;
-    LinearLayout layoutDots;
     int mDotCount;
     ImageView[] dots;
     ImageView ivSearch, ivMarker;
@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static String deviceLocation;
     public static List<WeatherFragment> weathers;
+    private TabLayout tabLayout;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -80,11 +81,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         weathers = new ArrayList<>();
 
+        tabLayout = findViewById(R.id.tabLayout);
         lifecycleOwner = (LifecycleOwner) this;
         swipeRefreshLayout = findViewById(R.id.swipeLayout);
         tvLocalization = findViewById(R.id.tvLocalization);
         viewPager = findViewById(R.id.ViewPager);
-        layoutDots = findViewById(R.id.layoutDots);
         ivSearch = findViewById(R.id.ivSearch);
         ivMarker = findViewById(R.id.ivMarker);
         ivSearch.setOnClickListener(new View.OnClickListener() {
@@ -287,32 +288,11 @@ public class MainActivity extends AppCompatActivity {
         slidePagerAdapter = new SlidePagerAdapter(this, getSupportFragmentManager(), data);
         viewPager.setAdapter(slidePagerAdapter);
         viewPager.setCurrentItem(getIntent().getIntExtra("position", 0));
+        tabLayout.setupWithViewPager(viewPager);
         //setUiViewPager();
     }
 
     void setUiViewPager() {
-        int oldDots = layoutDots.getChildCount();
-        if (oldDots > 0) {
-            for (int j = 0; j < oldDots; j++) {
-                layoutDots.removeViewAt(j);
-            }
-        }
-
-        mDotCount = slidePagerAdapter.getCount();
-        dots = new ImageView[mDotCount];
-
-        for (int i = 0; i < mDotCount; i++) {
-            dots[i] = new ImageView(this);
-            dots[i].setImageResource(R.drawable.dotinactive);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            dots[i].setLayoutParams(layoutParams);
-            layoutParams.setMargins(5, 0, 5, 0);
-            layoutParams.gravity = Gravity.CENTER;
-
-            layoutDots.addView(dots[i], layoutParams);
-        }
-        dots[viewPager.getCurrentItem()].setImageResource(R.drawable.dotactive);
         changeActiveCityName(viewPager.getCurrentItem());
         geoLocMarkerVisibility(viewPager.getCurrentItem());
         viewPager.addOnPageChangeListener(changeListener);
@@ -326,7 +306,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onPageSelected(int i) {
-            changeActiveDot(i);
             changeActiveCityName(i);
             geoLocMarkerVisibility(i);
         }
@@ -337,15 +316,10 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private void changeActiveDot(int position) {
-        for (int i = 0; i < mDotCount; i++) {
-            dots[i].setImageResource(R.drawable.dotinactive);
-        }
-        dots[position].setImageResource(R.drawable.dotactive);
-    }
 
     private void changeActiveCityName(int position) {
-        tvLocalization.setText(locations.get(position).getId());
+        if(weathers != null && weathers.size() >= position)
+            tvLocalization.setText(weathers.get(position).currentWeather().getLocation());
     }
 
     private void geoLocMarkerVisibility(int position) {
