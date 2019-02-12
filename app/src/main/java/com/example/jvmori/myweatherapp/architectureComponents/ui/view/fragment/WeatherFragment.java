@@ -98,8 +98,10 @@ public class WeatherFragment extends Fragment {
         String feelslike = "Feels like: " + currentWeather.mFeelslikeC.toString() + "°";
         String humidityTxt= "Humidity: " + currentWeather.mHumidity.toString() + " %";
         String pressureTxt = currentWeather.mPressureMb.toString() + " hPa";
+        String temp = currentWeather.mTempC.toString() + "°";
 
         desc.setText(description);
+        mainTemp.setText(temp);
         feelsLike.setText(feelslike);
         humidity.setText(humidityTxt);
         pressure.setText(pressureTxt);
