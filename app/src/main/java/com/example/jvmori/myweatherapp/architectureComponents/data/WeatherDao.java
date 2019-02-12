@@ -19,6 +19,9 @@ public interface WeatherDao
     @Query("select * from current_weather where isDeviceLocation like 0" )
     LiveData<List<CurrentWeatherResponse>> getWeather();
 
+    @Query("select * from current_weather" )
+    LiveData<List<CurrentWeatherResponse>> getAllWeather();
+
     @Query("select * from current_weather where mCityName like :locationName" )
     LiveData<CurrentWeatherResponse> getWeatherForLocation(String locationName);
 }

@@ -46,8 +46,12 @@ public class WeatherRepository {
         executors.diskIO().execute(() -> weatherDao.insert(currentWeather));
     }
 
-    public LiveData<List<CurrentWeatherResponse>> getAllWeather(){
+    public LiveData<List<CurrentWeatherResponse>> getWeatherExceptDeviceLoc(){
         return weatherDao.getWeather();
+    }
+
+    public LiveData<List<CurrentWeatherResponse>> getAllWeather(){
+        return weatherDao.getAllWeather();
     }
 
     public LiveData<CurrentWeatherResponse> initWeatherData(WeatherParameters weatherParameters, OnFailure callbackOnFailure) {

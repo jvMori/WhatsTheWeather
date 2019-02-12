@@ -9,10 +9,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,13 +29,11 @@ import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.adapters.SlidePagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
@@ -110,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getWeatherFromDb() {
         CurrentWeatherViewModel currentWeatherViewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        currentWeatherViewModel.getAllWeather().observe(this, new Observer<List<CurrentWeatherResponse>>() {
+        currentWeatherViewModel.getWeather().observe(this, new Observer<List<CurrentWeatherResponse>>() {
             @Override
             public void onChanged(List<CurrentWeatherResponse> currentWeathers) {
                 for (CurrentWeatherResponse currentWeather : currentWeathers) {
