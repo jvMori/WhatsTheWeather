@@ -60,6 +60,7 @@ public class WeatherRepository {
                         return;
                     }
                     if (response.body() != null){
+                        response.body().setDeviceLocation(weatherParameters.isDeviceLocation());
                         currentWeatherLiveData.postValue(response.body());
                         persistFetchedCurrentWeather(response.body());
                     }

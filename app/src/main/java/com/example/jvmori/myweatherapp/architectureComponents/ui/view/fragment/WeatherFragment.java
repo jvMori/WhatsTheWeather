@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class WeatherFragment extends Fragment {
 
     private View view;
-    private TextView mainTemp, feelsLike, desc, humidity, pressure;
+    private TextView mainTemp, feelsLike, desc, humidity, pressure, city;
     private LinearLayout errorLayout;
     private ImageView ivIcon;
     private RecyclerView recyclerView;
@@ -59,6 +59,7 @@ public class WeatherFragment extends Fragment {
         ivIcon = view.findViewById(R.id.ivMainIcon);
         desc = view.findViewById(R.id.tvDescriptionMain);
         errorLayout = view.findViewById(R.id.errorLayout);
+        city = view.findViewById(R.id.locationTextView);
         recyclerView = view.findViewById(R.id.RecyclerViewList);
         return view;
     }
@@ -82,12 +83,17 @@ public class WeatherFragment extends Fragment {
     private void createCurrentWeatherUi(CurrentWeatherResponse currentWeatherResponse){
         weatherParameters.setLocation(currentWeatherResponse.getLocation().getName());
         CurrentWeather currentWeather = currentWeatherResponse.getCurrent();
+
+        String cityAndCountry = String.format("%s, %s",
+                currentWeatherResponse.getLocation().getName(),
+                currentWeatherResponse.getLocation().getCountry());
         String description = currentWeather.mCondition.getText();
         String feelslike = "Feels like: " + currentWeather.mFeelslikeC.toString() + "°";
         String humidityTxt= "Humidity: " + currentWeather.mHumidity.toString() + " %";
         String pressureTxt = currentWeather.mPressureMb.toString() + " hPa";
         String temp = currentWeather.mTempC.toString() + "°";
 
+        city.setText(cityAndCountry);
         desc.setText(description);
         mainTemp.setText(temp);
         feelsLike.setText(feelslike);

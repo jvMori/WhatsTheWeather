@@ -30,16 +30,8 @@ public class WeatherParameters
         return isDeviceLocation;
     }
 
-    public void setDeviceLocation(boolean deviceLocation) {
-        isDeviceLocation = deviceLocation;
-    }
-
     public String getLang() {
         return lang;
-    }
-
-    public void setLang(String lang) {
-        this.lang = lang;
     }
 
 }
