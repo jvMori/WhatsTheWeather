@@ -1,6 +1,6 @@
 package com.example.jvmori.myweatherapp.architectureComponents.data;
 
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
+import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
 
 import java.util.List;
 
@@ -14,11 +14,11 @@ import androidx.room.Query;
 public interface WeatherDao
 {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(CurrentWeather currentWeather);
+    void insert(CurrentWeatherResponse currentWeather);
 
     @Query("select * from current_weather where isDeviceLocation like 0" )
-    LiveData<List<CurrentWeather>> getWeather();
+    LiveData<List<CurrentWeatherResponse>> getWeather();
 
-    @Query("select * from current_weather where location like :locationName" )
-    LiveData<CurrentWeather> getWeatherForLocation(String locationName);
+    @Query("select * from current_weather where mCityName like :locationName" )
+    LiveData<CurrentWeatherResponse> getWeatherForLocation(String locationName);
 }

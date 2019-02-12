@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.activity.SearchActivity;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.fragment.WeatherFragment;
@@ -109,14 +110,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void getWeatherFromDb() {
         CurrentWeatherViewModel currentWeatherViewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        currentWeatherViewModel.getAllWeather().observe(this, new Observer<List<CurrentWeather>>() {
+        currentWeatherViewModel.getAllWeather().observe(this, new Observer<List<CurrentWeatherResponse>>() {
             @Override
-            public void onChanged(List<CurrentWeather> currentWeathers) {
-                for (CurrentWeather currentWeather : currentWeathers) {
+            public void onChanged(List<CurrentWeatherResponse> currentWeathers) {
+                for (CurrentWeatherResponse currentWeather : currentWeathers) {
                     WeatherParameters weatherParameters = new WeatherParameters(
-                            currentWeather.getLocation(),
-                            currentWeather.isDeviceLocation(),
-                            currentWeather.getFetchTime()
+                            currentWeather.getLocation().getName(),
+                            currentWeather.isDeviceLocation()
                     );
                     createFragmentAndUpdateAdapter(weatherParameters);
                 }
@@ -172,7 +172,6 @@ public class MainActivity extends AppCompatActivity {
                 //weatherFragmentsAdapter();
             }
         }
-
     }
 
     private void CheckLocation(final Context context) {
@@ -183,8 +182,7 @@ public class MainActivity extends AppCompatActivity {
                 deviceLocation = location.getLatitude() + "," + location.getLongitude();
                 WeatherParameters weatherParameters = new WeatherParameters(
                         deviceLocation,
-                        true,
-                        ZonedDateTime.now().minusHours(1)
+                        true
                 );
                if (weathers.size() == 0)
                    createFragmentAndUpdateAdapter(weatherParameters);
@@ -293,7 +291,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void setUiViewPager() {
-        changeActiveCityName(viewPager.getCurrentItem());
         geoLocMarkerVisibility(viewPager.getCurrentItem());
         viewPager.addOnPageChangeListener(changeListener);
     }
@@ -306,7 +303,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onPageSelected(int i) {
-            changeActiveCityName(i);
             geoLocMarkerVisibility(i);
         }
 
@@ -316,12 +312,6 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-
-    private void changeActiveCityName(int position) {
-        if(weathers != null && weathers.size() >= position)
-            tvLocalization.setText(weathers.get(position).currentWeather().getLocation());
-    }
-
     private void geoLocMarkerVisibility(int position) {
         if (position == 0)
             ivMarker.setVisibility(View.VISIBLE);
@@ -329,7 +319,6 @@ public class MainActivity extends AppCompatActivity {
             ivMarker.setVisibility(View.INVISIBLE);
         }
     }
-
 
 }
 

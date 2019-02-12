@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherRepository;
+import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
 import com.example.jvmori.myweatherapp.architectureComponents.util.CurrentLocation;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
@@ -32,15 +33,11 @@ public class WeatherFragment extends Fragment {
     private ImageView ivIcon;
     private RecyclerView recyclerView;
     private WeatherParameters weatherParameters;
-    private CurrentWeather currentWeatherData;
     private CurrentWeatherViewModel viewModel;
-
 
     public void setWeatherParameters(WeatherParameters weatherParameters){
         this.weatherParameters = weatherParameters;
     }
-
-    public CurrentWeather currentWeather(){return  currentWeatherData;}
 
     public WeatherParameters getWeatherParameters() {
         return weatherParameters;
@@ -75,25 +72,16 @@ public class WeatherFragment extends Fragment {
     }
 
     public void createView(){
-        viewModel.getCurrentWeather(weatherParameters, new WeatherRepository.OnFailure() {
-            @Override
-            public void callback(String message) {
-                    errorLayout.setVisibility(View.VISIBLE);
-                    TextView error =  errorLayout.findViewById(R.id.textViewError);
-                    error.setText(message);
-            }
-        }).observe(this, new Observer<CurrentWeather>() {
-            @Override
-            public void onChanged(CurrentWeather currentWeather) {
-                if (currentWeather != null) {
-                    currentWeatherData = currentWeather;
-                    createCurrentWeatherUi(currentWeather);
-                }
-            }
-        });
+        viewModel.getCurrentWeather(weatherParameters, message -> {
+                errorLayout.setVisibility(View.VISIBLE);
+                TextView error =  errorLayout.findViewById(R.id.textViewError);
+                error.setText(message);
+        }).observe(this, this::createCurrentWeatherUi
+                );
     }
-    private void createCurrentWeatherUi(CurrentWeather currentWeather){
-        weatherParameters.setLocation(currentWeather.getLocation());
+    private void createCurrentWeatherUi(CurrentWeatherResponse currentWeatherResponse){
+        weatherParameters.setLocation(currentWeatherResponse.getLocation().getName());
+        CurrentWeather currentWeather = currentWeatherResponse.getCurrent();
         String description = currentWeather.mCondition.getText();
         String feelslike = "Feels like: " + currentWeather.mFeelslikeC.toString() + "°";
         String humidityTxt= "Humidity: " + currentWeather.mHumidity.toString() + " %";

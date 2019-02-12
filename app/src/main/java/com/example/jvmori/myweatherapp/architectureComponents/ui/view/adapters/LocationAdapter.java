@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
-import com.example.jvmori.myweatherapp.architectureComponents.ui.view.fragment.WeatherFragment;
+import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
 import com.example.jvmori.myweatherapp.model.Locations;
 import com.example.jvmori.myweatherapp.utils.ItemClicked;
 import com.squareup.picasso.Picasso;
@@ -20,11 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder>
 {
-    private List<WeatherFragment> locations;
+    private List<CurrentWeatherResponse> currentWeathers;
     private ItemClicked itemClicked;
 
-    public LocationAdapter(List<WeatherFragment> locations, Context ctx) {
-        this.locations = locations;
+    public LocationAdapter(List<CurrentWeatherResponse> locations, Context ctx) {
+        this.currentWeathers = locations;
         itemClicked = (ItemClicked) ctx;
     }
 
@@ -42,7 +42,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
                 @Override
                 public void onClick(View view) {
                     Locations tag = (Locations) view.getTag();
-                    itemClicked.onItemClicked(locations.indexOf(tag));
+                    itemClicked.onItemClicked(currentWeathers.indexOf(tag));
                 }
             });
 
@@ -50,7 +50,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
                 @Override
                 public boolean onLongClick(View view) {
                     Locations tag = (Locations) view.getTag();
-                    itemClicked.onLongPress(locations.indexOf(tag));
+                    itemClicked.onLongPress(currentWeathers.indexOf(tag));
                     return true;
                 }
             });
@@ -67,15 +67,15 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull LocationAdapter.ViewHolder viewHolder, int i) {
-        viewHolder.itemView.setTag(locations.get(i));
-        String cityName = locations.get(i).currentWeather().getLocation();
-        String currTemp = locations.get(i).currentWeather().mTempC.toString();
+        viewHolder.itemView.setTag(currentWeathers.get(i));
+        String cityName = currentWeathers.get(i).getLocation().getName();
+        String currTemp = currentWeathers.get(i).getCurrent().mTempC.toString();
         if(i == 0){
             viewHolder.ivMarker.setVisibility(View.VISIBLE);
         }else{
             viewHolder.ivMarker.setVisibility(View.INVISIBLE);
         }
-        String url = "http:" + locations.get(i).currentWeather().mCondition.getIcon();
+        String url = "http:" + currentWeathers.get(i).getCurrent().mCondition.getIcon();
         Picasso.get()
                 .load(url)
                 .into(viewHolder.ivIcon);
@@ -83,8 +83,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         viewHolder.tvCurrentTemp.setText(String.format("%s°C", currTemp));
     }
 
+
     @Override
     public int getItemCount() {
-        return locations.size();
+        return currentWeathers.size();
     }
 }

@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import com.example.jvmori.myweatherapp.MainActivity;
 import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
+import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
 import com.example.jvmori.myweatherapp.data.WeatherData;
 import com.example.jvmori.myweatherapp.model.Locations;
 import com.example.jvmori.myweatherapp.utils.Contains;
@@ -18,7 +20,10 @@ import com.example.jvmori.myweatherapp.utils.SaveManager;
 import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.adapters.LocationAdapter;
 
+import java.util.List;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -54,12 +59,20 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
                 return false;
             }
         });
+        createUi();
+    }
 
+    private void createUi(){
+        CurrentWeatherViewModel viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
+        viewModel.getAllWeather().observe(this, this::setupLocationAdapter);
+    }
+
+    private void setupLocationAdapter(List<CurrentWeatherResponse> responses){
         recyclerView = findViewById(R.id.rvSearch);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        myAdapter = new LocationAdapter(MainActivity.weathers, this);
+        myAdapter = new LocationAdapter(responses, this);
         recyclerView.setAdapter(myAdapter);
     }
 

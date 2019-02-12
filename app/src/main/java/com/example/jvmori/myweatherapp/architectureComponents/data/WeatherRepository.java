@@ -24,7 +24,7 @@ public class WeatherRepository {
     private WeatherDao weatherDao;
     private WeatherNetworkDataSourceImpl weatherNetworkDataSource;
     private AppExecutors executors;
-    private MutableLiveData<CurrentWeather> currentWeatherLiveData;
+    private MutableLiveData<CurrentWeatherResponse> currentWeatherLiveData;
 
     private WeatherRepository(Application application, AppExecutors executors) {
         this.executors = executors;
@@ -42,17 +42,16 @@ public class WeatherRepository {
         return instance;
     }
 
-    private void persistFetchedCurrentWeather(final CurrentWeather currentWeather) {
-        currentWeather.setFetchTime(ZonedDateTime.now());
+    private void persistFetchedCurrentWeather(final CurrentWeatherResponse currentWeather) {
         executors.diskIO().execute(() -> weatherDao.insert(currentWeather));
     }
 
-    public LiveData<List<CurrentWeather>> getAllWeather(){
+    public LiveData<List<CurrentWeatherResponse>> getAllWeather(){
         return weatherDao.getWeather();
     }
 
-    public LiveData<CurrentWeather> initWeatherData(WeatherParameters weatherParameters, OnFailure callbackOnFailure) {
-        if (isFetchCurrentNeeded(weatherParameters.getLastFetchedTime()) || weatherParameters.isDeviceLocation()){
+    public LiveData<CurrentWeatherResponse> initWeatherData(WeatherParameters weatherParameters, OnFailure callbackOnFailure) {
+        if (isFetchCurrentNeeded(ZonedDateTime.now().minusMinutes(60))){
             weatherNetworkDataSource.fetchWeather(weatherParameters).enqueue(new Callback<CurrentWeatherResponse>() {
                 @Override
                 public void onResponse(Call<CurrentWeatherResponse> call, Response<CurrentWeatherResponse> response) {
@@ -61,12 +60,8 @@ public class WeatherRepository {
                         return;
                     }
                     if (response.body() != null){
-                        CurrentWeather currentWeather = response.body().getCurrent();
-                        String cityName = response.body().getLocation().getName();
-                        currentWeather.setLocation(cityName);
-                        currentWeather.setDeviceLocation(weatherParameters.isDeviceLocation());
-                        currentWeatherLiveData.postValue(currentWeather);
-                        persistFetchedCurrentWeather(currentWeather);
+                        currentWeatherLiveData.postValue(response.body());
+                        persistFetchedCurrentWeather(response.body());
                     }
                 }
 

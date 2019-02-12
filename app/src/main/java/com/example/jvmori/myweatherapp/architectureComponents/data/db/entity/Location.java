@@ -1,7 +1,14 @@
 
 package com.example.jvmori.myweatherapp.architectureComponents.data.db.entity;
 
+import com.example.jvmori.myweatherapp.architectureComponents.util.ZoneDateTypeConverter;
 import com.google.gson.annotations.SerializedName;
+
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
+import androidx.room.TypeConverters;
 
 public class Location {
 
@@ -16,11 +23,19 @@ public class Location {
     @SerializedName("lon")
     private Double mLon;
     @SerializedName("name")
-    private String mName;
+    public String mCityName;
     @SerializedName("region")
     private String mRegion;
     @SerializedName("tz_id")
     private String mTzId;
+//    @TypeConverters(ZoneDateTypeConverter.class)
+//    private ZonedDateTime zonedDateTime;
+
+//    public Location(){
+//        Instant instant = Instant.ofEpochSecond(getLocaltimeEpoch());
+//        ZoneId zoneId = ZoneId.of(getTzId());
+//        zonedDateTime = ZonedDateTime.ofInstant(instant, zoneId);
+//    }
 
     public String getCountry() {
         return mCountry;
@@ -63,11 +78,11 @@ public class Location {
     }
 
     public String getName() {
-        return mName;
+        return mCityName;
     }
 
     public void setName(String name) {
-        mName = name;
+        mCityName = name;
     }
 
     public String getRegion() {
@@ -86,4 +101,11 @@ public class Location {
         mTzId = tzId;
     }
 
+//    public ZonedDateTime getZonedDateTime() {
+//        return zonedDateTime;
+//    }
+//
+//    public void setZonedDateTime(ZonedDateTime zonedDateTime) {
+//        this.zonedDateTime = zonedDateTime;
+//    }
 }
