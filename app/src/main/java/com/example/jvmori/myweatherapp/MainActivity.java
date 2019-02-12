@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                             currentWeather.getLocation().getName(),
                             currentWeather.isDeviceLocation()
                     );
-                    createFragmentAndUpdateAdapter(weatherParameters);
+                    createFragments(currentWeathers, weatherParameters);
                 }
             }
         });
@@ -184,10 +184,10 @@ public class MainActivity extends AppCompatActivity {
                         deviceLocation,
                         true
                 );
-               if (weathers.size() == 0)
-                   createFragmentAndUpdateAdapter(weatherParameters);
-               else
-                   updateFragmentAndAdapter(weatherParameters);
+                if (weathers.size() == 0)
+                    createFragmentAndUpdateAdapter(weatherParameters);
+                else
+                    updateFragmentAndAdapter(weatherParameters);
             }
 
             @Override
@@ -252,34 +252,25 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void weatherFragmentsAdapter(WeatherParameters weatherParameters) {
-        if (weathers.size() == 0)
-            createFragmentAndUpdateAdapter(weatherParameters);
-        else {
-            for (WeatherFragment weatherFrag : weathers) {
-                if (weatherFrag.getWeatherParameters().getLocation() != weatherParameters.getLocation()){
-                    createFragmentAndUpdateAdapter(weatherParameters);
-                }
-            }
-        }
-    }
-    private void createFragmentAndUpdateAdapter(WeatherParameters weatherParameters){
+    private void createFragmentAndUpdateAdapter(WeatherParameters weatherParameters) {
         WeatherFragment weatherFragment = new WeatherFragment();
         weatherFragment.setWeatherParameters(weatherParameters);
         weathers.add(weatherFragment);
         slidePagerAdapter.notifyDataSetChanged();
     }
 
-    private void updateFragmentAndAdapter(WeatherParameters weatherParameters){
-        for (int i = 0; i < weathers.size() ; i++) {
-            if (weathers.get(i).getWeatherParameters().isDeviceLocation()){
-                WeatherFragment fragment = (WeatherFragment) slidePagerAdapter.getItem(i);
-                fragment.setWeatherParameters(weatherParameters);
-                fragment.createView();
-                break;
-            }
-        }
+    private void createFragments(List<CurrentWeatherResponse> currentWeathers, WeatherParameters weatherParameters ){
+        WeatherFragment weatherFragment = new WeatherFragment();
+        weatherFragment.setWeatherParameters(weatherParameters);
+        if (weathers.size() != currentWeathers.size())
+            weathers.add(weatherFragment);
+        slidePagerAdapter.notifyDataSetChanged();
+    }
 
+    private void updateFragmentAndAdapter(WeatherParameters weatherParameters) {
+        WeatherFragment fragment = (WeatherFragment) slidePagerAdapter.getItem(0);
+        fragment.setWeatherParameters(weatherParameters);
+        fragment.createView();
     }
 
     private void SetupSlidePagerAdapter(List<WeatherFragment> data) {
