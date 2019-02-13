@@ -11,7 +11,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 @Dao
-public interface WeatherDao
+public interface CurrentWeatherDao
 {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(CurrentWeatherEntry currentWeather);
