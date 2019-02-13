@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         ivSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SearchActivity(view);
+                SearchActivity();
             }
         });
         SetupSlidePagerAdapter(weathers);
@@ -121,41 +121,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void UpdateCurrentWeather() {
-        final int currentItem = viewPager.getCurrentItem();
-        String currentLocation = locations.get(currentItem).getId();
-        WeatherData weatherData = new WeatherData();
-        weatherData.getResponse(new WeatherAsyncResponse() {
-            @Override
-            public void processFinished(Locations locationData) {
-                locations.set(currentItem, locationData);
-                slidePagerAdapter.notifyDataSetChanged();
-            }
-        }, new OnErrorResponse() {
-            @Override
-            public void displayErrorMessage(String message) {
-                Toast.makeText(MainActivity.this, "Wrong City Name!", Toast.LENGTH_SHORT).show();
-            }
-        }, currentLocation);
-    }
-
-    private void UpdateWeather() {
-        tempLoc = new ArrayList<>();
-        for (int i = 0; i < locations.size(); i++) {
-            tempLoc.add(locations.get(i).getId());
-        }
-        locations.clear();
-        for (String loc : tempLoc) {
-            getWeather(loc);
-        }
-    }
-
-    private boolean ShouldBeWeatherDataUpdate() {
-        Calendar calendar = Calendar.getInstance();
-        long currTime = calendar.getTimeInMillis();
-        return currTime - locations.get(0).getUpdateTime() > 3600000;
-    }
-
     private void startListening() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
@@ -163,9 +128,7 @@ public class MainActivity extends AppCompatActivity {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3600, 5000, locationListener);
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (location != null) {
-                //deviceLocation = CurrentLocation.getCity(location, this);
                 deviceLocation = location.getLatitude() + "," + location.getLongitude();
-                //weatherFragmentsAdapter();
             }
         }
     }
@@ -210,40 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void FindWeatherForLocation(Location location, Context context) {
-        String city = CurrentLocation.getCity(location, context);
-
-        if (locations.size() > 0 && city != null && city == locations.get(0).getId())
-            return;
-
-        if (city != null && locations.size() == 0)
-            getWeather(city);
-
-    }
-
-    private void getWeather(final String cityName) {
-        WeatherData weatherData = new WeatherData();
-        weatherData.getResponse(new WeatherAsyncResponse() {
-            @Override
-            public void processFinished(Locations locationData) {
-                if (Contains.containsName(locations, locationData.getId()) == -1) {
-                    locations.add(locationData);
-                    // if (tempLoc != null && locations.size() == tempLoc.size())
-                    //SetData(locations);
-                    // else if (tempLoc == null)
-                    // SetData(locations);
-                }
-            }
-        }, new OnErrorResponse() {
-            @Override
-            public void displayErrorMessage(String message) {
-                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-            }
-        }, cityName);
-    }
-
-
-    private void SearchActivity(View view) {
+    private void SearchActivity() {
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
     }
