@@ -1,5 +1,5 @@
 
-package com.example.jvmori.myweatherapp.architectureComponents.data.db.entity;
+package com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast;
 
 import com.example.jvmori.myweatherapp.architectureComponents.util.LocalDateConverter;
 import com.google.gson.annotations.SerializedName;
@@ -7,15 +7,9 @@ import com.google.gson.annotations.SerializedName;
 import java.time.LocalDate;
 
 import androidx.room.Embedded;
-import androidx.room.Entity;
-import androidx.room.Index;
-import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
-@Entity(tableName = "forecast", indices = {@Index (value = {"mDate"}, unique = true)})
-public class FutureWeatherEntry {
-    @PrimaryKey()
-    private String mCityName;
+public class FutureWeather {
 
     @SerializedName("date")
     @TypeConverters(LocalDateConverter.class)
@@ -41,11 +35,4 @@ public class FutureWeatherEntry {
         mDay = day;
     }
 
-    public String getmCityName() {
-        return mCityName;
-    }
-
-    public void setmCityName(String mCityName) {
-        this.mCityName = mCityName;
-    }
 }

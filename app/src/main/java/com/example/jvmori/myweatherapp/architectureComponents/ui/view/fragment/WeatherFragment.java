@@ -9,9 +9,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeatherEntry;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeather;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
 import com.squareup.picasso.Picasso;
 

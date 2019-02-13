@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeatherEntry;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.model.Locations;
 import com.example.jvmori.myweatherapp.utils.ItemClicked;
 import com.squareup.picasso.Picasso;

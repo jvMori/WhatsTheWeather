@@ -2,7 +2,7 @@ package com.example.jvmori.myweatherapp.architectureComponents.data.db;
 
 import android.content.Context;
 
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeatherEntry;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeatherEntry;
 
 import androidx.room.Database;
 import androidx.room.Room;

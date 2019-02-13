@@ -3,7 +3,7 @@ package com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel;
 import android.app.Application;
 
 import com.example.jvmori.myweatherapp.architectureComponents.AppExecutors;
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeatherEntry;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.data.repository.WeatherRepository;
 

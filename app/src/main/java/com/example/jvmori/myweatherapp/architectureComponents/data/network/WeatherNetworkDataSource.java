@@ -1,6 +1,6 @@
 package com.example.jvmori.myweatherapp.architectureComponents.data.network;
 
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeatherEntry;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeatherEntry;
 
 import androidx.lifecycle.LiveData;
 

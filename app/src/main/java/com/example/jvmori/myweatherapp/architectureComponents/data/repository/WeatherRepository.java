@@ -7,7 +7,7 @@ import com.example.jvmori.myweatherapp.architectureComponents.AppExecutors;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.WeatherDao;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.WeatherDatabase;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSourceImpl;
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeatherEntry;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 
 import java.time.ZonedDateTime;

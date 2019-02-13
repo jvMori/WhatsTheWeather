@@ -1,26 +1,23 @@
 
-package com.example.jvmori.myweatherapp.architectureComponents.data.network.response;
+package com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast;
 
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.Location;
 import com.google.gson.annotations.SerializedName;
 
-public class ForecastWeather {
+import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.Index;
 
-    @SerializedName("current")
-    private CurrentWeather mCurrent;
+@Entity(tableName = "forecast", indices = {@Index(value = {"mDate"}, unique = true)})
+public class ForecastWeatherEntry {
+
     @SerializedName("forecast")
+    @Embedded
     private Forecast mForecast;
+
     @SerializedName("location")
+    @Embedded
     private Location mLocation;
-
-    public CurrentWeather getCurrent() {
-        return mCurrent;
-    }
-
-    public void setCurrent(CurrentWeather current) {
-        mCurrent = current;
-    }
 
     public Forecast getForecast() {
         return mForecast;
