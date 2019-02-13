@@ -12,25 +12,18 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.activity.SearchActivity;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.fragment.WeatherFragment;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
-import com.example.jvmori.myweatherapp.data.WeatherData;
-import com.example.jvmori.myweatherapp.architectureComponents.util.CurrentLocation;
-import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeather;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
 import com.example.jvmori.myweatherapp.model.Locations;
-import com.example.jvmori.myweatherapp.utils.Contains;
-import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
-import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.adapters.SlidePagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;

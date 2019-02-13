@@ -5,7 +5,7 @@ import android.app.Application;
 import com.example.jvmori.myweatherapp.architectureComponents.AppExecutors;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
-import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherRepository;
+import com.example.jvmori.myweatherapp.architectureComponents.data.repository.WeatherRepository;
 
 import java.util.List;
 

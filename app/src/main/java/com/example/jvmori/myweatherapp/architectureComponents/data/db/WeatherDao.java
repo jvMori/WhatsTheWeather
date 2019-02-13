@@ -1,4 +1,4 @@
-package com.example.jvmori.myweatherapp.architectureComponents.data;
+package com.example.jvmori.myweatherapp.architectureComponents.data.db;
 
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeatherEntry;
 

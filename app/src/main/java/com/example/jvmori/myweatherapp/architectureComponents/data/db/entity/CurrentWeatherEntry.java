@@ -1,7 +1,6 @@
 
 package com.example.jvmori.myweatherapp.architectureComponents.data.db.entity;
 
-import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeather;
 import com.google.gson.annotations.SerializedName;
 
 import androidx.room.Embedded;

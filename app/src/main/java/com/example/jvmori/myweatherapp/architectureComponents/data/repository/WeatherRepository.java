@@ -1,9 +1,11 @@
-package com.example.jvmori.myweatherapp.architectureComponents.data;
+package com.example.jvmori.myweatherapp.architectureComponents.data.repository;
 
 import android.app.Application;
 import android.util.Log;
 
 import com.example.jvmori.myweatherapp.architectureComponents.AppExecutors;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.WeatherDao;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.WeatherDatabase;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSourceImpl;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
