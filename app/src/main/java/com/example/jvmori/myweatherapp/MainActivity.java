@@ -105,7 +105,8 @@ public class MainActivity extends AppCompatActivity {
                 for (CurrentWeatherEntry currentWeather : currentWeathers) {
                     WeatherParameters weatherParameters = new WeatherParameters(
                             currentWeather.getLocation().getName(),
-                            currentWeather.isDeviceLocation()
+                            currentWeather.isDeviceLocation(),
+                            ""
                     );
                     createFragments(currentWeathers, weatherParameters);
                 }
@@ -134,7 +135,8 @@ public class MainActivity extends AppCompatActivity {
                 deviceLocation = location.getLatitude() + "," + location.getLongitude();
                 WeatherParameters weatherParameters = new WeatherParameters(
                         deviceLocation,
-                        true
+                        true,
+                        ""
                 );
                 if (weathers.size() == 0)
                     createFragmentAndUpdateAdapter(weatherParameters);

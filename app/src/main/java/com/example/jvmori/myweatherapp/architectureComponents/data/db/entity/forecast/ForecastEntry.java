@@ -12,9 +12,11 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "forecast", indices = {@Index(value = {"mCityName"}, unique = true)})
-public class ForecastWeatherEntry {
+public class ForecastEntry {
     @PrimaryKey(autoGenerate = true)
     public int id;
+
+    public boolean isDeviceLocation;
 
     @SerializedName("location")
     @Embedded
