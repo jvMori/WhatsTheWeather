@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.ForecastWeatherEntry;
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.FutureWeather;
 
 import androidx.room.Database;
 import androidx.room.Room;
@@ -14,7 +13,7 @@ import androidx.room.RoomDatabase;
 public abstract class WeatherDatabase extends RoomDatabase {
 
     public static WeatherDatabase instance;
-    public abstract WeatherDao weatherDao();
+    public abstract CurrentWeatherDao weatherDao();
 
     public static synchronized WeatherDatabase getInstance(Context context){
         if (instance == null){

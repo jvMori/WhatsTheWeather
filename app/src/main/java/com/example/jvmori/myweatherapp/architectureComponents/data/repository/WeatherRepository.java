@@ -4,7 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.example.jvmori.myweatherapp.architectureComponents.AppExecutors;
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.WeatherDao;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.CurrentWeatherDao;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.WeatherDatabase;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSourceImpl;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeatherEntry;
@@ -22,7 +22,7 @@ import retrofit2.Response;
 public class WeatherRepository {
     private static final Object LOCK = new Object();
     private static WeatherRepository instance;
-    private WeatherDao weatherDao;
+    private CurrentWeatherDao currentWeatherDao;
     private WeatherNetworkDataSourceImpl weatherNetworkDataSource;
     private AppExecutors executors;
     private MutableLiveData<CurrentWeatherEntry> currentWeatherLiveData;
@@ -31,7 +31,7 @@ public class WeatherRepository {
         this.executors = executors;
         currentWeatherLiveData = new MutableLiveData<>();
         this.weatherNetworkDataSource = new WeatherNetworkDataSourceImpl();
-        this.weatherDao = WeatherDatabase.getInstance(application.getApplicationContext()).weatherDao();
+        this.currentWeatherDao = WeatherDatabase.getInstance(application.getApplicationContext()).weatherDao();
     }
 
     public synchronized static WeatherRepository getInstance(Application context, AppExecutors executors) {
@@ -44,19 +44,19 @@ public class WeatherRepository {
     }
 
     private void persistFetchedCurrentWeather(final CurrentWeatherEntry currentWeather) {
-        executors.diskIO().execute(() -> weatherDao.insert(currentWeather));
+        executors.diskIO().execute(() -> currentWeatherDao.insert(currentWeather));
     }
 
     public LiveData<List<CurrentWeatherEntry>> getWeatherExceptDeviceLoc(){
-        return weatherDao.getWeather();
+        return currentWeatherDao.getWeather();
     }
 
     public LiveData<List<CurrentWeatherEntry>> getAllWeather(){
-        return weatherDao.getAllWeather();
+        return currentWeatherDao.getAllWeather();
     }
 
     public void deletePreviousDeviceLocation(){
-        executors.diskIO().execute(() -> weatherDao.deleteLastDeviceLocation());
+        executors.diskIO().execute(() -> currentWeatherDao.deleteLastDeviceLocation());
     }
 
     public LiveData<CurrentWeatherEntry> initWeatherData(WeatherParameters weatherParameters, OnFailure callbackOnFailure) {
@@ -85,7 +85,7 @@ public class WeatherRepository {
             });
         }
         else {
-            return weatherDao.getWeatherForLocation(weatherParameters.getLocation());
+            return currentWeatherDao.getWeatherForLocation(weatherParameters.getLocation());
         }
         return currentWeatherLiveData;
     }
