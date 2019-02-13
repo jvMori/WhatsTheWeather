@@ -1,8 +1,8 @@
 
-package com.example.jvmori.myweatherapp.architectureComponents.data.network.response;
+package com.example.jvmori.myweatherapp.architectureComponents.data.db.entity;
 
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.Location;
+import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeather;
+import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.Location;
 import com.google.gson.annotations.SerializedName;
 
 import androidx.room.Embedded;
@@ -10,8 +10,8 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "current_weather", indices = {@Index(value = {"mCityName", "isDeviceLocation"}, unique = true)})
-public class CurrentWeatherResponse {
+@Entity(tableName = "current_weather", indices = {@Index(value = {"mCityName"}, unique = true)})
+public class CurrentWeatherEntry {
     @PrimaryKey(autoGenerate = true)
     public int id;
 

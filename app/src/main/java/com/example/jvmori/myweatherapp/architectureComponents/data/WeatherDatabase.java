@@ -2,13 +2,13 @@ package com.example.jvmori.myweatherapp.architectureComponents.data;
 
 import android.content.Context;
 
-import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeatherEntry;
 
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {CurrentWeatherResponse.class}, version = 5, exportSchema = false)
+@Database(entities = {CurrentWeatherEntry.class}, version = 5, exportSchema = false)
 public abstract class WeatherDatabase extends RoomDatabase {
 
     public static WeatherDatabase instance;

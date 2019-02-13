@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
-import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.model.Locations;
 import com.example.jvmori.myweatherapp.utils.ItemClicked;
 import com.squareup.picasso.Picasso;
@@ -20,10 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder>
 {
-    private List<CurrentWeatherResponse> currentWeathers;
+    private List<CurrentWeatherEntry> currentWeathers;
     private ItemClicked itemClicked;
 
-    public LocationAdapter(List<CurrentWeatherResponse> locations, Context ctx) {
+    public LocationAdapter(List<CurrentWeatherEntry> locations, Context ctx) {
         this.currentWeathers = locations;
         itemClicked = (ItemClicked) ctx;
     }

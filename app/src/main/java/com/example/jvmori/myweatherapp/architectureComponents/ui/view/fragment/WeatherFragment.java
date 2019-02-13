@@ -9,16 +9,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
-import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherRepository;
-import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
-import com.example.jvmori.myweatherapp.architectureComponents.util.CurrentLocation;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
+import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeather;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
 import com.squareup.picasso.Picasso;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -80,7 +77,7 @@ public class WeatherFragment extends Fragment {
         }).observe(this, this::createCurrentWeatherUi
                 );
     }
-    private void createCurrentWeatherUi(CurrentWeatherResponse currentWeatherResponse){
+    private void createCurrentWeatherUi(CurrentWeatherEntry currentWeatherResponse){
         weatherParameters.setLocation(currentWeatherResponse.getLocation().getName());
         CurrentWeather currentWeather = currentWeatherResponse.getCurrent();
 

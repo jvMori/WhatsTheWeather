@@ -3,7 +3,7 @@ package com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel;
 import android.app.Application;
 
 import com.example.jvmori.myweatherapp.architectureComponents.AppExecutors;
-import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.data.WeatherRepository;
 
@@ -20,14 +20,14 @@ public class CurrentWeatherViewModel extends AndroidViewModel {
         super(application);
         weatherRepository = WeatherRepository.getInstance(application, AppExecutors.getInstance());
     }
-    public LiveData<CurrentWeatherResponse> getCurrentWeather(WeatherParameters weatherParameters, WeatherRepository.OnFailure onFailure)  {
+    public LiveData<CurrentWeatherEntry> getCurrentWeather(WeatherParameters weatherParameters, WeatherRepository.OnFailure onFailure)  {
         return weatherRepository.initWeatherData(weatherParameters, onFailure);
     }
 
-    public LiveData<List<CurrentWeatherResponse>> getWeather(){
+    public LiveData<List<CurrentWeatherEntry>> getWeather(){
         return weatherRepository.getWeatherExceptDeviceLoc();
     }
 
-    public LiveData<List<CurrentWeatherResponse>> getAllWeather(){ return  weatherRepository.getAllWeather();}
+    public LiveData<List<CurrentWeatherEntry>> getAllWeather(){ return  weatherRepository.getAllWeather();}
 
 }

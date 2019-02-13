@@ -4,9 +4,8 @@ import android.app.Application;
 import android.util.Log;
 
 import com.example.jvmori.myweatherapp.architectureComponents.AppExecutors;
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSourceImpl;
-import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 
 import java.time.ZonedDateTime;
@@ -24,7 +23,7 @@ public class WeatherRepository {
     private WeatherDao weatherDao;
     private WeatherNetworkDataSourceImpl weatherNetworkDataSource;
     private AppExecutors executors;
-    private MutableLiveData<CurrentWeatherResponse> currentWeatherLiveData;
+    private MutableLiveData<CurrentWeatherEntry> currentWeatherLiveData;
 
     private WeatherRepository(Application application, AppExecutors executors) {
         this.executors = executors;
@@ -42,23 +41,27 @@ public class WeatherRepository {
         return instance;
     }
 
-    private void persistFetchedCurrentWeather(final CurrentWeatherResponse currentWeather) {
+    private void persistFetchedCurrentWeather(final CurrentWeatherEntry currentWeather) {
         executors.diskIO().execute(() -> weatherDao.insert(currentWeather));
     }
 
-    public LiveData<List<CurrentWeatherResponse>> getWeatherExceptDeviceLoc(){
+    public LiveData<List<CurrentWeatherEntry>> getWeatherExceptDeviceLoc(){
         return weatherDao.getWeather();
     }
 
-    public LiveData<List<CurrentWeatherResponse>> getAllWeather(){
+    public LiveData<List<CurrentWeatherEntry>> getAllWeather(){
         return weatherDao.getAllWeather();
     }
 
-    public LiveData<CurrentWeatherResponse> initWeatherData(WeatherParameters weatherParameters, OnFailure callbackOnFailure) {
+    public void deletePreviousDeviceLocation(){
+        executors.diskIO().execute(() -> weatherDao.deleteLastDeviceLocation());
+    }
+
+    public LiveData<CurrentWeatherEntry> initWeatherData(WeatherParameters weatherParameters, OnFailure callbackOnFailure) {
         if (isFetchCurrentNeeded(ZonedDateTime.now().minusMinutes(60))){
-            weatherNetworkDataSource.fetchWeather(weatherParameters).enqueue(new Callback<CurrentWeatherResponse>() {
+            weatherNetworkDataSource.fetchWeather(weatherParameters).enqueue(new Callback<CurrentWeatherEntry>() {
                 @Override
-                public void onResponse(Call<CurrentWeatherResponse> call, Response<CurrentWeatherResponse> response) {
+                public void onResponse(Call<CurrentWeatherEntry> call, Response<CurrentWeatherEntry> response) {
                     if(!response.isSuccessful()){
                         Log.i("Fail", "Response is not successful");
                         return;
@@ -66,12 +69,14 @@ public class WeatherRepository {
                     if (response.body() != null){
                         response.body().setDeviceLocation(weatherParameters.isDeviceLocation());
                         currentWeatherLiveData.postValue(response.body());
+                        if (weatherParameters.isDeviceLocation())
+                            deletePreviousDeviceLocation();
                         persistFetchedCurrentWeather(response.body());
                     }
                 }
 
                 @Override
-                public void onFailure(Call<CurrentWeatherResponse> call, Throwable t) {
+                public void onFailure(Call<CurrentWeatherEntry> call, Throwable t) {
                     Log.i("Fail", "Failed to fetch current weather" + t.toString());
                     callbackOnFailure.callback(t.toString());
                 }

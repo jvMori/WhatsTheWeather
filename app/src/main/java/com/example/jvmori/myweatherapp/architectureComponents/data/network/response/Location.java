@@ -1,14 +1,7 @@
 
-package com.example.jvmori.myweatherapp.architectureComponents.data.db.entity;
+package com.example.jvmori.myweatherapp.architectureComponents.data.network.response;
 
-import com.example.jvmori.myweatherapp.architectureComponents.util.ZoneDateTypeConverter;
 import com.google.gson.annotations.SerializedName;
-
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-
-import androidx.room.TypeConverters;
 
 public class Location {
 
@@ -28,14 +21,6 @@ public class Location {
     private String mRegion;
     @SerializedName("tz_id")
     private String mTzId;
-//    @TypeConverters(ZoneDateTypeConverter.class)
-//    private ZonedDateTime zonedDateTime;
-
-//    public Location(){
-//        Instant instant = Instant.ofEpochSecond(getLocaltimeEpoch());
-//        ZoneId zoneId = ZoneId.of(getTzId());
-//        zonedDateTime = ZonedDateTime.ofInstant(instant, zoneId);
-//    }
 
     public String getCountry() {
         return mCountry;
@@ -101,11 +86,4 @@ public class Location {
         mTzId = tzId;
     }
 
-//    public ZonedDateTime getZonedDateTime() {
-//        return zonedDateTime;
-//    }
-//
-//    public void setZonedDateTime(ZonedDateTime zonedDateTime) {
-//        this.zonedDateTime = zonedDateTime;
-//    }
 }

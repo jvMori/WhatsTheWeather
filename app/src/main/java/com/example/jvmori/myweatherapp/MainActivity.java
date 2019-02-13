@@ -14,14 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeatherResponse;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.activity.SearchActivity;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.fragment.WeatherFragment;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
 import com.example.jvmori.myweatherapp.data.WeatherData;
 import com.example.jvmori.myweatherapp.architectureComponents.util.CurrentLocation;
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.CurrentWeather;
+import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.CurrentWeather;
 import com.example.jvmori.myweatherapp.model.Locations;
 import com.example.jvmori.myweatherapp.utils.Contains;
 import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
@@ -106,10 +106,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void getWeatherFromDb() {
         CurrentWeatherViewModel currentWeatherViewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        currentWeatherViewModel.getWeather().observe(this, new Observer<List<CurrentWeatherResponse>>() {
+        currentWeatherViewModel.getWeather().observe(this, new Observer<List<CurrentWeatherEntry>>() {
             @Override
-            public void onChanged(List<CurrentWeatherResponse> currentWeathers) {
-                for (CurrentWeatherResponse currentWeather : currentWeathers) {
+            public void onChanged(List<CurrentWeatherEntry> currentWeathers) {
+                for (CurrentWeatherEntry currentWeather : currentWeathers) {
                     WeatherParameters weatherParameters = new WeatherParameters(
                             currentWeather.getLocation().getName(),
                             currentWeather.isDeviceLocation()
@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
         slidePagerAdapter.notifyDataSetChanged();
     }
 
-    private void createFragments(List<CurrentWeatherResponse> currentWeathers, WeatherParameters weatherParameters ){
+    private void createFragments(List<CurrentWeatherEntry> currentWeathers, WeatherParameters weatherParameters ){
         WeatherFragment weatherFragment = new WeatherFragment();
         weatherFragment.setWeatherParameters(weatherParameters);
         if (weathers.size() != currentWeathers.size())

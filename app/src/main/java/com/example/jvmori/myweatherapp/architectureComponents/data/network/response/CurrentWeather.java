@@ -1,5 +1,5 @@
 
-package com.example.jvmori.myweatherapp.architectureComponents.data.db.entity;
+package com.example.jvmori.myweatherapp.architectureComponents.data.network.response;
 
 
 import com.google.gson.annotations.SerializedName;
