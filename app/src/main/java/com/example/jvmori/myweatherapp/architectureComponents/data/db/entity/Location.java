@@ -3,8 +3,8 @@ package com.example.jvmori.myweatherapp.architectureComponents.data.db.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Location {
 
+public class Location {
     @SerializedName("country")
     private String mCountry;
     @SerializedName("lat")

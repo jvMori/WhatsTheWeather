@@ -12,14 +12,6 @@ public class Forecast {
 
     @SerializedName("forecastday")
     @TypeConverters(ListTypeConverter.class)
-    private List<FutureWeather> mFutureWeather;
-
-    public List<FutureWeather> getForecastday() {
-        return mFutureWeather;
-    }
-
-    public void setForecastday(List<FutureWeather> futureWeather) {
-        mFutureWeather = futureWeather;
-    }
+    public List<FutureWeather> mFutureWeather;
 
 }

@@ -1,5 +1,6 @@
 package com.example.jvmori.myweatherapp.architectureComponents.util;
 
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeather;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.FutureWeather;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -10,23 +11,23 @@ import java.util.List;
 
 import androidx.room.TypeConverter;
 
-public class ListTypeConverter<T>
+public class ListTypeConverter
 {
-    Gson gson = new Gson();
+    static Gson gson = new Gson();
 
     @TypeConverter
-    public List<T> stringToSomeObjectList(String data) {
+    public static List<FutureWeather> stringToSomeObjectList(String data) {
         if (data == null) {
             return Collections.emptyList();
         }
 
-        Type listType = new TypeToken<List<T>>() {}.getType();
+        Type listType = new TypeToken<List<FutureWeather>>() {}.getType();
 
         return gson.fromJson(data, listType);
     }
 
     @TypeConverter
-    public String someObjectListToString(List<T> someObjects) {
+    public String someObjectListToString(List<FutureWeather> someObjects) {
         return gson.toJson(someObjects);
     }
 }
