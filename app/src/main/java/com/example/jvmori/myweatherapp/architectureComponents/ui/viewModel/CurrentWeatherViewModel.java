@@ -25,7 +25,9 @@ public class CurrentWeatherViewModel extends AndroidViewModel {
         return weatherRepository.initWeatherData(weatherParameters, onFailure);
     }
 
-    public LiveData<ForecastEntry> getForecast(WeatherParameters parameters){ return weatherRepository.getForecast(parameters);}
+    public LiveData<ForecastEntry> getForecast(WeatherParameters parameters,WeatherRepository.OnFailure onFailure){
+        return weatherRepository.getForecast(parameters,  onFailure);
+    }
 
     public LiveData<List<CurrentWeatherEntry>> getWeather(){
         return weatherRepository.getWeatherExceptDeviceLoc();

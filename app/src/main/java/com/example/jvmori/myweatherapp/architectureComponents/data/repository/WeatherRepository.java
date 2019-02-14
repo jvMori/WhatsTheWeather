@@ -75,7 +75,7 @@ public class WeatherRepository {
         });
     }
 
-    public LiveData<ForecastEntry> getForecast(WeatherParameters weatherParameters){
+    public LiveData<ForecastEntry> getForecast(WeatherParameters weatherParameters, OnFailure onFailure){
         if (isFetchCurrentNeeded(ZonedDateTime.now().minusMinutes(60))){
             weatherNetworkDataSource.fetchForecast(weatherParameters).enqueue(new Callback<ForecastEntry>() {
                 @Override
@@ -94,6 +94,7 @@ public class WeatherRepository {
                 @Override
                 public void onFailure(Call<ForecastEntry> call, Throwable t) {
                     Log.i("Fail", "Failed to fetch current weather" + t.toString());
+                    onFailure.callback(t.getMessage());
                 }
             });
         } else

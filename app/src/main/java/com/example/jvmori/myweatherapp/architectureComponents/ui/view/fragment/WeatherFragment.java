@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.ForecastEntry;
+import com.example.jvmori.myweatherapp.architectureComponents.data.repository.WeatherRepository;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.adapters.ForecastAdapter;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeather;
@@ -30,7 +31,7 @@ public class WeatherFragment extends Fragment {
 
     private View view;
     private TextView mainTemp, feelsLike, desc, humidity, pressure, city;
-    private LinearLayout errorLayout;
+    private LinearLayout errorLayout, progressBarLayout;
     private ImageView ivIcon;
     private RecyclerView recyclerView;
     private ForecastAdapter forecastAdapter;
@@ -63,6 +64,7 @@ public class WeatherFragment extends Fragment {
         errorLayout = view.findViewById(R.id.errorLayout);
         city = view.findViewById(R.id.locationTextView);
         recyclerView = view.findViewById(R.id.RecyclerViewList);
+        progressBarLayout = view.findViewById(R.id.progressBarLayout);
         return view;
     }
 
@@ -75,7 +77,14 @@ public class WeatherFragment extends Fragment {
     }
 
     public void createView(){
-        viewModel.getForecast(weatherParameters).observe(this, this::createCurrentWeatherUi);
+        progressBarLayout.setVisibility(View.VISIBLE);
+        errorLayout.setVisibility(View.GONE);
+        viewModel.getForecast(weatherParameters, new WeatherRepository.OnFailure() {
+            @Override
+            public void callback(String message) {
+                errorLayout.setVisibility(View.VISIBLE);
+            }
+        }).observe(this, this::createCurrentWeatherUi);
     }
     private void createCurrentWeatherUi(ForecastEntry forecastEntry){
         weatherParameters.setLocation(forecastEntry.getLocation().getName());
@@ -103,6 +112,7 @@ public class WeatherFragment extends Fragment {
                 .into(ivIcon);
 
         createRecyclerView(forecastEntry);
+        progressBarLayout.setVisibility(View.GONE);
     }
 
     private void createRecyclerView(ForecastEntry forecastEntry){
