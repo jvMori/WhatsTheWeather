@@ -82,6 +82,7 @@ public class WeatherRepository {
                 public void onResponse(Call<ForecastEntry> call, Response<ForecastEntry> response) {
                     if(!response.isSuccessful()){
                         Log.i("Fail", "Response is not successful");
+                        onFailure.callback("Failed! Response is not successful");
                         return;
                     }
                     if (response.body() != null){
