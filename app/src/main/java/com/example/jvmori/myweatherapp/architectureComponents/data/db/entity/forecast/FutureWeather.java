@@ -13,17 +13,17 @@ public class FutureWeather {
 
     @SerializedName("date")
     @TypeConverters(LocalDateConverter.class)
-    private LocalDate mDate;
+    private String mDate;
 
     @SerializedName("day")
     @Embedded
     private Day mDay;
 
-    public LocalDate getDate() {
+    public String getDate() {
         return mDate;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         mDate = date;
     }
 

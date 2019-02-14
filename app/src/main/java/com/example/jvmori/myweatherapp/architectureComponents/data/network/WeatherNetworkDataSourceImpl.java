@@ -13,6 +13,7 @@ public class WeatherNetworkDataSourceImpl implements WeatherNetworkDataSource  {
     public WeatherNetworkDataSourceImpl(){
         service = ApixuApiCall.init();
     }
+
     @Override
     public Call<CurrentWeatherEntry> fetchWeather(WeatherParameters weatherParameters){
         return service.getCurrentWeather(weatherParameters.getLocation(), weatherParameters.getLang());
@@ -22,5 +23,4 @@ public class WeatherNetworkDataSourceImpl implements WeatherNetworkDataSource  {
     public Call<ForecastEntry> fetchForecast(WeatherParameters weatherParameters) {
         return service.getForecast(weatherParameters.getLocation(), weatherParameters.getLang(), weatherParameters.getDays());
     }
-
 }

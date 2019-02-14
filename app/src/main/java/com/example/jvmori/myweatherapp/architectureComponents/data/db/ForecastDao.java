@@ -25,6 +25,9 @@ public interface ForecastDao
     @Query("select * from forecast")
     LiveData<List<ForecastEntry>> getForecastsForAllLocations();
 
+    @Query("select * from forecast where mCityName like :location")
+    LiveData<ForecastEntry> getForecastsForLocation(String location);
+
     @Query("select * from forecast where isDeviceLocation = 0")
     LiveData<List<ForecastEntry>> AllForecastsExceptForDeviceLocation();
 

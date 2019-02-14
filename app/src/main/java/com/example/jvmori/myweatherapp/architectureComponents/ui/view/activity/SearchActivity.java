@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.example.jvmori.myweatherapp.MainActivity;
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeatherEntry;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
 import com.example.jvmori.myweatherapp.data.WeatherData;
 import com.example.jvmori.myweatherapp.model.Locations;
@@ -64,10 +65,10 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked{
 
     private void createUi(){
         CurrentWeatherViewModel viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        viewModel.getAllWeather().observe(this, this::setupLocationAdapter);
+        viewModel.getAllForecast().observe(this, this::setupLocationAdapter);
     }
 
-    private void setupLocationAdapter(List<CurrentWeatherEntry> responses){
+    private void setupLocationAdapter(List<ForecastEntry> responses){
         recyclerView = findViewById(R.id.rvSearch);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);

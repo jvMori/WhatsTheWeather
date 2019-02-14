@@ -9,11 +9,12 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {CurrentWeatherEntry.class, ForecastEntry.class}, version = 7, exportSchema = false)
+@Database(entities = {CurrentWeatherEntry.class, ForecastEntry.class}, version = 8, exportSchema = false)
 public abstract class WeatherDatabase extends RoomDatabase {
 
     public static WeatherDatabase instance;
     public abstract CurrentWeatherDao weatherDao();
+    public abstract ForecastDao forecastDao();
 
     public static synchronized WeatherDatabase getInstance(Context context){
         if (instance == null){

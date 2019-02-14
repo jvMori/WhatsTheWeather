@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeatherEntry;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.model.Locations;
 import com.example.jvmori.myweatherapp.utils.ItemClicked;
 import com.squareup.picasso.Picasso;
@@ -20,10 +21,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder>
 {
-    private List<CurrentWeatherEntry> currentWeathers;
+    private List<ForecastEntry> currentWeathers;
     private ItemClicked itemClicked;
 
-    public LocationAdapter(List<CurrentWeatherEntry> locations, Context ctx) {
+    public LocationAdapter(List<ForecastEntry> locations, Context ctx) {
         this.currentWeathers = locations;
         itemClicked = (ItemClicked) ctx;
     }
@@ -69,13 +70,13 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     public void onBindViewHolder(@NonNull LocationAdapter.ViewHolder viewHolder, int i) {
         viewHolder.itemView.setTag(currentWeathers.get(i));
         String cityName = currentWeathers.get(i).getLocation().getName();
-        String currTemp = currentWeathers.get(i).getCurrent().mTempC.toString();
+        String currTemp = currentWeathers.get(i).getCurrentWeather().mTempC.toString();
         if(i == 0){
             viewHolder.ivMarker.setVisibility(View.VISIBLE);
         }else{
             viewHolder.ivMarker.setVisibility(View.INVISIBLE);
         }
-        String url = "http:" + currentWeathers.get(i).getCurrent().mCondition.getIcon();
+        String url = "http:" + currentWeathers.get(i).getCurrentWeather().mCondition.getIcon();
         Picasso.get()
                 .load(url)
                 .into(viewHolder.ivIcon);

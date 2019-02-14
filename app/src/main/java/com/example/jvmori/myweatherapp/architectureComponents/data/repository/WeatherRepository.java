@@ -5,7 +5,9 @@ import android.util.Log;
 
 import com.example.jvmori.myweatherapp.architectureComponents.AppExecutors;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.CurrentWeatherDao;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.ForecastDao;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.WeatherDatabase;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSourceImpl;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
@@ -23,15 +25,19 @@ public class WeatherRepository {
     private static final Object LOCK = new Object();
     private static WeatherRepository instance;
     private CurrentWeatherDao currentWeatherDao;
+    private ForecastDao forecastDao;
     private WeatherNetworkDataSourceImpl weatherNetworkDataSource;
     private AppExecutors executors;
     private MutableLiveData<CurrentWeatherEntry> currentWeatherLiveData;
+    private MutableLiveData<ForecastEntry> forecastEntryData;
 
     private WeatherRepository(Application application, AppExecutors executors) {
         this.executors = executors;
         currentWeatherLiveData = new MutableLiveData<>();
+        forecastEntryData = new MutableLiveData<>();
         this.weatherNetworkDataSource = new WeatherNetworkDataSourceImpl();
         this.currentWeatherDao = WeatherDatabase.getInstance(application.getApplicationContext()).weatherDao();
+        this.forecastDao = WeatherDatabase.getInstance(application.getApplicationContext()).forecastDao();
     }
 
     public synchronized static WeatherRepository getInstance(Application context, AppExecutors executors) {
@@ -54,9 +60,46 @@ public class WeatherRepository {
     public LiveData<List<CurrentWeatherEntry>> getAllWeather(){
         return currentWeatherDao.getAllWeather();
     }
+    public LiveData<List<ForecastEntry>> getAllForecast(){
+        return forecastDao.getForecastsForAllLocations();
+    }
 
     public void deletePreviousDeviceLocation(){
         executors.diskIO().execute(() -> currentWeatherDao.deleteLastDeviceLocation());
+    }
+
+    private void persistForecast(ForecastEntry newForecastEntry){
+        executors.diskIO().execute(()-> {
+            forecastDao.deleteForecastForDeviceLocation();
+            forecastDao.insert(newForecastEntry);
+        });
+    }
+
+    public LiveData<ForecastEntry> getForecast(WeatherParameters weatherParameters){
+        if (isFetchCurrentNeeded(ZonedDateTime.now().minusMinutes(60))){
+            weatherNetworkDataSource.fetchForecast(weatherParameters).enqueue(new Callback<ForecastEntry>() {
+                @Override
+                public void onResponse(Call<ForecastEntry> call, Response<ForecastEntry> response) {
+                    if(!response.isSuccessful()){
+                        Log.i("Fail", "Response is not successful");
+                        return;
+                    }
+                    if (response.body() != null){
+                        response.body().isDeviceLocation = weatherParameters.isDeviceLocation();
+                        persistForecast(response.body());
+                        forecastEntryData.postValue(response.body());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ForecastEntry> call, Throwable t) {
+                    Log.i("Fail", "Failed to fetch current weather" + t.toString());
+                }
+            });
+        } else
+            return forecastDao.getForecastsForLocation(weatherParameters.getLocation());
+
+        return forecastEntryData;
     }
 
     public LiveData<CurrentWeatherEntry> initWeatherData(WeatherParameters weatherParameters, OnFailure callbackOnFailure) {
@@ -79,10 +122,10 @@ public class WeatherRepository {
                 }
                 if (response.body() != null){
                     response.body().setDeviceLocation(weatherParameters.isDeviceLocation());
-                    currentWeatherLiveData.postValue(response.body());
                     if (weatherParameters.isDeviceLocation())
                         deletePreviousDeviceLocation();
                     persistFetchedCurrentWeather(response.body());
+                    currentWeatherLiveData.postValue(response.body());
                 }
             }
 

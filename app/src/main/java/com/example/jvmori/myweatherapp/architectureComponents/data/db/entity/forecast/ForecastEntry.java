@@ -4,6 +4,7 @@ package com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.fo
 import android.support.annotation.NonNull;
 
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.Location;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeather;
 import com.google.gson.annotations.SerializedName;
 
 import androidx.room.Embedded;
@@ -17,6 +18,10 @@ public class ForecastEntry {
     public int id;
 
     public boolean isDeviceLocation;
+
+    @SerializedName("current")
+    @Embedded
+    private CurrentWeather currentWeather;
 
     @SerializedName("location")
     @Embedded
@@ -42,6 +47,11 @@ public class ForecastEntry {
         mLocation = location;
     }
 
+    public CurrentWeather getCurrentWeather() {
+        return currentWeather;
+    }
 
-
+    public void setCurrentWeather(CurrentWeather currentWeather) {
+        this.currentWeather = currentWeather;
+    }
 }

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeatherEntry;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeather;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
@@ -70,20 +71,21 @@ public class WeatherFragment extends Fragment {
     }
 
     public void createView(){
-        viewModel.getCurrentWeather(weatherParameters, message -> {
-                errorLayout.setVisibility(View.VISIBLE);
-                TextView error =  errorLayout.findViewById(R.id.textViewError);
-                error.setText(message);
-        }).observe(this, this::createCurrentWeatherUi
-                );
+//        viewModel.getCurrentWeather(weatherParameters, message -> {
+//                errorLayout.setVisibility(View.VISIBLE);
+//                TextView error =  errorLayout.findViewById(R.id.textViewError);
+//                error.setText(message);
+//        }).observe(this, this::createCurrentWeatherUi
+//                );
+        viewModel.getForecast(weatherParameters).observe(this, this::createCurrentWeatherUi);
     }
-    private void createCurrentWeatherUi(CurrentWeatherEntry currentWeatherResponse){
-        weatherParameters.setLocation(currentWeatherResponse.getLocation().getName());
-        CurrentWeather currentWeather = currentWeatherResponse.getCurrent();
+    private void createCurrentWeatherUi(ForecastEntry forecastEntry){
+        weatherParameters.setLocation(forecastEntry.getLocation().getName());
+        CurrentWeather currentWeather = forecastEntry.getCurrentWeather();
 
         String cityAndCountry = String.format("%s, %s",
-                currentWeatherResponse.getLocation().getName(),
-                currentWeatherResponse.getLocation().getCountry());
+                forecastEntry.getLocation().getName(),
+                forecastEntry.getLocation().getCountry());
         String description = currentWeather.mCondition.getText();
         String feelslike = "Feels like: " + currentWeather.mFeelslikeC.toString() + "°";
         String humidityTxt= "Humidity: " + currentWeather.mHumidity.toString() + " %";
