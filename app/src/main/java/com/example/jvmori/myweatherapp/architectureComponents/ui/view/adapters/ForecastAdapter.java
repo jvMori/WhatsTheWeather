@@ -1,4 +1,4 @@
-package com.example.jvmori.myweatherapp.view;
+package com.example.jvmori.myweatherapp.architectureComponents.ui.view.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,28 +9,32 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.ForecastEntry;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.FutureWeather;
 import com.example.jvmori.myweatherapp.model.Forecast;
 import com.example.jvmori.myweatherapp.utils.SetImage;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHolder>
 {
-    private ArrayList<Forecast> forecast;
+    private List<FutureWeather> forecast;
     private  Context context;
-    public ForecastAdapter(ArrayList<Forecast> forecast, Context context) {
+
+    public ForecastAdapter(List<FutureWeather> forecast, Context context) {
         this.forecast = forecast;
         this.context = context;
     }
 
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder{
         ImageView ivIcon;
         TextView day, minMaxTemp;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivIcon = itemView.findViewById(R.id.ivIconForecast);
             day = itemView.findViewById(R.id.tvDayForecast);
@@ -47,18 +51,15 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ForecastAdapter.ViewHolder viewHolder, int i) {
-        String[] date = forecast.get(i).getDate().split(" ");
-        String dayData = forecast.get(i).getDay();
-        String dayDate = String.format("%s %s, %s", date[0], date[1], dayData);
-        String minTemp = forecast.get(i).getTempLow();
-        String highTemp = forecast.get(i).getTempHigh();
+        String dayDate = forecast.get(i).getDate();
+        String minTemp = forecast.get(i).getDay().getMintempC().toString();
+        String highTemp = forecast.get(i).getDay().getMaxtempC().toString();
         String minMax = String.format("%s° / %s°", highTemp, minTemp);
 
         viewHolder.day.setText(dayDate);
         viewHolder.minMaxTemp.setText(minMax);
-        String code = forecast.get(i).getCode();
-        SetImage.setImageView(context, code,  viewHolder.ivIcon);
-
+        String url = "http:" + forecast.get(i).getDay().getCondition().getIcon();
+        Picasso.get().load(url).into(viewHolder.ivIcon);
 
     }
 

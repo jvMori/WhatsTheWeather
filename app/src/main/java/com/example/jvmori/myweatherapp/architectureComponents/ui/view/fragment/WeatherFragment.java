@@ -1,5 +1,6 @@
 package com.example.jvmori.myweatherapp.architectureComponents.ui.view.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.ForecastEntry;
+import com.example.jvmori.myweatherapp.architectureComponents.ui.view.adapters.ForecastAdapter;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeather;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
@@ -18,6 +20,7 @@ import com.squareup.picasso.Picasso;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -30,6 +33,7 @@ public class WeatherFragment extends Fragment {
     private LinearLayout errorLayout;
     private ImageView ivIcon;
     private RecyclerView recyclerView;
+    private ForecastAdapter forecastAdapter;
     private WeatherParameters weatherParameters;
     private CurrentWeatherViewModel viewModel;
 
@@ -71,12 +75,6 @@ public class WeatherFragment extends Fragment {
     }
 
     public void createView(){
-//        viewModel.getCurrentWeather(weatherParameters, message -> {
-//                errorLayout.setVisibility(View.VISIBLE);
-//                TextView error =  errorLayout.findViewById(R.id.textViewError);
-//                error.setText(message);
-//        }).observe(this, this::createCurrentWeatherUi
-//                );
         viewModel.getForecast(weatherParameters).observe(this, this::createCurrentWeatherUi);
     }
     private void createCurrentWeatherUi(ForecastEntry forecastEntry){
@@ -103,5 +101,14 @@ public class WeatherFragment extends Fragment {
                 .load(url)
                 .error(R.drawable.ic_11)
                 .into(ivIcon);
+
+        createRecyclerView(forecastEntry);
+    }
+
+    private void createRecyclerView(ForecastEntry forecastEntry){
+        forecastAdapter = new ForecastAdapter(forecastEntry.getForecast().mFutureWeather,getContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(forecastAdapter);
     }
 }
