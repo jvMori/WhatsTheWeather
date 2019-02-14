@@ -61,34 +61,39 @@ public class WeatherRepository {
 
     public LiveData<CurrentWeatherEntry> initWeatherData(WeatherParameters weatherParameters, OnFailure callbackOnFailure) {
         if (isFetchCurrentNeeded(ZonedDateTime.now().minusMinutes(60))){
-            weatherNetworkDataSource.fetchWeather(weatherParameters).enqueue(new Callback<CurrentWeatherEntry>() {
-                @Override
-                public void onResponse(Call<CurrentWeatherEntry> call, Response<CurrentWeatherEntry> response) {
-                    if(!response.isSuccessful()){
-                        Log.i("Fail", "Response is not successful");
-                        return;
-                    }
-                    if (response.body() != null){
-                        response.body().setDeviceLocation(weatherParameters.isDeviceLocation());
-                        currentWeatherLiveData.postValue(response.body());
-                        if (weatherParameters.isDeviceLocation())
-                            deletePreviousDeviceLocation();
-                        persistFetchedCurrentWeather(response.body());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<CurrentWeatherEntry> call, Throwable t) {
-                    Log.i("Fail", "Failed to fetch current weather" + t.toString());
-                    callbackOnFailure.callback(t.toString());
-                }
-            });
+           fetchCurrentWeather(weatherParameters, callbackOnFailure);
         }
         else {
             return currentWeatherDao.getWeatherForLocation(weatherParameters.getLocation());
         }
         return currentWeatherLiveData;
     }
+
+    private void fetchCurrentWeather(WeatherParameters weatherParameters, OnFailure callbackOnFailure){
+        weatherNetworkDataSource.fetchWeather(weatherParameters).enqueue(new Callback<CurrentWeatherEntry>() {
+            @Override
+            public void onResponse(Call<CurrentWeatherEntry> call, Response<CurrentWeatherEntry> response) {
+                if(!response.isSuccessful()){
+                    Log.i("Fail", "Response is not successful");
+                    return;
+                }
+                if (response.body() != null){
+                    response.body().setDeviceLocation(weatherParameters.isDeviceLocation());
+                    currentWeatherLiveData.postValue(response.body());
+                    if (weatherParameters.isDeviceLocation())
+                        deletePreviousDeviceLocation();
+                    persistFetchedCurrentWeather(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CurrentWeatherEntry> call, Throwable t) {
+                Log.i("Fail", "Failed to fetch current weather" + t.toString());
+                callbackOnFailure.callback(t.toString());
+            }
+        });
+    }
+
     public interface OnFailure{
         void callback(String message);
     }
