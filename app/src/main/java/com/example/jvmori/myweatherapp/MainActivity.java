@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeatherEntry;
+import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.activity.SearchActivity;
 import com.example.jvmori.myweatherapp.architectureComponents.util.Const;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
@@ -73,47 +73,35 @@ public class MainActivity extends AppCompatActivity {
         weathers = new ArrayList<>();
 
         tabLayout = findViewById(R.id.tabLayout);
-        lifecycleOwner = (LifecycleOwner) this;
+        lifecycleOwner = this;
         swipeRefreshLayout = findViewById(R.id.swipeLayout);
         tvLocalization = findViewById(R.id.tvLocalization);
         viewPager = findViewById(R.id.ViewPager);
         ivSearch = findViewById(R.id.ivSearch);
         ivMarker = findViewById(R.id.ivMarker);
-        ivSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SearchActivity();
-            }
-        });
+        ivSearch.setOnClickListener((view) -> SearchActivity());
         SetupSlidePagerAdapter(weathers);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                //UpdateCurrentWeather();
-                //swipeRefreshLayout.setRefreshing(false);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            //UpdateCurrentWeather();
+            //swipeRefreshLayout.setRefreshing(false);
         });
-        CheckLocation(this);
+        CheckLocation();
         getWeatherFromDb();
 
     }
 
     private void getWeatherFromDb() {
         CurrentWeatherViewModel currentWeatherViewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        currentWeatherViewModel.getWeather().observe(this, new Observer<List<CurrentWeatherEntry>>() {
-            @Override
-            public void onChanged(List<CurrentWeatherEntry> currentWeathers) {
-                for (CurrentWeatherEntry currentWeather : currentWeathers) {
-                    WeatherParameters weatherParameters = new WeatherParameters(
-                            currentWeather.getLocation().getName(),
-                            currentWeather.isDeviceLocation(),
-                            Const.FORECAST_DAYS
-                    );
-                    createFragments(currentWeathers, weatherParameters);
-                }
+        currentWeatherViewModel.allForecastsWithoutLoc().observe(this, (currentWeathers) -> {
+            for (ForecastEntry currentWeather : currentWeathers) {
+                WeatherParameters weatherParameters = new WeatherParameters(
+                        currentWeather.getLocation().getName(),
+                        currentWeather.isDeviceLocation,
+                        Const.FORECAST_DAYS
+                );
+                createFragments(currentWeathers, weatherParameters);
             }
         });
-
     }
 
     private void startListening() {
@@ -128,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void CheckLocation(final Context context) {
+    private void CheckLocation() {
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
@@ -181,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         slidePagerAdapter.notifyDataSetChanged();
     }
 
-    private void createFragments(List<CurrentWeatherEntry> currentWeathers, WeatherParameters weatherParameters ){
+    private void createFragments(List<ForecastEntry> currentWeathers, WeatherParameters weatherParameters) {
         WeatherFragment weatherFragment = new WeatherFragment();
         weatherFragment.setWeatherParameters(weatherParameters);
         if (weathers.size() != currentWeathers.size())

@@ -1,6 +1,5 @@
 package com.example.jvmori.myweatherapp.architectureComponents.ui.view.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.data.repository.WeatherRepository;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.adapters.ForecastAdapter;

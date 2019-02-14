@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.example.jvmori.myweatherapp.MainActivity;
 import com.example.jvmori.myweatherapp.R;
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
 import com.example.jvmori.myweatherapp.data.WeatherData;
