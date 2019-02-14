@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeatherEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.activity.SearchActivity;
+import com.example.jvmori.myweatherapp.architectureComponents.util.Const;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.fragment.WeatherFragment;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                     WeatherParameters weatherParameters = new WeatherParameters(
                             currentWeather.getLocation().getName(),
                             currentWeather.isDeviceLocation(),
-                            "7"
+                            Const.FORECAST_DAYS
                     );
                     createFragments(currentWeathers, weatherParameters);
                 }
@@ -136,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 WeatherParameters weatherParameters = new WeatherParameters(
                         deviceLocation,
                         true,
-                        "7"
+                        Const.FORECAST_DAYS
                 );
                 if (weathers.size() == 0)
                     createFragmentAndUpdateAdapter(weatherParameters);
