@@ -7,6 +7,7 @@ import com.example.jvmori.myweatherapp.architectureComponents.AppExecutors;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.ForecastDao;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.WeatherDatabase;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.ForecastEntry;
+import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSource;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSourceImpl;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 
@@ -23,7 +24,7 @@ public class WeatherRepository {
     private static final Object LOCK = new Object();
     private static WeatherRepository instance;
     private ForecastDao forecastDao;
-    private WeatherNetworkDataSourceImpl weatherNetworkDataSource;
+    private WeatherNetworkDataSource weatherNetworkDataSource;
     private AppExecutors executors;
     private MutableLiveData<ForecastEntry> forecastEntryData;
 
