@@ -38,21 +38,15 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             ivMarker = itemView.findViewById(R.id.ivLocationMarker);
             ivIcon = itemView.findViewById(R.id.ivIconLocItem);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Locations tag = (Locations) view.getTag();
-                    itemClicked.onItemClicked(currentWeathers.indexOf(tag));
-                }
+            itemView.setOnClickListener(view -> {
+                Locations tag = (Locations) view.getTag();
+                itemClicked.onItemClicked(currentWeathers.indexOf(tag));
             });
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    Locations tag = (Locations) view.getTag();
-                    itemClicked.onLongPress(currentWeathers.indexOf(tag));
-                    return true;
-                }
+            itemView.setOnLongClickListener(view -> {
+                Locations tag = (Locations) view.getTag();
+                itemClicked.onLongPress(currentWeathers.indexOf(tag));
+                return true;
             });
         }
     }

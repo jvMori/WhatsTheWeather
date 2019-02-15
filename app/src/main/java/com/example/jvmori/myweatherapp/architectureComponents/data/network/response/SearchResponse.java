@@ -5,4 +5,12 @@ import java.util.List;
 public class SearchResponse
 {
     private List<Search> results;
+
+    public List<Search> getResults() {
+        return results;
+    }
+
+    public void setResults(List<Search> results) {
+        this.results = results;
+    }
 }

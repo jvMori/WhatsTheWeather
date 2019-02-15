@@ -24,6 +24,14 @@
         android:id="@+id/rvSearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="50dp" />
+        android:paddingTop="50dp"
+        android:visibility="visible"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchResults"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="50dp"
+        android:visibility="gone"/>
 
 </LinearLayout>
