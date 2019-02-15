@@ -9,6 +9,7 @@ import com.example.jvmori.myweatherapp.architectureComponents.data.db.WeatherDat
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSource;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSourceImpl;
+import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.SearchResponse;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 
 import java.time.ZonedDateTime;
@@ -27,10 +28,12 @@ public class WeatherRepository {
     private WeatherNetworkDataSource weatherNetworkDataSource;
     private AppExecutors executors;
     private MutableLiveData<ForecastEntry> forecastEntryData;
+    private MutableLiveData<SearchResponse> searchResponseData;
 
     private WeatherRepository(Application application, AppExecutors executors) {
         this.executors = executors;
         forecastEntryData = new MutableLiveData<>();
+        searchResponseData = new MutableLiveData<>();
         this.weatherNetworkDataSource = new WeatherNetworkDataSourceImpl();
         this.forecastDao = WeatherDatabase.getInstance(application.getApplicationContext()).forecastDao();
     }
@@ -57,6 +60,10 @@ public class WeatherRepository {
             forecastDao.deleteForecastForDeviceLocation();
             forecastDao.insert(newForecastEntry);
         });
+    }
+
+    public LiveData<SearchResponse> getResultsForCity(String cityName){
+       return weatherNetworkDataSource.searchCity(cityName);
     }
 
     public LiveData<ForecastEntry> getForecast(WeatherParameters weatherParameters, OnFailure onFailure){
