@@ -85,7 +85,7 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked {
     private void searchViewModel(String query) {
         if (query.length() > 3) {
             searchViewModel.getResultsForCity(query).observe(this, (searchResponse -> {
-                setSearchResultView(searchResponse.getResults());
+                setSearchResultView(searchResponse);
             }));
         }
     }

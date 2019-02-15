@@ -9,6 +9,7 @@ import com.example.jvmori.myweatherapp.architectureComponents.data.db.WeatherDat
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSource;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSourceImpl;
+import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.Search;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.SearchResponse;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 
@@ -62,7 +63,7 @@ public class WeatherRepository {
         });
     }
 
-    public LiveData<SearchResponse> getResultsForCity(String cityName){
+    public LiveData<List<Search>> getResultsForCity(String cityName){
        return weatherNetworkDataSource.searchCity(cityName);
     }
 
