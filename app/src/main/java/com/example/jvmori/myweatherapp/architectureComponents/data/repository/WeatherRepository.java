@@ -10,7 +10,6 @@ import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.for
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSource;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.WeatherNetworkDataSourceImpl;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.Search;
-import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.SearchResponse;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 
 import java.time.ZonedDateTime;
@@ -29,12 +28,10 @@ public class WeatherRepository {
     private WeatherNetworkDataSource weatherNetworkDataSource;
     private AppExecutors executors;
     private MutableLiveData<ForecastEntry> forecastEntryData;
-    private MutableLiveData<SearchResponse> searchResponseData;
 
     private WeatherRepository(Application application, AppExecutors executors) {
         this.executors = executors;
         forecastEntryData = new MutableLiveData<>();
-        searchResponseData = new MutableLiveData<>();
         this.weatherNetworkDataSource = new WeatherNetworkDataSourceImpl();
         this.forecastDao = WeatherDatabase.getInstance(application.getApplicationContext()).forecastDao();
     }

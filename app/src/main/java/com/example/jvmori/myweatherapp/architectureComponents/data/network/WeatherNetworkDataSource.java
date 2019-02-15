@@ -2,7 +2,6 @@ package com.example.jvmori.myweatherapp.architectureComponents.data.network;
 
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.Search;
-import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.SearchResponse;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 
 import java.util.List;
