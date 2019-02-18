@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.Search;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -15,10 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.SearchViewHolder>
 {
-    private List<Search> items;
+    private List<Search> items =  new ArrayList<>();
 
-    public SearchResultsAdapter(List<Search> items){
+    public void setSearchedResult(List<Search> items){
         this.items = items;
+        notifyDataSetChanged();
     }
 
     @NonNull

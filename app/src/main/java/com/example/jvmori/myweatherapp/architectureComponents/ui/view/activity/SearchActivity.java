@@ -6,25 +6,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.example.jvmori.myweatherapp.MainActivity;
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.ForecastEntry;
-import com.example.jvmori.myweatherapp.architectureComponents.data.network.response.Search;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.adapters.SearchResultsAdapter;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.SearchViewModel;
-import com.example.jvmori.myweatherapp.data.WeatherData;
-import com.example.jvmori.myweatherapp.model.Locations;
-import com.example.jvmori.myweatherapp.utils.Contains;
 import com.example.jvmori.myweatherapp.utils.ItemClicked;
-import com.example.jvmori.myweatherapp.utils.OnErrorResponse;
-import com.example.jvmori.myweatherapp.utils.SaveManager;
-import com.example.jvmori.myweatherapp.utils.WeatherAsyncResponse;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.adapters.LocationAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,12 +26,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class SearchActivity extends AppCompatActivity implements ItemClicked {
 
-    private RecyclerView recyclerView, searchResltsRv;
+    private RecyclerView recyclerView, searchResultsRv;
     private RecyclerView.Adapter myAdapter;
     private ImageView backBtn;
     private SearchView searchView;
     private Context context;
     private SearchViewModel searchViewModel;
+    private SearchResultsAdapter searchAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,43 +40,48 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked {
         context = this;
         setContentView(R.layout.activity_search);
         searchView = findViewById(R.id.searchField);
-        searchResltsRv = findViewById(R.id.searchResults);
+        searchResultsRv = findViewById(R.id.searchResults);
         String hint = (String) getText(R.string.search_hint);
         searchViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
+        setSearchResultView();
         searchView.setQueryHint(hint);
-        searchView.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
+        searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus){
                 recyclerView.setVisibility(View.GONE);
-                searchResltsRv.setVisibility(View.VISIBLE);
-            } else {
-                recyclerView.setVisibility(View.VISIBLE);
-                searchResltsRv.setVisibility(View.GONE);
-                searchView.setQuery("", false);
-                searchView.clearFocus();
-                searchView.setIconified(true);
+                searchResultsRv.setVisibility(View.VISIBLE);
             }
         });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
+                searchViewModel(s.trim());
                 searchView.setQuery("", false);
                 searchView.clearFocus();
                 searchView.setIconified(true);
-                return false;
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String query) {
                 searchViewModel(query.trim());
-                return false;
+                return true;
             }
+        });
+
+        searchView.setOnCloseListener(() -> {
+            recyclerView.setVisibility(View.VISIBLE);
+            searchResultsRv.setVisibility(View.GONE);
+            searchView.setQuery("", false);
+            searchView.clearFocus();
+            searchView.setIconified(true);
+            return false;
         });
         createUi();
     }
 
     private void searchViewModel(String query) {
         searchViewModel.getResultsForCity(query).observe(this, (searchResponse -> {
-            setSearchResultView(searchResponse);
+            searchAdapter.setSearchedResult(searchResponse);
         }));
     }
 
@@ -108,26 +105,11 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked {
         startActivity(intent);
     }
 
-    void searchWeather(String location) {
-        WeatherData weatherData = new WeatherData();
-        weatherData.getResponse(locationData -> {
-            if (Contains.containsName(MainActivity.locations, locationData.getId()) == -1) {
-                MainActivity.locations.add(locationData);
-                SaveManager.saveData(context, MainActivity.locations);
-                myAdapter.notifyDataSetChanged();
-            } else {
-                Toast.makeText(SearchActivity.this, "City already exist!", Toast.LENGTH_SHORT).show();
-            }
-            BackToMainActivity(MainActivity.locations.size() - 1);
-        }, message -> Toast.makeText(SearchActivity.this, message, Toast.LENGTH_SHORT).show(), location);
-
-    }
-
-    private void setSearchResultView(List<Search> results) {
-        SearchResultsAdapter adapter = new SearchResultsAdapter(results);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);
+    private void setSearchResultView() {
+        searchAdapter = new SearchResultsAdapter();
+        searchResultsRv.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        searchResultsRv.setHasFixedSize(true);
+        searchResultsRv.setAdapter(searchAdapter);
     }
 
     @Override
@@ -137,9 +119,7 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked {
 
     @Override
     public void onLongPress(int index) {
-        MainActivity.locations.remove(index);
-        SaveManager.saveData(context, MainActivity.locations);
-        myAdapter.notifyDataSetChanged();
+
     }
 
 }
