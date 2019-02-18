@@ -71,9 +71,6 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked {
         searchView.setOnCloseListener(() -> {
             recyclerView.setVisibility(View.VISIBLE);
             searchResultsRv.setVisibility(View.GONE);
-            searchView.setQuery("", false);
-            searchView.clearFocus();
-            searchView.setIconified(true);
             return false;
         });
         createUi();
