@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             //swipeRefreshLayout.setRefreshing(false);
         });
         CheckLocation();
-        getWeatherFromDb();
+       // getWeatherFromDb();
 
     }
 

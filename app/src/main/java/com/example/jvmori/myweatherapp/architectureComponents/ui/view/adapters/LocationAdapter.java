@@ -27,6 +27,12 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         this.currentWeathers = locations;
         itemClicked = (ItemClicked) ctx;
     }
+    public void addForecastAndNotifyAdapter(ForecastEntry forecastEntry){
+        if(!currentWeathers.contains(forecastEntry)){
+            currentWeathers.add(forecastEntry);
+            notifyDataSetChanged();
+        }
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvCityName, tvCurrentTemp;
