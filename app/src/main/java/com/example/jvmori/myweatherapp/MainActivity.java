@@ -81,12 +81,12 @@ public class MainActivity extends AppCompatActivity {
         ivMarker = findViewById(R.id.ivMarker);
         ivSearch.setOnClickListener((view) -> SearchActivity());
         SetupSlidePagerAdapter(weathers);
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            //UpdateCurrentWeather();
-            //swipeRefreshLayout.setRefreshing(false);
-        });
+//        swipeRefreshLayout.setOnRefreshListener(() -> {
+//            //UpdateCurrentWeather();
+//            //swipeRefreshLayout.setRefreshing(false);
+//        });
         CheckLocation();
-       // getWeatherFromDb();
+        getWeatherFromDb();
 
     }
 
