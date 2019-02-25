@@ -53,6 +53,9 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked {
             if (hasFocus) {
                 recyclerView.setVisibility(View.GONE);
                 searchResultsRv.setVisibility(View.VISIBLE);
+            }else {
+                recyclerView.setVisibility(View.VISIBLE);
+                searchResultsRv.setVisibility(View.GONE);
             }
         });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -73,9 +76,10 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked {
         });
 
         searchView.setOnCloseListener(() -> {
-            recyclerView.setVisibility(View.VISIBLE);
-            searchResultsRv.setVisibility(View.GONE);
-            return false;
+            searchView.clearFocus();
+//            recyclerView.setVisibility(View.VISIBLE);
+//            searchResultsRv.setVisibility(View.GONE);
+            return true;
         });
     }
 
@@ -87,8 +91,11 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked {
             currentWeatherViewModel.downloadWeather(
                     new WeatherParameters(query, false, Const.FORECAST_DAYS), null)
                     .observe(this, forecastEntry -> {
-                        if(forecastEntry!= null)
+                        if(forecastEntry!= null){
                             locationsAdapter.addForecastAndNotifyAdapter(forecastEntry);
+                            recyclerView.setVisibility(View.VISIBLE);
+                            searchResultsRv.setVisibility(View.GONE);
+                        }
                     });
         }
     }

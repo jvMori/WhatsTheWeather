@@ -40,7 +40,6 @@ public class WeatherNetworkDataSourceImpl implements WeatherNetworkDataSource  {
                 if(response.body() != null)
                     results.postValue(response.body());
             }
-
             @Override
             public void onFailure(Call<List<Search>> call, Throwable t) {
                 Log.i("Failed", "Failed to fetch data!");
