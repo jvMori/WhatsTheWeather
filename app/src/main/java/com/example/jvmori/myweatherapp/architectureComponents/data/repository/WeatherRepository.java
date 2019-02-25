@@ -27,11 +27,10 @@ public class WeatherRepository {
     private ForecastDao forecastDao;
     private WeatherNetworkDataSource weatherNetworkDataSource;
     private AppExecutors executors;
-    private MutableLiveData<ForecastEntry> forecastEntryData;
+
 
     private WeatherRepository(Application application, AppExecutors executors) {
         this.executors = executors;
-        forecastEntryData = new MutableLiveData<>();
         this.weatherNetworkDataSource = new WeatherNetworkDataSourceImpl();
         this.forecastDao = WeatherDatabase.getInstance(application.getApplicationContext()).forecastDao();
     }
@@ -45,55 +44,69 @@ public class WeatherRepository {
         return instance;
     }
 
-    public LiveData<List<ForecastEntry>> getAllForecast(){
+    public LiveData<List<ForecastEntry>> getAllForecast() {
         return forecastDao.getForecastsForAllLocations();
     }
 
-    public LiveData<List<ForecastEntry>> allForecastsWithoutLoc(){
+    public LiveData<List<ForecastEntry>> allForecastsWithoutLoc() {
         return forecastDao.allForecastsExceptForDeviceLocation();
     }
 
-    private void persistForecast(ForecastEntry newForecastEntry){
-        executors.diskIO().execute(()-> {
+    private void persistForecast(ForecastEntry newForecastEntry) {
+        executors.diskIO().execute(() -> {
             forecastDao.deleteForecastForDeviceLocation();
             forecastDao.insert(newForecastEntry);
         });
     }
 
-    public LiveData<List<Search>> getResultsForCity(String cityName){
-       return weatherNetworkDataSource.searchCity(cityName);
+    public LiveData<List<Search>> getResultsForCity(String cityName) {
+        return weatherNetworkDataSource.searchCity(cityName);
     }
 
-    public LiveData<ForecastEntry> getForecast(WeatherParameters weatherParameters, OnFailure onFailure){
-        if (isFetchCurrentNeeded(ZonedDateTime.now().minusMinutes(60))){
-            weatherNetworkDataSource.fetchForecast(weatherParameters).enqueue(new Callback<ForecastEntry>() {
-                @Override
-                public void onResponse(Call<ForecastEntry> call, Response<ForecastEntry> response) {
-                    if(!response.isSuccessful()){
-                        Log.i("Fail", "Response is not successful");
-                        onFailure.callback("Failed! Response is not successful");
-                        return;
-                    }
-                    if (response.body() != null){
-                        response.body().isDeviceLocation = weatherParameters.isDeviceLocation();
-                        persistForecast(response.body());
-                        forecastEntryData.postValue(response.body());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ForecastEntry> call, Throwable t) {
-                    Log.i("Fail", "Failed to fetch current weather" + t.toString());
-                    onFailure.callback(t.getMessage());
-                }
-            });
-        } else
-            return forecastDao.getForecastsForLocation(weatherParameters.getLocation());
-
+    public LiveData<ForecastEntry> downloadWeather(WeatherParameters weatherParameters, OnFailure onFailure) {
+        MutableLiveData<ForecastEntry> forecastEntryData = new MutableLiveData<>();
+        if (isFetchCurrentNeeded(ZonedDateTime.now().minusMinutes(60))) {
+            fetchWeather(weatherParameters, onFailure, forecastEntryData);
+        } else {
+            getWeatherFromDb(weatherParameters,forecastEntryData);
+        }
         return forecastEntryData;
     }
 
-    public interface OnFailure{
+    private void getWeatherFromDb(WeatherParameters weatherParameters,
+                                  MutableLiveData<ForecastEntry> forecastEntryData) {
+        executors.diskIO().execute(() -> {
+            forecastEntryData.postValue(forecastDao.getForecastsForLocation(weatherParameters.getLocation()));
+        });
+    }
+
+    private void fetchWeather(WeatherParameters weatherParameters,
+                              OnFailure onFailure,
+                              MutableLiveData<ForecastEntry> forecastEntryData) {
+        weatherNetworkDataSource.fetchForecast(weatherParameters).enqueue(new Callback<ForecastEntry>() {
+            @Override
+            public void onResponse(Call<ForecastEntry> call, Response<ForecastEntry> response) {
+                if (!response.isSuccessful()) {
+                    Log.i("Fail", "Response is not successful");
+                    onFailure.callback("Failed! Response is not successful");
+                    return;
+                }
+                if (response.body() != null) {
+                    response.body().isDeviceLocation = weatherParameters.isDeviceLocation();
+                    persistForecast(response.body());
+                    forecastEntryData.postValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ForecastEntry> call, Throwable t) {
+                Log.i("Fail", "Failed to fetch current weather" + t.toString());
+                onFailure.callback(t.getMessage());
+            }
+        });
+    }
+
+    public interface OnFailure {
         void callback(String message);
     }
 

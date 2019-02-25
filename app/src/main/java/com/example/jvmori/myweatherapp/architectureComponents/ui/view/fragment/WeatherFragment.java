@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.ForecastEntry;
-import com.example.jvmori.myweatherapp.architectureComponents.data.repository.WeatherRepository;
 import com.example.jvmori.myweatherapp.architectureComponents.ui.view.adapters.ForecastAdapter;
 import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeather;
@@ -36,7 +35,7 @@ public class WeatherFragment extends Fragment {
     private WeatherParameters weatherParameters;
     private CurrentWeatherViewModel viewModel;
 
-    public void setWeatherParameters(WeatherParameters weatherParameters){
+    public void setWeatherParameters(WeatherParameters weatherParameters) {
         this.weatherParameters = weatherParameters;
     }
 
@@ -70,21 +69,22 @@ public class WeatherFragment extends Fragment {
     public void onViewCreated(@androidx.annotation.NonNull View view, @androidx.annotation.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        if (weatherParameters!= null)
+        if (weatherParameters != null)
             createView();
     }
 
-    public void createView(){
+    public void createView() {
         progressBarLayout.setVisibility(View.VISIBLE);
         errorLayout.setVisibility(View.GONE);
-        viewModel.getForecast(weatherParameters, new WeatherRepository.OnFailure() {
-            @Override
-            public void callback(String message) {
-                errorLayout.setVisibility(View.VISIBLE);
-            }
-        }).observe(this, this::createCurrentWeatherUi);
+        viewModel.downloadWeather(weatherParameters, message ->
+                errorLayout.setVisibility(View.VISIBLE))
+                .observe(this, forecastEntry -> {
+                    if(forecastEntry != null)
+                        createCurrentWeatherUi(forecastEntry);
+                });
     }
-    private void createCurrentWeatherUi(ForecastEntry forecastEntry){
+
+    private void createCurrentWeatherUi(ForecastEntry forecastEntry) {
         weatherParameters.setLocation(forecastEntry.getLocation().getName());
         CurrentWeather currentWeather = forecastEntry.getCurrentWeather();
 
@@ -93,7 +93,7 @@ public class WeatherFragment extends Fragment {
                 forecastEntry.getLocation().getCountry());
         String description = currentWeather.mCondition.getText();
         String feelslike = "Feels like: " + currentWeather.mFeelslikeC.toString() + "°";
-        String humidityTxt= "Humidity: " + currentWeather.mHumidity.toString() + " %";
+        String humidityTxt = "Humidity: " + currentWeather.mHumidity.toString() + " %";
         String pressureTxt = currentWeather.mPressureMb.toString() + " hPa";
         String temp = currentWeather.mTempC.toString() + "°";
 
@@ -113,8 +113,8 @@ public class WeatherFragment extends Fragment {
         progressBarLayout.setVisibility(View.GONE);
     }
 
-    private void createRecyclerView(ForecastEntry forecastEntry){
-        forecastAdapter = new ForecastAdapter(forecastEntry.getForecast().mFutureWeather,getContext());
+    private void createRecyclerView(ForecastEntry forecastEntry) {
+        forecastAdapter = new ForecastAdapter(forecastEntry.getForecast().mFutureWeather, getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(forecastAdapter);

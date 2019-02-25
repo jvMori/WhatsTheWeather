@@ -84,10 +84,11 @@ public class SearchActivity extends AppCompatActivity implements ItemClicked {
             searchAdapter.setSearchedResult(searchResponse);
         }));
         if(query != null && query.length() > 3){
-            currentWeatherViewModel.getForecast(
+            currentWeatherViewModel.downloadWeather(
                     new WeatherParameters(query, false, Const.FORECAST_DAYS), null)
                     .observe(this, forecastEntry -> {
-                        locationsAdapter.addForecastAndNotifyAdapter(forecastEntry);
+                        if(forecastEntry!= null)
+                            locationsAdapter.addForecastAndNotifyAdapter(forecastEntry);
                     });
         }
     }
