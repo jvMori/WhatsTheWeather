@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="@drawable/bg"
     android:layout_height="match_parent"
-    tools:context=".architectureComponents.ui.view.activity.SearchActivity">
+    tools:context=".ui.view.activity.SearchActivity">
 
     <SearchView
         android:id="@+id/searchField"

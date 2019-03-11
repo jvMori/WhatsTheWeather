@@ -13,15 +13,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.forecast.ForecastEntry;
-import com.example.jvmori.myweatherapp.architectureComponents.ui.view.activity.SearchActivity;
-import com.example.jvmori.myweatherapp.architectureComponents.util.Const;
-import com.example.jvmori.myweatherapp.architectureComponents.util.WeatherParameters;
-import com.example.jvmori.myweatherapp.architectureComponents.ui.view.fragment.WeatherFragment;
-import com.example.jvmori.myweatherapp.architectureComponents.ui.viewModel.CurrentWeatherViewModel;
-import com.example.jvmori.myweatherapp.architectureComponents.data.db.entity.current.CurrentWeather;
-import com.example.jvmori.myweatherapp.model.Locations;
-import com.example.jvmori.myweatherapp.architectureComponents.ui.view.adapters.SlidePagerAdapter;
+import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
+import com.example.jvmori.myweatherapp.ui.view.activity.SearchActivity;
+import com.example.jvmori.myweatherapp.util.Const;
+import com.example.jvmori.myweatherapp.util.WeatherParameters;
+import com.example.jvmori.myweatherapp.ui.view.fragment.WeatherFragment;
+import com.example.jvmori.myweatherapp.ui.viewModel.CurrentWeatherViewModel;
+import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
+import com.example.jvmori.myweatherapp.ui.view.adapters.SlidePagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -32,21 +31,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 
 public class MainActivity extends AppCompatActivity {
-    private MutableLiveData<List<CurrentWeather>> allWeather;
 
-    public static ArrayList<Locations> locations;
-    private static ArrayList<String> tempLoc;
     private SlidePagerAdapter slidePagerAdapter;
     private ViewPager viewPager;
-    int mDotCount;
-    ImageView[] dots;
     ImageView ivSearch, ivMarker;
     TextView tvLocalization;
     LocationManager locationManager;
