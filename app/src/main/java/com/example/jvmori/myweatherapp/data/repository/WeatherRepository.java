@@ -56,7 +56,8 @@ public class WeatherRepository {
 
     private void persistForecast(ForecastEntry newForecastEntry) {
         executors.diskIO().execute(() -> {
-            forecastDao.deleteForecastForDeviceLocation();
+//            if(newForecastEntry.isDeviceLocation)
+//                forecastDao.deleteForecastForDeviceLocation();
             newForecastEntry.setTimestamp(System.currentTimeMillis());
             forecastDao.insert(newForecastEntry);
         });

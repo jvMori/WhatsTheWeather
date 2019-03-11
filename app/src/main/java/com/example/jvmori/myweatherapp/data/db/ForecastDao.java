@@ -22,7 +22,7 @@ public interface ForecastDao
     @Query("delete from forecast where mCityName like :cityName")
     void deleteForecastByLocation(String cityName);
 
-    @Query("select * from forecast")
+    @Query("select * from forecast order by isDeviceLocation desc")
     LiveData<List<ForecastEntry>> getForecastsForAllLocations();
 
     @Query("select * from forecast where mCityName like :location")
