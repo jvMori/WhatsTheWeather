@@ -67,20 +67,14 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tabLayout);
         lifecycleOwner = this;
-        swipeRefreshLayout = findViewById(R.id.swipeLayout);
         tvLocalization = findViewById(R.id.tvLocalization);
         viewPager = findViewById(R.id.ViewPager);
         ivSearch = findViewById(R.id.ivSearch);
         ivMarker = findViewById(R.id.ivMarker);
         ivSearch.setOnClickListener((view) -> SearchActivity());
         SetupSlidePagerAdapter(weathers);
-//        swipeRefreshLayout.setOnRefreshListener(() -> {
-//            //UpdateCurrentWeather();
-//            //swipeRefreshLayout.setRefreshing(false);
-//        });
         CheckLocation();
-        getWeatherFromDb();
-
+        //getWeatherFromDb();
     }
 
     private void getWeatherFromDb() {

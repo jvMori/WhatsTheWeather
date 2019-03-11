@@ -16,6 +16,7 @@ public class ForecastEntry {
     public int id;
 
     public boolean isDeviceLocation;
+    private Long timestamp;
 
     @SerializedName("current")
     @Embedded
@@ -51,5 +52,13 @@ public class ForecastEntry {
 
     public void setCurrentWeather(CurrentWeather currentWeather) {
         this.currentWeather = currentWeather;
+    }
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
     }
 }

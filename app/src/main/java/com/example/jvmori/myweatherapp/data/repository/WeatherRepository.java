@@ -10,6 +10,7 @@ import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.data.network.WeatherNetworkDataSource;
 import com.example.jvmori.myweatherapp.data.network.WeatherNetworkDataSourceImpl;
 import com.example.jvmori.myweatherapp.data.network.response.Search;
+import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 
 import java.time.ZonedDateTime;
@@ -27,7 +28,8 @@ public class WeatherRepository {
     private ForecastDao forecastDao;
     private WeatherNetworkDataSource weatherNetworkDataSource;
     private AppExecutors executors;
-
+    private Long lastUpdate = 0L;
+    private MutableLiveData<ForecastEntry> forecastEntryData = new MutableLiveData<>();
 
     private WeatherRepository(Application application, AppExecutors executors) {
         this.executors = executors;
@@ -55,6 +57,7 @@ public class WeatherRepository {
     private void persistForecast(ForecastEntry newForecastEntry) {
         executors.diskIO().execute(() -> {
             forecastDao.deleteForecastForDeviceLocation();
+            newForecastEntry.setTimestamp(System.currentTimeMillis());
             forecastDao.insert(newForecastEntry);
         });
     }
@@ -64,24 +67,19 @@ public class WeatherRepository {
     }
 
     public LiveData<ForecastEntry> downloadWeather(WeatherParameters weatherParameters, OnFailure onFailure) {
-        MutableLiveData<ForecastEntry> forecastEntryData = new MutableLiveData<>();
-        getWeatherFromDb(weatherParameters,forecastEntryData);
-        if (isFetchCurrentNeeded(ZonedDateTime.now().minusMinutes(60))) {
-            fetchWeather(weatherParameters, onFailure, forecastEntryData);
-        }
+        getWeatherFromDb(weatherParameters);
+        fetchWeather(weatherParameters, onFailure);
         return forecastEntryData;
     }
 
-    private void getWeatherFromDb(WeatherParameters weatherParameters,
-                                  MutableLiveData<ForecastEntry> forecastEntryData) {
+    private void getWeatherFromDb(WeatherParameters weatherParameters) {
         executors.diskIO().execute(() -> {
             forecastEntryData.postValue(forecastDao.getForecastsForLocation(weatherParameters.getLocation()));
         });
     }
 
     private void fetchWeather(WeatherParameters weatherParameters,
-                              OnFailure onFailure,
-                              MutableLiveData<ForecastEntry> forecastEntryData) {
+                              OnFailure onFailure) {
         weatherNetworkDataSource.fetchForecast(weatherParameters).enqueue(new Callback<ForecastEntry>() {
             @Override
             public void onResponse(Call<ForecastEntry> call, Response<ForecastEntry> response) {
@@ -100,7 +98,8 @@ public class WeatherRepository {
             @Override
             public void onFailure(Call<ForecastEntry> call, Throwable t) {
                 Log.i("Fail", "Failed to fetch current weather" + t.toString());
-                onFailure.callback(t.getMessage());
+                if(onFailure != null)
+                    onFailure.callback(t.getMessage());
             }
         });
     }
@@ -109,8 +108,7 @@ public class WeatherRepository {
         void callback(String message);
     }
 
-    private boolean isFetchCurrentNeeded(ZonedDateTime lastFetchedTime) {
-        ZonedDateTime thirtyMinutesAgo = ZonedDateTime.now().minusMinutes(30);
-        return lastFetchedTime.isBefore(thirtyMinutesAgo);
+    private boolean isFetchCurrentNeeded(Long lastUpdate) {
+        return System.currentTimeMillis() - lastUpdate < Const.STALE_MS;
     }
 }
