@@ -20,10 +20,15 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 {
     private List<ForecastEntry> currentWeathers;
     private IOnClickListener iOnClickListener;
+    private ILongClickListener iLongClickListener;
 
-    public LocationAdapter(List<ForecastEntry> locations, IOnClickListener iOnClickListener, Context ctx) {
+    public LocationAdapter(List<ForecastEntry> locations,
+                           IOnClickListener iOnClickListener,
+                           ILongClickListener iLongClickListener,
+                           Context ctx) {
         this.currentWeathers = locations;
         this.iOnClickListener = iOnClickListener;
+        this.iLongClickListener = iLongClickListener;
     }
     public void addForecastAndNotifyAdapter(ForecastEntry forecastEntry){
         if(!currentWeathers.contains(forecastEntry)){
@@ -49,7 +54,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             });
 
             itemView.setOnLongClickListener(view -> {
-
+                int position = getAdapterPosition();
+                if (position != -1 )
+                    iLongClickListener.onLongClick(currentWeathers.get(position).getLocation().mCityName);
                 return true;
             });
         }
@@ -68,7 +75,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         viewHolder.itemView.setTag(currentWeathers.get(i));
         String cityName = currentWeathers.get(i).getLocation().getName();
         String currTemp = currentWeathers.get(i).getCurrentWeather().mTempC.toString();
-        if(i == 0){
+        Boolean isDeviceLoc = currentWeathers.get(i).isDeviceLocation;
+        if(isDeviceLoc){
             viewHolder.ivMarker.setVisibility(View.VISIBLE);
         }else{
             viewHolder.ivMarker.setVisibility(View.INVISIBLE);
@@ -89,5 +97,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     public interface IOnClickListener{
         void callback(String location);
+    }
+
+    public interface ILongClickListener{
+        void onLongClick(String location);
     }
 }

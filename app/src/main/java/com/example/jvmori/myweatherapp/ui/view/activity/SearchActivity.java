@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class SearchActivity extends AppCompatActivity implements LocationAdapter.IOnClickListener {
+public class SearchActivity extends AppCompatActivity implements LocationAdapter.IOnClickListener, LocationAdapter.ILongClickListener {
 
     private RecyclerView recyclerView, searchResultsRv;
     private LocationAdapter locationsAdapter;
@@ -113,7 +113,7 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        locationsAdapter = new LocationAdapter(responses, this, this);
+        locationsAdapter = new LocationAdapter(responses, this, this, this);
         recyclerView.setAdapter(locationsAdapter);
     }
 
@@ -133,5 +133,11 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
     @Override
     public void callback(String location) {
         BackToMainActivity(location);
+    }
+
+    @Override
+    public void onLongClick(String location) {
+        currentWeatherViewModel.deleteWeather(location);
+        locationsAdapter.notifyDataSetChanged();
     }
 }

@@ -62,6 +62,13 @@ public class WeatherRepository {
         });
     }
 
+    public void deleteWeather(String location){
+        executors.diskIO().execute(()->{
+            forecastDao.deleteForecastByLocation(location);
+        });
+    }
+
+
     public LiveData<List<Search>> getResultsForCity(String cityName) {
         return weatherNetworkDataSource.searchCity(cityName);
     }

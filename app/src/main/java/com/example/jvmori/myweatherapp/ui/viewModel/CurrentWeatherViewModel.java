@@ -25,6 +25,10 @@ public class CurrentWeatherViewModel extends AndroidViewModel {
         return weatherRepository.downloadWeather(parameters, onFailure);
     }
 
+    public void deleteWeather(String location){
+        weatherRepository.deleteWeather(location);
+    }
+
     public LiveData<List<ForecastEntry>> getAllForecast(){ return  weatherRepository.getAllForecast();}
 
     public LiveData<List<ForecastEntry>> allForecastsWithoutLoc() {return  weatherRepository.allForecastsWithoutLoc();}
