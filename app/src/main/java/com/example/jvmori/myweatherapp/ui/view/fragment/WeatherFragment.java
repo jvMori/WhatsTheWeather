@@ -79,7 +79,7 @@ public class WeatherFragment extends Fragment {
         viewModel.downloadWeather(weatherParameters, message ->
                 errorLayout.setVisibility(View.VISIBLE))
                 .observe(this, forecastEntry -> {
-                    if(forecastEntry != null)
+                    if (forecastEntry != null)
                         createCurrentWeatherUi(forecastEntry);
                 });
     }

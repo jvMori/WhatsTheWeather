@@ -34,7 +34,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:textColor="#FFF"
-            android:text="TextView"
+            android:text="Something went wrong!"
             android:textSize="22sp" />
     </LinearLayout>
 

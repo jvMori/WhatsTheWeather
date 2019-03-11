@@ -73,7 +73,13 @@ public class MainActivity extends AppCompatActivity {
         ivMarker = findViewById(R.id.ivMarker);
         ivSearch.setOnClickListener((view) -> SearchActivity());
         SetupSlidePagerAdapter(weathers);
-        CheckLocation();
+
+        String location = getIntent().getStringExtra("location");
+        if (location != null){
+            createFragmentAndUpdateAdapter(new WeatherParameters(location,false,"10"));
+        }else{
+            CheckLocation();
+        }
         //getWeatherFromDb();
     }
 

@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements LocationAdapter.IOnClickListener {
 
     private RecyclerView recyclerView, searchResultsRv;
     private LocationAdapter locationsAdapter;
@@ -113,13 +113,13 @@ public class SearchActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        locationsAdapter = new LocationAdapter(responses, this);
+        locationsAdapter = new LocationAdapter(responses, this, this);
         recyclerView.setAdapter(locationsAdapter);
     }
 
-    void BackToMainActivity(int position) {
+    void BackToMainActivity(String location) {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("position", position);
+        intent.putExtra("location", location);
         startActivity(intent);
     }
 
@@ -130,4 +130,8 @@ public class SearchActivity extends AppCompatActivity {
         searchResultsRv.setAdapter(searchAdapter);
     }
 
+    @Override
+    public void callback(String location) {
+        BackToMainActivity(location);
+    }
 }

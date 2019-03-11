@@ -19,9 +19,11 @@ import androidx.recyclerview.widget.RecyclerView;
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder>
 {
     private List<ForecastEntry> currentWeathers;
+    private IOnClickListener iOnClickListener;
 
-    public LocationAdapter(List<ForecastEntry> locations, Context ctx) {
+    public LocationAdapter(List<ForecastEntry> locations, IOnClickListener iOnClickListener, Context ctx) {
         this.currentWeathers = locations;
+        this.iOnClickListener = iOnClickListener;
     }
     public void addForecastAndNotifyAdapter(ForecastEntry forecastEntry){
         if(!currentWeathers.contains(forecastEntry)){
@@ -41,7 +43,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             ivIcon = itemView.findViewById(R.id.ivIconLocItem);
 
             itemView.setOnClickListener(view -> {
-
+                int position = getAdapterPosition();
+                if (position != -1 )
+                    iOnClickListener.callback(currentWeathers.get(position).getLocation().mCityName);
             });
 
             itemView.setOnLongClickListener(view -> {
@@ -81,5 +85,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     @Override
     public int getItemCount() {
         return currentWeathers.size();
+    }
+
+    public interface IOnClickListener{
+        void callback(String location);
     }
 }
