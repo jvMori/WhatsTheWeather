@@ -65,10 +65,9 @@ public class WeatherRepository {
 
     public LiveData<ForecastEntry> downloadWeather(WeatherParameters weatherParameters, OnFailure onFailure) {
         MutableLiveData<ForecastEntry> forecastEntryData = new MutableLiveData<>();
+        getWeatherFromDb(weatherParameters,forecastEntryData);
         if (isFetchCurrentNeeded(ZonedDateTime.now().minusMinutes(60))) {
             fetchWeather(weatherParameters, onFailure, forecastEntryData);
-        } else {
-            getWeatherFromDb(weatherParameters,forecastEntryData);
         }
         return forecastEntryData;
     }
