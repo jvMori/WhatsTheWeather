@@ -133,8 +133,6 @@ public class MainActivity extends AppCompatActivity {
                         Const.FORECAST_DAYS
                 );
                 createFragmentAndUpdateAdapter(weatherParameters);
-//                else
-//                    updateFragmentAndAdapter(weatherParameters);
             }
 
             @Override
