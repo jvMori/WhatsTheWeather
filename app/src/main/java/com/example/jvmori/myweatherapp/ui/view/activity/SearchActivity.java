@@ -1,17 +1,15 @@
 package com.example.jvmori.myweatherapp.ui.view.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.SearchView;
 
 import com.example.jvmori.myweatherapp.MainActivity;
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.ui.view.adapters.SearchResultsAdapter;
-import com.example.jvmori.myweatherapp.ui.viewModel.CurrentWeatherViewModel;
+import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.SearchViewModel;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
@@ -33,7 +31,7 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
     private SearchView searchView;
     private SearchViewModel searchViewModel;
     private SearchResultsAdapter searchAdapter;
-    private CurrentWeatherViewModel currentWeatherViewModel;
+    private WeatherViewModel weatherViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,15 +83,15 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
             searchAdapter.setSearchedResult(searchResponse);
         }));
         if(query != null && query.length() > 3){
-            currentWeatherViewModel.downloadWeather(
-                    new WeatherParameters(query, false, Const.FORECAST_DAYS), null)
-                    .observe(this, forecastEntry -> {
-                        if(forecastEntry!= null){
-                            locationsAdapter.addForecastAndNotifyAdapter(forecastEntry);
-                            recyclerView.setVisibility(View.VISIBLE);
-                            searchResultsRv.setVisibility(View.GONE);
-                        }
-                    });
+//            weatherViewModel.downloadWeather(
+//                    new WeatherParameters(query, false, Const.FORECAST_DAYS), null)
+//                    .observe(this, forecastEntry -> {
+//                        if(forecastEntry!= null){
+//                            locationsAdapter.addForecastAndNotifyAdapter(forecastEntry);
+//                            recyclerView.setVisibility(View.VISIBLE);
+//                            searchResultsRv.setVisibility(View.GONE);
+//                        }
+//                    });
         }
     }
 
@@ -104,8 +102,8 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
     }
 
     private void currentWeatherViewModel() {
-        currentWeatherViewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        currentWeatherViewModel.getAllForecast().observe(this, this::setupLocationAdapter);
+        weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
+        weatherViewModel.getAllForecast().observe(this, this::setupLocationAdapter);
     }
 
     private void setupLocationAdapter(List<ForecastEntry> responses) {
@@ -137,7 +135,7 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
 
     @Override
     public void onLongClick(String location) {
-        currentWeatherViewModel.deleteWeather(location);
+        weatherViewModel.deleteWeather(location);
         locationsAdapter.notifyDataSetChanged();
     }
 }

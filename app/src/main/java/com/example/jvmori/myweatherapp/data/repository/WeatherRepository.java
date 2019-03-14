@@ -1,7 +1,6 @@
 package com.example.jvmori.myweatherapp.data.repository;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.example.jvmori.myweatherapp.AppExecutors;
 import com.example.jvmori.myweatherapp.data.db.ForecastDao;
@@ -13,14 +12,13 @@ import com.example.jvmori.myweatherapp.data.network.response.Search;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 
-import java.time.ZonedDateTime;
+import io.reactivex.Maybe;
+import io.reactivex.Observable;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.schedulers.Schedulers;
 
 public class WeatherRepository {
     private static final Object LOCK = new Object();
@@ -46,8 +44,31 @@ public class WeatherRepository {
         return instance;
     }
 
+    public Observable<ForecastEntry> getWeather(String location, boolean isDeviceLoc, String days) {
+        return Maybe.concat(getWeatherFromDb(location), getWeatherRemote(location, isDeviceLoc, days))
+                .filter(it -> isUpToDate(it.getTimestamp()))
+                .toObservable();
+    }
+
+    private Maybe<ForecastEntry> getWeatherFromDb(String location) {
+        return forecastDao.getWeather(location)
+                .subscribeOn(Schedulers.io());
+    }
+
+    private Maybe<ForecastEntry> getWeatherRemote(String location, boolean isDeviceLoc, String days) {
+        return weatherNetworkDataSource.fetchWeather(
+                new WeatherParameters(location, isDeviceLoc, days))
+                .subscribeOn(Schedulers.io())
+                .doOnSuccess(
+                        it -> {
+                            it.isDeviceLocation = isDeviceLoc;
+                            persistForecast(it);
+                        }
+                );
+    }
+
     public LiveData<List<ForecastEntry>> getAllForecast() {
-        return forecastDao.getForecastsForAllLocations();
+        return forecastDao.getAllWeather();
     }
 
     public LiveData<List<ForecastEntry>> allForecastsWithoutLoc() {
@@ -55,17 +76,15 @@ public class WeatherRepository {
     }
 
     private void persistForecast(ForecastEntry newForecastEntry) {
-        executors.diskIO().execute(() -> {
-//            if(newForecastEntry.isDeviceLocation)
-//                forecastDao.deleteForecastForDeviceLocation();
-            newForecastEntry.setTimestamp(System.currentTimeMillis());
-            forecastDao.insert(newForecastEntry);
-        });
+        newForecastEntry.setTimestamp(System.currentTimeMillis());
+//        if(newForecastEntry.isDeviceLocation)
+//            forecastDao.deleteOldDeviceLocWeather();
+        forecastDao.insert(newForecastEntry);
     }
 
-    public void deleteWeather(String location){
-        executors.diskIO().execute(()->{
-            forecastDao.deleteForecastByLocation(location);
+    public void deleteWeather(String location) {
+        executors.diskIO().execute(() -> {
+            forecastDao.deleteForecast(location);
         });
     }
 
@@ -74,49 +93,49 @@ public class WeatherRepository {
         return weatherNetworkDataSource.searchCity(cityName);
     }
 
-    public LiveData<ForecastEntry> downloadWeather(WeatherParameters weatherParameters, OnFailure onFailure) {
-        getWeatherFromDb(weatherParameters);
-        fetchWeather(weatherParameters, onFailure);
-        return forecastEntryData;
-    }
+//    public LiveData<ForecastEntry> downloadWeather(WeatherParameters weatherParameters, OnFailure onFailure) {
+//        getWeatherFromDb(weatherParameters);
+//        fetchWeather(weatherParameters, onFailure);
+//        return forecastEntryData;
+//    }
 
-    private void getWeatherFromDb(WeatherParameters weatherParameters) {
-        executors.diskIO().execute(() -> {
-            forecastEntryData.postValue(forecastDao.getForecastsForLocation(weatherParameters.getLocation()));
-        });
-    }
+//    private void getWeatherFromDb(WeatherParameters weatherParameters) {
+//        executors.diskIO().execute(() -> {
+//            forecastEntryData.postValue(forecastDao.getWeather(weatherParameters.getLocation()));
+//        });
+//    }
 
-    private void fetchWeather(WeatherParameters weatherParameters,
-                              OnFailure onFailure) {
-        weatherNetworkDataSource.fetchForecast(weatherParameters).enqueue(new Callback<ForecastEntry>() {
-            @Override
-            public void onResponse(Call<ForecastEntry> call, Response<ForecastEntry> response) {
-                if (!response.isSuccessful()) {
-                    Log.i("Fail", "Response is not successful");
-                    onFailure.callback("Failed! Response is not successful");
-                    return;
-                }
-                if (response.body() != null) {
-                    response.body().isDeviceLocation = weatherParameters.isDeviceLocation();
-                    persistForecast(response.body());
-                    forecastEntryData.postValue(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ForecastEntry> call, Throwable t) {
-                Log.i("Fail", "Failed to fetch current weather" + t.toString());
-                if(onFailure != null)
-                    onFailure.callback(t.getMessage());
-            }
-        });
-    }
+//    private void fetchWeather(WeatherParameters weatherParameters,
+//                              OnFailure onFailure) {
+//        weatherNetworkDataSource.fetchWeather(weatherParameters).enqueue(new Callback<ForecastEntry>() {
+//            @Override
+//            public void onResponse(Call<ForecastEntry> call, Response<ForecastEntry> response) {
+//                if (!response.isSuccessful()) {
+//                    Log.i("Fail", "Response is not successful");
+//                    onFailure.callback("Failed! Response is not successful");
+//                    return;
+//                }
+//                if (response.body() != null) {
+//                    response.body().isDeviceLocation = weatherParameters.isDeviceLocation();
+//                    persistForecast(response.body());
+//                    forecastEntryData.postValue(response.body());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ForecastEntry> call, Throwable t) {
+//                Log.i("Fail", "Failed to fetch current weather" + t.toString());
+//                if(onFailure != null)
+//                    onFailure.callback(t.getMessage());
+//            }
+//        });
+//    }
 
     public interface OnFailure {
         void callback(String message);
     }
 
-    private boolean isFetchCurrentNeeded(Long lastUpdate) {
+    private boolean isUpToDate(Long lastUpdate) {
         return System.currentTimeMillis() - lastUpdate < Const.STALE_MS;
     }
 }

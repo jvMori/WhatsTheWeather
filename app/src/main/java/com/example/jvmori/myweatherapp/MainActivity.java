@@ -18,8 +18,7 @@ import com.example.jvmori.myweatherapp.ui.view.activity.SearchActivity;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.ui.view.fragment.WeatherFragment;
-import com.example.jvmori.myweatherapp.ui.viewModel.CurrentWeatherViewModel;
-import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
+import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
 import com.example.jvmori.myweatherapp.ui.view.adapters.SlidePagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
@@ -30,7 +29,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
@@ -84,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getWeatherFromDb() {
-        CurrentWeatherViewModel currentWeatherViewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        currentWeatherViewModel.allForecastsWithoutLoc().observe(this, (currentWeathers) -> {
+        WeatherViewModel weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
+        weatherViewModel.allForecastsWithoutLoc().observe(this, (currentWeathers) -> {
             for (ForecastEntry currentWeather : currentWeathers) {
                 WeatherParameters weatherParameters = new WeatherParameters(
                         currentWeather.getLocation().getName(),
@@ -120,10 +118,9 @@ public class MainActivity extends AppCompatActivity {
                         true,
                         Const.FORECAST_DAYS
                 );
-                if (weathers.size() == 0)
-                    createFragmentAndUpdateAdapter(weatherParameters);
-                else
-                    updateFragmentAndAdapter(weatherParameters);
+                createFragmentAndUpdateAdapter(weatherParameters);
+//                else
+//                    updateFragmentAndAdapter(weatherParameters);
             }
 
             @Override
@@ -158,6 +155,11 @@ public class MainActivity extends AppCompatActivity {
     private void createFragmentAndUpdateAdapter(WeatherParameters weatherParameters) {
         WeatherFragment weatherFragment = new WeatherFragment();
         weatherFragment.setWeatherParameters(weatherParameters);
+        for(WeatherFragment fragment : weathers ){
+            if(fragment.getWeatherParameters().equals(weatherParameters)){
+               return;
+            }
+        }
         weathers.add(weatherFragment);
         slidePagerAdapter.notifyDataSetChanged();
     }

@@ -7,10 +7,12 @@ import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 import retrofit2.Call;
 
 public interface WeatherNetworkDataSource
 {
-    Call<ForecastEntry> fetchForecast(WeatherParameters weatherParameters);
+    Maybe<ForecastEntry> fetchWeather(WeatherParameters weatherParameters);
     LiveData<List<Search>> searchCity(String cityName);
 }

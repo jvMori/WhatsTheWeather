@@ -9,6 +9,8 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 @Dao
 public interface ForecastDao
@@ -17,16 +19,16 @@ public interface ForecastDao
     void insert(ForecastEntry forecastEntry);
 
     @Query("delete from forecast where isDeviceLocation = 1")
-    void deleteForecastForDeviceLocation();
+    void deleteOldDeviceLocWeather();
 
     @Query("delete from forecast where mCityName like :cityName")
-    void deleteForecastByLocation(String cityName);
+    void deleteForecast(String cityName);
 
     @Query("select * from forecast order by isDeviceLocation desc")
-    LiveData<List<ForecastEntry>> getForecastsForAllLocations();
+    LiveData<List<ForecastEntry>> getAllWeather();
 
     @Query("select * from forecast where mCityName like :location")
-    ForecastEntry getForecastsForLocation(String location);
+    Maybe<ForecastEntry> getWeather(String location);
 
     @Query("select * from forecast where isDeviceLocation = 0")
     LiveData<List<ForecastEntry>> allForecastsExceptForDeviceLocation();

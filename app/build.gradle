@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.jvmori.myweatherapp"
-        minSdkVersion 26
+        minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -46,7 +46,9 @@ dependencies {
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
     //Room
     implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-rxjava2:2.1.0-alpha04"
     annotationProcessor "androidx.room:room-compiler:$room_version"
+
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     //Gson

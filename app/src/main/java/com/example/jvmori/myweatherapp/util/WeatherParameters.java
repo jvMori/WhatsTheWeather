@@ -1,6 +1,8 @@
 package com.example.jvmori.myweatherapp.util;
 
 
+import androidx.annotation.Nullable;
+
 public class WeatherParameters
 {
     private String location;
@@ -19,6 +21,19 @@ public class WeatherParameters
         this.isDeviceLocation = isDeviceLocation;
         this.lang = "en";
         this.days = days;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if(obj == this)
+            return true;
+        if(!(obj instanceof WeatherParameters))
+            return false;
+        WeatherParameters param = (WeatherParameters) obj;
+        return param.location.equals(this.location) &&
+                param.isDeviceLocation == this.isDeviceLocation &&
+                param.days.equals(this.days) &&
+                param.lang.equals(this.lang);
     }
 
     public String getLocation() {
