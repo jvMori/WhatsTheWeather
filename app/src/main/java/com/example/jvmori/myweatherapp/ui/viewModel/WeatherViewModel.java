@@ -29,7 +29,7 @@ public class WeatherViewModel extends AndroidViewModel {
         weatherRepository = WeatherRepository.getInstance(application, AppExecutors.getInstance());
     }
 
-    public void fetchWeather(WeatherParameters weatherParameters) {
+    public void fetchWeather(WeatherParameters weatherParameters, OnFailure onFailure) {
         disposable.add(
                 weatherRepository.getWeather(
                         weatherParameters.getLocation(),
@@ -39,11 +39,15 @@ public class WeatherViewModel extends AndroidViewModel {
                         .subscribeOn(Schedulers.io())
                         .subscribe(
                                 success -> weather.postValue(success),
-                                error -> Log.i("Error", "Something went wrong!")
+                                error -> {if (onFailure!= null) onFailure.callback("Something went wrong!");}
                         )
         );
     }
     public LiveData<ForecastEntry> getWeather(){return weather;}
+
+    public interface OnFailure {
+        void callback(String message);
+    }
 
     public void deleteWeather(String location) {
         weatherRepository.deleteWeather(location);

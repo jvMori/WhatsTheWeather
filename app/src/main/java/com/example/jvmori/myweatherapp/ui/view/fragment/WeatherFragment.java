@@ -70,7 +70,9 @@ public class WeatherFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
         if (weatherParameters != null) {
-            viewModel.fetchWeather(weatherParameters);
+            viewModel.fetchWeather(weatherParameters, error -> {
+                errorLayout.setVisibility(View.VISIBLE);
+            });
             createView();
         }
     }
