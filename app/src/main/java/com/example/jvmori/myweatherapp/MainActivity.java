@@ -44,11 +44,9 @@ public class MainActivity extends AppCompatActivity {
     LocationListener locationListener;
     SwipeRefreshLayout swipeRefreshLayout;
     LifecycleOwner lifecycleOwner;
-
     public static String deviceLocation;
     public static List<WeatherFragment> weathers;
     private TabLayout tabLayout;
-    private WeatherViewModel weatherViewModel;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -74,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         ivSearch.setOnClickListener((view) -> SearchActivity());
         SetupSlidePagerAdapter(weathers);
 
-        weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
+        WeatherViewModel weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
         weatherViewModel.allForecastsFromDb();
         weatherViewModel.getAllWeather().observe(this, this::createWeatherFragments);
 
@@ -171,38 +169,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(slidePagerAdapter);
         viewPager.setCurrentItem(getIntent().getIntExtra("position", 0));
         tabLayout.setupWithViewPager(viewPager);
-        //setUiViewPager();
     }
-
-    void setUiViewPager() {
-        geoLocMarkerVisibility(viewPager.getCurrentItem());
-        viewPager.addOnPageChangeListener(changeListener);
-    }
-
-    ViewPager.OnPageChangeListener changeListener = new ViewPager.OnPageChangeListener() {
-        @Override
-        public void onPageScrolled(int i, float v, int i1) {
-
-        }
-
-        @Override
-        public void onPageSelected(int i) {
-            geoLocMarkerVisibility(i);
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int i) {
-
-        }
-    };
-
-    private void geoLocMarkerVisibility(int position) {
-        if (position == 0)
-            ivMarker.setVisibility(View.VISIBLE);
-        else {
-            ivMarker.setVisibility(View.INVISIBLE);
-        }
-    }
-
 }
 
