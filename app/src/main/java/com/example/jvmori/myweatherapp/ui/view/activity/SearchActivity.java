@@ -115,9 +115,10 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
         recyclerView.setAdapter(locationsAdapter);
     }
 
-    void BackToMainActivity(String location) {
+    void BackToMainActivity(ForecastEntry forecastEntry) {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("location", location);
+        intent.putExtra("location", forecastEntry.getLocation().mCityName);
+        intent.putExtra("isDeviceLoc", forecastEntry.isDeviceLocation);
         startActivity(intent);
     }
 
@@ -129,8 +130,8 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
     }
 
     @Override
-    public void callback(String location) {
-        BackToMainActivity(location);
+    public void callback(ForecastEntry weather) {
+        BackToMainActivity(weather);
     }
 
     @Override

@@ -73,8 +73,9 @@ public class MainActivity extends AppCompatActivity {
         SetupSlidePagerAdapter(weathers);
 
         String location = getIntent().getStringExtra("location");
+        boolean isDeviceLoc = getIntent().getBooleanExtra("isDeviceLoc", false);
         if (location != null){
-            createFragmentAndUpdateAdapter(new WeatherParameters(location,false,"10"));
+            createFragmentAndUpdateAdapter(new WeatherParameters(location,isDeviceLoc,"10"));
         }else{
             CheckLocation();
         }

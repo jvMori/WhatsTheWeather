@@ -30,12 +30,6 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         this.iOnClickListener = iOnClickListener;
         this.iLongClickListener = iLongClickListener;
     }
-    public void addForecastAndNotifyAdapter(ForecastEntry forecastEntry){
-        if(!currentWeathers.contains(forecastEntry)){
-            currentWeathers.add(forecastEntry);
-            notifyDataSetChanged();
-        }
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvCityName, tvCurrentTemp;
@@ -50,7 +44,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             itemView.setOnClickListener(view -> {
                 int position = getAdapterPosition();
                 if (position != -1 )
-                    iOnClickListener.callback(currentWeathers.get(position).getLocation().mCityName);
+                    iOnClickListener.callback(currentWeathers.get(position));
             });
 
             itemView.setOnLongClickListener(view -> {
@@ -96,7 +90,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     }
 
     public interface IOnClickListener{
-        void callback(String location);
+        void callback(ForecastEntry forecastEntry);
     }
 
     public interface ILongClickListener{
