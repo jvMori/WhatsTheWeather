@@ -38,7 +38,6 @@ public class WeatherViewModel extends AndroidViewModel {
         return allWeatherFromDb;
     }
 
-
     public void fetchWeather(WeatherParameters weatherParameters, OnFailure onFailure) {
         disposable.add(
                 weatherRepository.getWeather(

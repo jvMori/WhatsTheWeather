@@ -103,6 +103,7 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
 
     private void currentWeatherViewModel() {
         weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
+        weatherViewModel.allForecastsFromDb();
         weatherViewModel.getAllWeather().observe(this, this::setupLocationAdapter);
     }
 
