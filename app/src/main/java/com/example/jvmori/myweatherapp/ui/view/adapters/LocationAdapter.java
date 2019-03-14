@@ -83,10 +83,16 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         viewHolder.tvCurrentTemp.setText(String.format("%s°C", currTemp));
     }
 
-
     @Override
     public int getItemCount() {
         return currentWeathers.size();
+    }
+
+    public void addForecastAndNotifyAdapter(ForecastEntry forecastEntry){
+        if(!currentWeathers.contains(forecastEntry)){
+            currentWeathers.add(forecastEntry);
+            notifyDataSetChanged();
+        }
     }
 
     public interface IOnClickListener{

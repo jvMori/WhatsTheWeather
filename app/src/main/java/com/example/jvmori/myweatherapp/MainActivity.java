@@ -62,14 +62,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        weathers = new ArrayList<>();
-
         tabLayout = findViewById(R.id.tabLayout);
         lifecycleOwner = this;
         tvLocalization = findViewById(R.id.tvLocalization);
         viewPager = findViewById(R.id.ViewPager);
         ivSearch = findViewById(R.id.ivSearch);
         ivMarker = findViewById(R.id.ivMarker);
+
+        weathers = new ArrayList<>();
+
         ivSearch.setOnClickListener((view) -> SearchActivity());
         SetupSlidePagerAdapter(weathers);
 
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
         String location = getIntent().getStringExtra("location");
         boolean isDeviceLoc = getIntent().getBooleanExtra("isDeviceLoc", false);
+
         if (location != null){
             createFragmentAndUpdateAdapter(new WeatherParameters(location,isDeviceLoc,"10"));
         }else {

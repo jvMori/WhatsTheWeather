@@ -48,7 +48,7 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
             if (hasFocus) {
                 recyclerView.setVisibility(View.GONE);
                 searchResultsRv.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 recyclerView.setVisibility(View.VISIBLE);
                 searchResultsRv.setVisibility(View.GONE);
             }
@@ -82,16 +82,15 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
         searchViewModel.getResultsForCity(query).observe(this, (searchResponse -> {
             searchAdapter.setSearchedResult(searchResponse);
         }));
-        if(query != null && query.length() > 3){
-//            weatherViewModel.downloadWeather(
-//                    new WeatherParameters(query, false, Const.FORECAST_DAYS), null)
-//                    .observe(this, forecastEntry -> {
-//                        if(forecastEntry!= null){
-//                            locationsAdapter.addForecastAndNotifyAdapter(forecastEntry);
-//                            recyclerView.setVisibility(View.VISIBLE);
-//                            searchResultsRv.setVisibility(View.GONE);
-//                        }
-//                    });
+        if (query != null && query.length() > 3) {
+            weatherViewModel.fetchWeather(new WeatherParameters(query, false, Const.FORECAST_DAYS), null);
+            weatherViewModel.getWeather().observe(this, result -> {
+                if (result != null) {
+                    locationsAdapter.addForecastAndNotifyAdapter(result);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    searchResultsRv.setVisibility(View.GONE);
+                }
+            });
         }
     }
 
