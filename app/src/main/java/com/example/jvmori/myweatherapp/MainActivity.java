@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     public static String deviceLocation;
     public static List<WeatherFragment> weathers;
     private TabLayout tabLayout;
+    private WeatherViewModel weatherViewModel;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -72,28 +73,40 @@ public class MainActivity extends AppCompatActivity {
         ivSearch.setOnClickListener((view) -> SearchActivity());
         SetupSlidePagerAdapter(weathers);
 
+        weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
+        weatherViewModel.allForecastsFromDb();
+        weatherViewModel.getAllWeather().observe(this, this::createWeatherFragments);
+
         String location = getIntent().getStringExtra("location");
         boolean isDeviceLoc = getIntent().getBooleanExtra("isDeviceLoc", false);
         if (location != null){
             createFragmentAndUpdateAdapter(new WeatherParameters(location,isDeviceLoc,"10"));
-        }else{
+        }else {
             CheckLocation();
         }
-        //getWeatherFromDb();
     }
 
-    private void getWeatherFromDb() {
-        WeatherViewModel weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
-        weatherViewModel.allForecastsWithoutLoc().observe(this, (currentWeathers) -> {
-            for (ForecastEntry currentWeather : currentWeathers) {
-                WeatherParameters weatherParameters = new WeatherParameters(
-                        currentWeather.getLocation().getName(),
-                        currentWeather.isDeviceLocation,
-                        Const.FORECAST_DAYS
-                );
-                createFragments(currentWeathers, weatherParameters);
+    private void createWeatherFragments(List<ForecastEntry> weatherFromDb) {
+        for (ForecastEntry currentWeather : weatherFromDb) {
+            WeatherParameters weatherParameters = new WeatherParameters(
+                    currentWeather.getLocation().getName(),
+                    currentWeather.isDeviceLocation,
+                    Const.FORECAST_DAYS
+            );
+            createFragmentAndUpdateAdapter(weatherParameters);
+        }
+    }
+
+    private void createFragmentAndUpdateAdapter(WeatherParameters weatherParameters) {
+        WeatherFragment weatherFragment = new WeatherFragment();
+        weatherFragment.setWeatherParameters(weatherParameters);
+        for(WeatherFragment fragment : weathers ){
+            if(fragment.getWeatherParameters().equals(weatherParameters)){
+                return;
             }
-        });
+        }
+        weathers.add(weatherFragment);
+        slidePagerAdapter.notifyDataSetChanged();
     }
 
     private void startListening() {
@@ -151,32 +164,6 @@ public class MainActivity extends AppCompatActivity {
     private void SearchActivity() {
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
-    }
-
-    private void createFragmentAndUpdateAdapter(WeatherParameters weatherParameters) {
-        WeatherFragment weatherFragment = new WeatherFragment();
-        weatherFragment.setWeatherParameters(weatherParameters);
-        for(WeatherFragment fragment : weathers ){
-            if(fragment.getWeatherParameters().equals(weatherParameters)){
-               return;
-            }
-        }
-        weathers.add(weatherFragment);
-        slidePagerAdapter.notifyDataSetChanged();
-    }
-
-    private void createFragments(List<ForecastEntry> currentWeathers, WeatherParameters weatherParameters) {
-        WeatherFragment weatherFragment = new WeatherFragment();
-        weatherFragment.setWeatherParameters(weatherParameters);
-        if (weathers.size() != currentWeathers.size())
-            weathers.add(weatherFragment);
-        slidePagerAdapter.notifyDataSetChanged();
-    }
-
-    private void updateFragmentAndAdapter(WeatherParameters weatherParameters) {
-        WeatherFragment fragment = (WeatherFragment) slidePagerAdapter.getItem(0);
-        fragment.setWeatherParameters(weatherParameters);
-        fragment.createView();
     }
 
     private void SetupSlidePagerAdapter(List<WeatherFragment> data) {

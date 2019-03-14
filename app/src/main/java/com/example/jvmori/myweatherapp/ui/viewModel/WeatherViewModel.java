@@ -22,12 +22,22 @@ import io.reactivex.schedulers.Schedulers;
 public class WeatherViewModel extends AndroidViewModel {
     private WeatherRepository weatherRepository;
     private MutableLiveData<ForecastEntry> weather = new MutableLiveData<>();
+    private MutableLiveData<List<ForecastEntry>> allWeatherFromDb = new MutableLiveData<>();
     private CompositeDisposable disposable = new CompositeDisposable();
 
     public WeatherViewModel(@NonNull Application application) {
         super(application);
         weatherRepository = WeatherRepository.getInstance(application, AppExecutors.getInstance());
     }
+
+    public LiveData<ForecastEntry> getWeather() {
+        return weather;
+    }
+
+    public LiveData<List<ForecastEntry>> getAllWeather(){
+        return allWeatherFromDb;
+    }
+
 
     public void fetchWeather(WeatherParameters weatherParameters, OnFailure onFailure) {
         disposable.add(
@@ -39,11 +49,29 @@ public class WeatherViewModel extends AndroidViewModel {
                         .subscribeOn(Schedulers.io())
                         .subscribe(
                                 success -> weather.postValue(success),
-                                error -> {if (onFailure!= null) onFailure.callback("Something went wrong!");}
+                                error -> {
+                                    if (onFailure != null)
+                                        onFailure.callback("Something went wrong!");
+                                }
                         )
         );
     }
-    public LiveData<ForecastEntry> getWeather(){return weather;}
+
+    public void allForecastsFromDb() {
+        disposable.add(
+                weatherRepository.getAllForecast()
+                        .subscribe(
+                                next -> {
+                                    allWeatherFromDb.postValue(next);
+                                },
+                                error -> {
+                                    Log.i("Error", "error");
+                                },
+                                () -> Log.i("Error", "error")
+
+                        )
+        );
+    }
 
     public interface OnFailure {
         void callback(String message);
@@ -51,14 +79,6 @@ public class WeatherViewModel extends AndroidViewModel {
 
     public void deleteWeather(String location) {
         weatherRepository.deleteWeather(location);
-    }
-
-    public LiveData<List<ForecastEntry>> getAllForecast() {
-        return weatherRepository.getAllForecast();
-    }
-
-    public LiveData<List<ForecastEntry>> allForecastsWithoutLoc() {
-        return weatherRepository.allForecastsWithoutLoc();
     }
 
     @Override

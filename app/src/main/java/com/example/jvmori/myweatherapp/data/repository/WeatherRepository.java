@@ -14,6 +14,7 @@ import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import java.util.List;
 import androidx.lifecycle.LiveData;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class WeatherRepository {
@@ -41,6 +42,7 @@ public class WeatherRepository {
     public Observable<ForecastEntry> getWeather(String location, boolean isDeviceLoc, String days) {
         return Maybe.concat(getWeatherFromDb(location), getWeatherRemote(location, isDeviceLoc, days))
                 .filter(it -> isUpToDate(it.getTimestamp()))
+                .take(1)
                 .toObservable();
     }
 
@@ -61,13 +63,12 @@ public class WeatherRepository {
                 );
     }
 
-    public LiveData<List<ForecastEntry>> getAllForecast() {
-        return forecastDao.getAllWeather();
+    public Observable<List<ForecastEntry>> getAllForecast() {
+        return forecastDao.getAllWeather()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public LiveData<List<ForecastEntry>> allForecastsWithoutLoc() {
-        return forecastDao.allForecastsExceptForDeviceLocation();
-    }
 
     private void persistForecast(ForecastEntry newForecastEntry) {
         newForecastEntry.setTimestamp(System.currentTimeMillis());
