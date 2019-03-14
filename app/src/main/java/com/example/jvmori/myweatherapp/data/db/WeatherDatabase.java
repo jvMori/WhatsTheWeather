@@ -8,7 +8,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {ForecastEntry.class}, version = 9, exportSchema = false)
+@Database(entities = {ForecastEntry.class}, version = 10, exportSchema = false)
 public abstract class WeatherDatabase extends RoomDatabase {
 
     public static WeatherDatabase instance;

@@ -3,6 +3,8 @@ package com.example.jvmori.myweatherapp.data.db.entity;
 
 import com.google.gson.annotations.SerializedName;
 
+import androidx.annotation.NonNull;
+
 
 public class Location {
     @SerializedName("country")
@@ -16,7 +18,8 @@ public class Location {
     @SerializedName("lon")
     private Double mLon;
     @SerializedName("name")
-    public String mCityName;
+    @NonNull
+    public String mCityName ="";
     @SerializedName("region")
     private String mRegion;
     @SerializedName("tz_id")

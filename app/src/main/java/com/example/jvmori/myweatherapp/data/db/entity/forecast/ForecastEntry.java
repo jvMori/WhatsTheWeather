@@ -5,17 +5,16 @@ import com.example.jvmori.myweatherapp.data.db.entity.Location;
 import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
 import com.google.gson.annotations.SerializedName;
 
+import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-
-@Entity(tableName = "forecast", indices = {@Index(value = {"mCityName"}, unique = true)})
+//indices = {@Index(value = {"mCityName"}, unique = true)}
+@Entity(tableName = "forecast", primaryKeys = {"mCityName", "isDeviceLocation"})
 public class ForecastEntry {
-    @PrimaryKey(autoGenerate = true)
-    public int id;
-
     public boolean isDeviceLocation;
+
     private Long timestamp;
 
     @SerializedName("current")
@@ -24,7 +23,8 @@ public class ForecastEntry {
 
     @SerializedName("location")
     @Embedded
-    private Location mLocation;
+    @NonNull
+    private Location mLocation = new Location();
 
     @SerializedName("forecast")
     @Embedded
