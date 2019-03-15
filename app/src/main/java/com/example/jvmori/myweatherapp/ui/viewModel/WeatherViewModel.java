@@ -10,6 +10,8 @@ import com.example.jvmori.myweatherapp.data.repository.WeatherRepository;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -20,14 +22,14 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class WeatherViewModel extends AndroidViewModel {
-    private WeatherRepository weatherRepository;
+    @Inject
+    public WeatherRepository weatherRepository;
     private MutableLiveData<ForecastEntry> weather = new MutableLiveData<>();
     private MutableLiveData<List<ForecastEntry>> allWeatherFromDb = new MutableLiveData<>();
     private CompositeDisposable disposable = new CompositeDisposable();
 
     public WeatherViewModel(@NonNull Application application) {
         super(application);
-        weatherRepository = WeatherRepository.getInstance(application, AppExecutors.getInstance());
     }
 
     public LiveData<ForecastEntry> getWeather() {
