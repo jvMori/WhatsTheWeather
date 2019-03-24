@@ -11,12 +11,15 @@ import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.ui.view.adapters.SearchResultsAdapter;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.SearchViewModel;
+import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModelFactory;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.ui.view.adapters.LocationAdapter;
 
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
@@ -32,6 +35,8 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
     private SearchViewModel searchViewModel;
     private SearchResultsAdapter searchAdapter;
     private WeatherViewModel weatherViewModel;
+    @Inject
+    WeatherViewModelFactory weatherViewModelFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +106,7 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
     }
 
     private void currentWeatherViewModel() {
-        weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
+        weatherViewModel = ViewModelProviders.of(this, weatherViewModelFactory).get(WeatherViewModel.class);
         weatherViewModel.allForecastsFromDb();
         weatherViewModel.getAllWeather().observe(this, this::setupLocationAdapter);
     }

@@ -11,10 +11,13 @@ import android.widget.TextView;
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
+import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModelFactory;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
 import com.squareup.picasso.Picasso;
+
+import javax.inject.Inject;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -34,6 +37,8 @@ public class WeatherFragment extends Fragment {
     private ForecastAdapter forecastAdapter;
     private WeatherParameters weatherParameters;
     private WeatherViewModel viewModel;
+    @Inject
+    WeatherViewModelFactory weatherViewModelFactory;
 
     public void setWeatherParameters(WeatherParameters weatherParameters) {
         this.weatherParameters = weatherParameters;
@@ -68,7 +73,7 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onViewCreated(@androidx.annotation.NonNull View view, @androidx.annotation.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
+        viewModel = ViewModelProviders.of(this, weatherViewModelFactory).get(WeatherViewModel.class);
         if (weatherParameters != null) {
             viewModel.fetchWeather(weatherParameters, error -> {
                 errorLayout.setVisibility(View.VISIBLE);

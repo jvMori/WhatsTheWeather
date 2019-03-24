@@ -9,12 +9,13 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.jvmori.myweatherapp.application.WeatherApp;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.ui.view.activity.SearchActivity;
+import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModelFactory;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.ui.view.fragment.WeatherFragment;
@@ -24,6 +25,8 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -47,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     public static String deviceLocation;
     public static List<WeatherFragment> weathers;
     private TabLayout tabLayout;
+    @Inject
+    WeatherViewModelFactory weatherViewModelFactory;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -67,12 +72,16 @@ public class MainActivity extends AppCompatActivity {
         ivSearch = findViewById(R.id.ivSearch);
         ivMarker = findViewById(R.id.ivMarker);
 
+        WeatherApp weatherApp = (WeatherApp) getApplication();
+        weatherApp.getAppComponent().inject(this);
+
         weathers = new ArrayList<>();
 
         ivSearch.setOnClickListener((view) -> SearchActivity());
         SetupSlidePagerAdapter(weathers);
 
-        WeatherViewModel weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
+        WeatherViewModel weatherViewModel = ViewModelProviders.of(this, weatherViewModelFactory)
+                .get(WeatherViewModel.class);
         weatherViewModel.allForecastsFromDb();
         weatherViewModel.getAllWeather().observe(this, this::createWeatherFragments);
 
