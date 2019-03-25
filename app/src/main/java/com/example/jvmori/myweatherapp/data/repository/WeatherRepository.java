@@ -1,5 +1,7 @@
 package com.example.jvmori.myweatherapp.data.repository;
 
+import android.annotation.SuppressLint;
+
 import com.example.jvmori.myweatherapp.AppExecutors;
 import com.example.jvmori.myweatherapp.data.db.ForecastDao;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
@@ -7,13 +9,17 @@ import com.example.jvmori.myweatherapp.data.network.WeatherNetworkDataSource;
 import com.example.jvmori.myweatherapp.data.network.response.Search;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
+
+import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
+
 import java.util.List;
 
 import javax.inject.Inject;
 
 import androidx.lifecycle.LiveData;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -48,6 +54,9 @@ public class WeatherRepository {
                 .doOnSuccess(
                         it -> {
                             it.isDeviceLocation = isDeviceLoc;
+                            if (isDeviceLoc){
+                                deleteOldDeviceLocation();
+                            }
                             persistForecast(it);
                         }
                 );
@@ -62,15 +71,19 @@ public class WeatherRepository {
 
     private void persistForecast(ForecastEntry newForecastEntry) {
         newForecastEntry.setTimestamp(System.currentTimeMillis());
-//TODO: delete old device location
         forecastDao.insert(newForecastEntry);
     }
 
     public void deleteWeather(String location) {
-        //TODO: do it on background thread
-       // executors.diskIO().execute(() -> {
-            forecastDao.deleteForecast(location);
-       // });
+        Completable.fromAction(() -> forecastDao.deleteForecast(location))
+                .subscribeOn(Schedulers.io())
+                .subscribe();
+    }
+
+    private void deleteOldDeviceLocation() {
+        Completable.fromAction(()-> forecastDao.deleteOldDeviceLocWeather())
+                .subscribeOn(Schedulers.io())
+                .subscribe();
     }
 
     public LiveData<List<Search>> getResultsForCity(String cityName) {
