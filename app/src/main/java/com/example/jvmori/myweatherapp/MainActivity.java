@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         boolean isDeviceLoc = getIntent().getBooleanExtra("isDeviceLoc", false);
 
         if (location != null) {
+            slidePagerAdapter.notifyDataSetChanged();
            // createFragmentAndUpdateAdapter(new WeatherParameters(location, isDeviceLoc, "10"));
         } else {
             CheckLocation();

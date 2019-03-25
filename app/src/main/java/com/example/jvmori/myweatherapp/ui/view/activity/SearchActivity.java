@@ -72,8 +72,6 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
 
         searchView.setOnCloseListener(() -> {
             searchView.clearFocus();
-//            recyclerView.setVisibility(View.VISIBLE);
-//            searchResultsRv.setVisibility(View.GONE);
             return true;
         });
     }
