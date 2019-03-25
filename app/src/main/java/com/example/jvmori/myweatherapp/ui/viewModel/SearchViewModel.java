@@ -2,6 +2,7 @@ package com.example.jvmori.myweatherapp.ui.viewModel;
 
 import android.app.Application;
 
+import com.example.jvmori.myweatherapp.application.WeatherApplication;
 import com.example.jvmori.myweatherapp.data.network.response.Search;
 import com.example.jvmori.myweatherapp.data.repository.WeatherRepository;
 
@@ -16,7 +17,8 @@ public class SearchViewModel extends AndroidViewModel {
 
     public SearchViewModel(@NonNull Application application) {
         super(application);
-        weatherRepository = WeatherRepository.getInstance(application, null);
+        WeatherApplication weatherApplication = (WeatherApplication) application;
+        weatherRepository = weatherApplication.weatherRepository();
     }
 
     public LiveData<List<Search>> getResultsForCity(String city){ return weatherRepository.getResultsForCity(city);}

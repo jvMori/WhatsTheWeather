@@ -8,10 +8,11 @@ import com.example.jvmori.myweatherapp.util.WeatherParameters;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import io.reactivex.Maybe;
-import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,6 +23,7 @@ public class WeatherNetworkDataSourceImpl implements WeatherNetworkDataSource {
     private MutableLiveData<List<Search>> results;
     private ApixuApi service;
 
+    @Inject
     public WeatherNetworkDataSourceImpl(ApixuApi service) {
         results = new MutableLiveData<>();
         this.service = service;

@@ -1,19 +1,22 @@
 package com.example.jvmori.myweatherapp.application;
 
 import android.app.Application;
-
-import com.example.jvmori.myweatherapp.data.network.ApixuApi;
 import com.example.jvmori.myweatherapp.data.repository.WeatherRepository;
+import com.example.jvmori.myweatherapp.di.component.WeatherApplicationComponent;
+import com.example.jvmori.myweatherapp.di.module.ContextModule;
 
 public class WeatherApplication extends Application
 {
-    private ApixuApi apixuApi;
     private WeatherRepository weatherRepository;
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        WeatherApplicationComponent component = DaggerWeatherApplicationComponent.builder()
+                .contextModule(new ContextModule(this))
+                .build();
 
-
-    public ApixuApi getApixuApi(){
-        return apixuApi;
+        weatherRepository = component.weatherRepository();
     }
 
     public WeatherRepository weatherRepository(){
