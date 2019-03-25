@@ -79,14 +79,17 @@ public class MainActivity extends AppCompatActivity {
 
         WeatherViewModel weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
         weatherViewModel.allForecastsFromDb();
-        weatherViewModel.getAllWeather().observe(this, this::createWeatherFragments);
+        weatherViewModel.getAllWeather().observe(this, weatherFromDb -> {
+                    createWeatherFragments(weatherFromDb);
+                }
+        );
 
         String location = getIntent().getStringExtra("location");
         boolean isDeviceLoc = getIntent().getBooleanExtra("isDeviceLoc", false);
 
-        if (location != null){
-            createFragmentAndUpdateAdapter(new WeatherParameters(location,isDeviceLoc,"10"));
-        }else {
+        if (location != null) {
+           // createFragmentAndUpdateAdapter(new WeatherParameters(location, isDeviceLoc, "10"));
+        } else {
             CheckLocation();
         }
     }
@@ -106,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
         WeatherFragment weatherFragment = new WeatherFragment();
         weatherFragment.setWeatherParameters(weatherParameters);
         weatherFragment.setImageLoader(iLoadImage);
-        for(WeatherFragment fragment : weathers ){
-            if(fragment.getWeatherParameters().equals(weatherParameters)){
+        for (WeatherFragment fragment : weathers) {
+            if (fragment.getWeatherParameters().equals(weatherParameters)) {
                 return;
             }
         }
