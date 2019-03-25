@@ -2,6 +2,7 @@ package com.example.jvmori.myweatherapp.application;
 
 import android.app.Application;
 import com.example.jvmori.myweatherapp.data.repository.WeatherRepository;
+import com.example.jvmori.myweatherapp.di.component.DaggerWeatherApplicationComponent;
 import com.example.jvmori.myweatherapp.di.component.WeatherApplicationComponent;
 import com.example.jvmori.myweatherapp.di.module.ContextModule;
 

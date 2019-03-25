@@ -20,13 +20,13 @@ import dagger.Provides;
 public class DataSourceModule {
 
     @Provides
-    @Singleton
+    //@Singleton
     public WeatherRepository weatherRepository(WeatherNetworkDataSource weatherNetworkDataSource, ForecastDao forecastDao){
         return new WeatherRepository(weatherNetworkDataSource, forecastDao);
     }
 
     @Provides
-    @Singleton
+   // @Singleton
     public WeatherNetworkDataSource weatherNetworkDataSource(ApixuApi apixuApi) {
         return new WeatherNetworkDataSourceImpl(apixuApi);
     }
@@ -37,7 +37,7 @@ public class DataSourceModule {
     }
 
     @Provides
-    @Singleton
+   // @Singleton
     public WeatherDatabase weatherDatabase(Context context) {
         return Room.databaseBuilder(context.getApplicationContext(), WeatherDatabase.class, "weather_database")
                 .fallbackToDestructiveMigration()
