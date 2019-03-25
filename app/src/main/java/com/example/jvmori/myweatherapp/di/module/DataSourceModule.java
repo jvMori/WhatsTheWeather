@@ -9,6 +9,7 @@ import com.example.jvmori.myweatherapp.data.network.ApixuApi;
 import com.example.jvmori.myweatherapp.data.network.WeatherNetworkDataSource;
 import com.example.jvmori.myweatherapp.data.network.WeatherNetworkDataSourceImpl;
 import com.example.jvmori.myweatherapp.data.repository.WeatherRepository;
+import com.example.jvmori.myweatherapp.di.scope.WeatherApplicationScope;
 
 import javax.inject.Singleton;
 
@@ -20,24 +21,25 @@ import dagger.Provides;
 public class DataSourceModule {
 
     @Provides
-    //@Singleton
-    public WeatherRepository weatherRepository(WeatherNetworkDataSource weatherNetworkDataSource, ForecastDao forecastDao){
+    @WeatherApplicationScope
+    public WeatherRepository weatherRepository(WeatherNetworkDataSource weatherNetworkDataSource, ForecastDao forecastDao) {
         return new WeatherRepository(weatherNetworkDataSource, forecastDao);
     }
 
     @Provides
-   // @Singleton
+    @WeatherApplicationScope
     public WeatherNetworkDataSource weatherNetworkDataSource(ApixuApi apixuApi) {
         return new WeatherNetworkDataSourceImpl(apixuApi);
     }
 
     @Provides
+    @WeatherApplicationScope
     public ForecastDao forecastDao(WeatherDatabase weatherDatabase) {
         return weatherDatabase.forecastDao();
     }
 
     @Provides
-   // @Singleton
+    @WeatherApplicationScope
     public WeatherDatabase weatherDatabase(Context context) {
         return Room.databaseBuilder(context.getApplicationContext(), WeatherDatabase.class, "weather_database")
                 .fallbackToDestructiveMigration()

@@ -1,5 +1,7 @@
 package com.example.jvmori.myweatherapp.di.module;
 
+import com.example.jvmori.myweatherapp.di.scope.WeatherApplicationScope;
+
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.HttpUrl;
@@ -13,6 +15,7 @@ public class NetworkModule {
     private static final String API_KEY = "7a5ba9d2d18041f38e0135842190602";
 
     @Provides
+    @WeatherApplicationScope
     public Interceptor interceptor() {
         return chain -> {
             HttpUrl url = chain.request()
@@ -28,6 +31,7 @@ public class NetworkModule {
     }
 
     @Provides
+    @WeatherApplicationScope
     public OkHttpClient okHttpClient(Interceptor interceptor) {
         return new OkHttpClient.Builder()
                 .addInterceptor(interceptor)

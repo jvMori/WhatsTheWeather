@@ -2,6 +2,8 @@ package com.example.jvmori.myweatherapp.di.module;
 
 import android.content.Context;
 
+import com.example.jvmori.myweatherapp.di.scope.WeatherApplicationScope;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -15,6 +17,7 @@ public class ContextModule
     }
 
     @Provides
+    @WeatherApplicationScope
     public Context getContext(){
         return context;
     }
