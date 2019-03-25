@@ -67,6 +67,7 @@ public class WeatherRepository {
     }
 
     public void deleteWeather(String location) {
+        //TODO: do it on background thread
        // executors.diskIO().execute(() -> {
             forecastDao.deleteForecast(location);
        // });
