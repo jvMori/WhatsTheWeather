@@ -1,5 +1,6 @@
 package com.example.jvmori.myweatherapp.ui.view.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +15,10 @@ import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
+import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 import com.squareup.picasso.Picasso;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,9 +37,14 @@ public class WeatherFragment extends Fragment {
     private ForecastAdapter forecastAdapter;
     private WeatherParameters weatherParameters;
     private WeatherViewModel viewModel;
+    private ILoadImage iLoadImage;
 
     public void setWeatherParameters(WeatherParameters weatherParameters) {
         this.weatherParameters = weatherParameters;
+    }
+
+    public void setImageLoader(ILoadImage imageLoader){
+        this.iLoadImage = imageLoader;
     }
 
     public WeatherParameters getWeatherParameters() {
@@ -108,10 +116,7 @@ public class WeatherFragment extends Fragment {
         humidity.setText(humidityTxt);
         pressure.setText(pressureTxt);
         String url = "http:" + currentWeather.mCondition.getIcon();
-        Picasso.get()
-                .load(url)
-                .error(R.drawable.ic_11)
-                .into(ivIcon);
+        iLoadImage.loadImage(url, ivIcon);
 
         createRecyclerView(forecastEntry);
         progressBarLayout.setVisibility(View.GONE);
