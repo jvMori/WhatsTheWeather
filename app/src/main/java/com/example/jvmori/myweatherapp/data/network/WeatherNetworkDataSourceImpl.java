@@ -22,9 +22,9 @@ public class WeatherNetworkDataSourceImpl implements WeatherNetworkDataSource {
     private MutableLiveData<List<Search>> results;
     private ApixuApi service;
 
-    public WeatherNetworkDataSourceImpl() {
+    public WeatherNetworkDataSourceImpl(ApixuApi service) {
         results = new MutableLiveData<>();
-        service = ApixuApiCall.init();
+        this.service = service;
     }
 
     @Override
