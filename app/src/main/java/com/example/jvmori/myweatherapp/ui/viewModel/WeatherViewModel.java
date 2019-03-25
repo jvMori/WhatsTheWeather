@@ -25,7 +25,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class WeatherViewModel extends ViewModel {
 
-    @Inject WeatherRepository weatherRepository;
+    @Inject
+    public WeatherRepository weatherRepository;
 
     private MutableLiveData<ForecastEntry> weather = new MutableLiveData<>();
     private MutableLiveData<List<ForecastEntry>> allWeatherFromDb = new MutableLiveData<>();

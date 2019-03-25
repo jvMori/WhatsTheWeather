@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.example.jvmori.myweatherapp.application.WeatherApp;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.ui.view.activity.SearchActivity;
-import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModelFactory;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.ui.view.fragment.WeatherFragment;
@@ -50,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
     public static String deviceLocation;
     public static List<WeatherFragment> weathers;
     private TabLayout tabLayout;
-    @Inject
-    WeatherViewModelFactory weatherViewModelFactory;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -80,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         ivSearch.setOnClickListener((view) -> SearchActivity());
         SetupSlidePagerAdapter(weathers);
 
-        WeatherViewModel weatherViewModel = ViewModelProviders.of(this, weatherViewModelFactory)
+        WeatherViewModel weatherViewModel = ViewModelProviders.of(this)
                 .get(WeatherViewModel.class);
         weatherViewModel.allForecastsFromDb();
         weatherViewModel.getAllWeather().observe(this, this::createWeatherFragments);
