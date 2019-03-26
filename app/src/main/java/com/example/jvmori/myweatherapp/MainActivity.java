@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     public static List<WeatherFragment> weathers;
     private TabLayout tabLayout;
     private ILoadImage iLoadImage;
+    private WeatherViewModel weatherViewModel;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -65,19 +66,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
         bindView();
 
-        //TODO: checkWeather for location and update view pager 
-
-//        String location = getIntent().getStringExtra("location");
-//        boolean isDeviceLoc = getIntent().getBooleanExtra("isDeviceLoc", false);
-//
-//        if (location != null) {
-//            slidePagerAdapter.notifyDataSetChanged();
-//           // createFragmentAndUpdateAdapter(new WeatherParameters(location, isDeviceLoc, "10"));
-//        } else {
-//            CheckLocation();
-//        }
+        int position = getIntent().getIntExtra("position",-1);
+        if (position == -1) {
+           // CheckLocation();
+        }
     }
 
     @Override
@@ -100,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getWeatherFromDb(){
-        WeatherViewModel weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
         weatherViewModel.allForecastsFromDb();
         weatherViewModel.getAllWeather().observe(this, weatherFromDb -> {
             createWeatherFragments(weatherFromDb);
@@ -121,11 +116,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createFragmentAndUpdateAdapter(ForecastEntry forecastEntry) {
+        WeatherFragment weatherFragment = createFragment(forecastEntry);
+        weathers.add(weatherFragment);
+        slidePagerAdapter.notifyDataSetChanged();
+    }
+
+    private WeatherFragment createFragment(ForecastEntry forecastEntry){
         WeatherFragment weatherFragment = new WeatherFragment();
         weatherFragment.setForecastEntry(forecastEntry);
         weatherFragment.setImageLoader(iLoadImage);
-        weathers.add(weatherFragment);
-        slidePagerAdapter.notifyDataSetChanged();
+        return weatherFragment;
+    }
+
+    private void getWeather(WeatherParameters parameters){
+        weatherViewModel.fetchWeather(parameters, null);
+        weatherViewModel.getWeather().observe(this,
+                this::displayWeather
+        );
+    }
+    private void displayWeather(ForecastEntry forecastEntry){
+        if (weathers != null && weathers.size() > 0){
+            weathers.set(0, createFragment(forecastEntry));
+            slidePagerAdapter.notifyDataSetChanged();
+        }else{
+            createFragmentAndUpdateAdapter(forecastEntry);
+        }
     }
 
     private void startListening() {
@@ -151,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                         true,
                         Const.FORECAST_DAYS
                 );
-                ///createFragmentAndUpdateAdapter(weatherParameters);
+                getWeather(weatherParameters);
             }
 
             @Override
