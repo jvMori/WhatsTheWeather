@@ -47,7 +47,7 @@ public class WeatherViewModel extends AndroidViewModel {
     }
 
     public void refreshWeather(ForecastEntry oldWeather) {
-       // if (!weatherRepository.isUpToDate(oldWeather.getTimestamp()))
+        if (!weatherRepository.isUpToDate(oldWeather.getTimestamp()))
         {
             disposable.add(
                     weatherRepository.getWeatherRemote(
