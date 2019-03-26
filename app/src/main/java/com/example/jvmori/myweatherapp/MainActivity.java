@@ -65,12 +65,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         bindView();
-        weathers = new ArrayList<>();
-        createSlidePagerAdapter(weathers);
-        getWeatherFromDb();
-
+        
         //TODO: checkWeather for location and update view pager 
 
 //        String location = getIntent().getStringExtra("location");
@@ -82,6 +78,14 @@ public class MainActivity extends AppCompatActivity {
 //        } else {
 //            CheckLocation();
 //        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        weathers = new ArrayList<>();
+        createSlidePagerAdapter(weathers);
+        getWeatherFromDb();
     }
 
     private void bindView(){

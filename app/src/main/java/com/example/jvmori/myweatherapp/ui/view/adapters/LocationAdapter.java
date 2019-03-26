@@ -89,10 +89,12 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     }
 
     public void addForecastAndNotifyAdapter(ForecastEntry forecastEntry){
-        if(!currentWeathers.contains(forecastEntry)){
-            currentWeathers.add(forecastEntry);
-            notifyDataSetChanged();
+        for (ForecastEntry weather: currentWeathers) {
+            if (weather.getLocation().mCityName.equals(forecastEntry.getLocation().mCityName))
+                return;
         }
+        currentWeathers.add(forecastEntry);
+        notifyDataSetChanged();
     }
 
     public interface IOnClickListener {
