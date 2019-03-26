@@ -100,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void createWeatherFragments(List<ForecastEntry> weatherFromDb) {
         for (ForecastEntry currentWeather : weatherFromDb) {
-            createFragmentAndUpdateAdapter(currentWeather);
+            if (weathers.size() != weatherFromDb.size())
+                createFragmentAndUpdateAdapter(currentWeather);
         }
     }
 

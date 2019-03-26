@@ -47,7 +47,7 @@ public class WeatherRepository {
                 .subscribeOn(Schedulers.io());
     }
 
-    private Maybe<ForecastEntry> getWeatherRemote(String location, boolean isDeviceLoc, String days) {
+    public Maybe<ForecastEntry> getWeatherRemote(String location, boolean isDeviceLoc, String days) {
         return weatherNetworkDataSource.fetchWeather(
                 new WeatherParameters(location, isDeviceLoc, days))
                 .subscribeOn(Schedulers.io())
@@ -90,7 +90,7 @@ public class WeatherRepository {
         return weatherNetworkDataSource.searchCity(cityName);
     }
 
-    private boolean isUpToDate(Long lastUpdate) {
+    public boolean isUpToDate(Long lastUpdate) {
         return System.currentTimeMillis() - lastUpdate < Const.STALE_MS;
     }
 }

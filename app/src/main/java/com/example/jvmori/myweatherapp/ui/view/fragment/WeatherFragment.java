@@ -1,6 +1,5 @@
 package com.example.jvmori.myweatherapp.ui.view.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +11,10 @@ import android.widget.TextView;
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
-import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
-import com.squareup.picasso.Picasso;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,7 +31,7 @@ public class WeatherFragment extends Fragment {
     private ImageView ivIcon;
     private RecyclerView recyclerView;
     private ForecastAdapter forecastAdapter;
-   // private WeatherParameters weatherParameters;
+    // private WeatherParameters weatherParameters;
     private ILoadImage iLoadImage;
     private ForecastEntry forecastEntry;
 
@@ -56,16 +52,7 @@ public class WeatherFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_weather, container, false);
-        mainTemp = view.findViewById(R.id.tvMainCurrTemp);
-        feelsLike = view.findViewById(R.id.feelsTemp);
-        humidity = view.findViewById(R.id.Humidity);
-        pressure = view.findViewById(R.id.Pressure);
-        ivIcon = view.findViewById(R.id.ivMainIcon);
-        desc = view.findViewById(R.id.tvDescriptionMain);
-        errorLayout = view.findViewById(R.id.errorLayout);
-        city = view.findViewById(R.id.locationTextView);
-        recyclerView = view.findViewById(R.id.RecyclerViewList);
-        progressBarLayout = view.findViewById(R.id.progressBarLayout);
+        bindView(view);
         return view;
     }
 
@@ -74,6 +61,15 @@ public class WeatherFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         progressBarLayout.setVisibility(View.VISIBLE);
         displayWeather(forecastEntry);
+        refreshWeather();
+    }
+
+    private void refreshWeather(){
+        WeatherViewModel viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
+        viewModel.refreshWeather(forecastEntry);
+        viewModel.getFreshWeather().observe(this,
+                this::displayWeather
+        );
     }
 
     private void displayWeather(ForecastEntry forecastEntry) {
@@ -109,6 +105,20 @@ public class WeatherFragment extends Fragment {
         createRecyclerView(forecastEntry);
         progressBarLayout.setVisibility(View.GONE);
     }
+
+    private void bindView(View view) {
+        mainTemp = view.findViewById(R.id.tvMainCurrTemp);
+        feelsLike = view.findViewById(R.id.feelsTemp);
+        humidity = view.findViewById(R.id.Humidity);
+        pressure = view.findViewById(R.id.Pressure);
+        ivIcon = view.findViewById(R.id.ivMainIcon);
+        desc = view.findViewById(R.id.tvDescriptionMain);
+        errorLayout = view.findViewById(R.id.errorLayout);
+        city = view.findViewById(R.id.locationTextView);
+        recyclerView = view.findViewById(R.id.RecyclerViewList);
+        progressBarLayout = view.findViewById(R.id.progressBarLayout);
+    }
+
 
     private void createRecyclerView(ForecastEntry forecastEntry) {
         forecastAdapter = new ForecastAdapter(forecastEntry.getForecast().mFutureWeather, getContext());
