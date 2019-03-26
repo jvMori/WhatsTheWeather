@@ -35,20 +35,16 @@ public class WeatherFragment extends Fragment {
     private ImageView ivIcon;
     private RecyclerView recyclerView;
     private ForecastAdapter forecastAdapter;
-    private WeatherParameters weatherParameters;
-    private WeatherViewModel viewModel;
+   // private WeatherParameters weatherParameters;
     private ILoadImage iLoadImage;
+    private ForecastEntry forecastEntry;
 
-    public void setWeatherParameters(WeatherParameters weatherParameters) {
-        this.weatherParameters = weatherParameters;
+    public void setForecastEntry(ForecastEntry forecastEntry) {
+        this.forecastEntry = forecastEntry;
     }
 
-    public void setImageLoader(ILoadImage imageLoader){
+    public void setImageLoader(ILoadImage imageLoader) {
         this.iLoadImage = imageLoader;
-    }
-
-    public WeatherParameters getWeatherParameters() {
-        return weatherParameters;
     }
 
     public WeatherFragment() {
@@ -76,28 +72,20 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onViewCreated(@androidx.annotation.NonNull View view, @androidx.annotation.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
-        if (weatherParameters != null) {
-            viewModel.fetchWeather(weatherParameters, error -> {
-                errorLayout.setVisibility(View.VISIBLE);
-            });
-            createView();
+        progressBarLayout.setVisibility(View.VISIBLE);
+        displayWeather(forecastEntry);
+    }
+
+    private void displayWeather(ForecastEntry forecastEntry) {
+        if (forecastEntry != null) {
+            createCurrentWeatherUi(forecastEntry);
+            errorLayout.setVisibility(View.GONE);
+            progressBarLayout.setVisibility(View.GONE);
         }
     }
 
-    public void createView() {
-        progressBarLayout.setVisibility(View.VISIBLE);
-        viewModel.getWeather().observe(this, result ->
-                {
-                    createCurrentWeatherUi(result);
-                    errorLayout.setVisibility(View.GONE);
-                    progressBarLayout.setVisibility(View.GONE);
-                }
-        );
-    }
-
     private void createCurrentWeatherUi(ForecastEntry forecastEntry) {
-        weatherParameters.setLocation(forecastEntry.getLocation().getName());
+        //weatherParameters.setLocation(forecastEntry.getLocation().getName());
         CurrentWeather currentWeather = forecastEntry.getCurrentWeather();
 
         String cityAndCountry = String.format("%s, %s",
@@ -128,4 +116,8 @@ public class WeatherFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(forecastAdapter);
     }
+
+//    public WeatherParameters getWeatherParameters() {
+//        return weatherParameters;
+//    }
 }

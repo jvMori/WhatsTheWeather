@@ -9,7 +9,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -63,58 +62,52 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        bindView();
+        weathers = new ArrayList<>();
+        createSlidePagerAdapter(weathers);
+        getWeatherFromDb();
+
+//        String location = getIntent().getStringExtra("location");
+//        boolean isDeviceLoc = getIntent().getBooleanExtra("isDeviceLoc", false);
+//
+//        if (location != null) {
+//            slidePagerAdapter.notifyDataSetChanged();
+//           // createFragmentAndUpdateAdapter(new WeatherParameters(location, isDeviceLoc, "10"));
+//        } else {
+//            CheckLocation();
+//        }
+    }
+
+    private void bindView(){
         tabLayout = findViewById(R.id.tabLayout);
         lifecycleOwner = this;
         tvLocalization = findViewById(R.id.tvLocalization);
         viewPager = findViewById(R.id.ViewPager);
         ivSearch = findViewById(R.id.ivSearch);
         ivMarker = findViewById(R.id.ivMarker);
-
-        weathers = new ArrayList<>();
-
         iLoadImage = ((WeatherApplication) getApplication()).imageLoader();
-
         ivSearch.setOnClickListener((view) -> SearchActivity());
-        SetupSlidePagerAdapter(weathers);
+    }
 
+    private void getWeatherFromDb(){
         WeatherViewModel weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
         weatherViewModel.allForecastsFromDb();
-        weatherViewModel.getAllWeather().observe(this, weatherFromDb -> {
-                    createWeatherFragments(weatherFromDb);
-                }
+        weatherViewModel.getAllWeather().observe(this,
+                this::createWeatherFragments
         );
-
-        String location = getIntent().getStringExtra("location");
-        boolean isDeviceLoc = getIntent().getBooleanExtra("isDeviceLoc", false);
-
-        if (location != null) {
-            slidePagerAdapter.notifyDataSetChanged();
-           // createFragmentAndUpdateAdapter(new WeatherParameters(location, isDeviceLoc, "10"));
-        } else {
-            CheckLocation();
-        }
     }
 
     private void createWeatherFragments(List<ForecastEntry> weatherFromDb) {
         for (ForecastEntry currentWeather : weatherFromDb) {
-            WeatherParameters weatherParameters = new WeatherParameters(
-                    currentWeather.getLocation().getName(),
-                    currentWeather.isDeviceLocation,
-                    Const.FORECAST_DAYS
-            );
-            createFragmentAndUpdateAdapter(weatherParameters);
+            createFragmentAndUpdateAdapter(currentWeather);
         }
     }
 
-    private void createFragmentAndUpdateAdapter(WeatherParameters weatherParameters) {
+    private void createFragmentAndUpdateAdapter(ForecastEntry forecastEntry) {
         WeatherFragment weatherFragment = new WeatherFragment();
-        weatherFragment.setWeatherParameters(weatherParameters);
+        weatherFragment.setForecastEntry(forecastEntry);
         weatherFragment.setImageLoader(iLoadImage);
-        for (WeatherFragment fragment : weathers) {
-            if (fragment.getWeatherParameters().equals(weatherParameters)) {
-                return;
-            }
-        }
         weathers.add(weatherFragment);
         slidePagerAdapter.notifyDataSetChanged();
     }
@@ -142,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                         true,
                         Const.FORECAST_DAYS
                 );
-                createFragmentAndUpdateAdapter(weatherParameters);
+                ///createFragmentAndUpdateAdapter(weatherParameters);
             }
 
             @Override
@@ -174,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void SetupSlidePagerAdapter(List<WeatherFragment> data) {
+    private void createSlidePagerAdapter(List<WeatherFragment> data) {
         slidePagerAdapter = new SlidePagerAdapter(this, getSupportFragmentManager(), data);
         viewPager.setAdapter(slidePagerAdapter);
         viewPager.setCurrentItem(getIntent().getIntExtra("position", 0));
