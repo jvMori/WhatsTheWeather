@@ -7,14 +7,17 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.application.WeatherApplication;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.ui.view.activity.SearchActivity;
+import com.example.jvmori.myweatherapp.ui.view.adapters.LocationAdapter;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.ui.view.fragment.WeatherFragment;
@@ -68,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
         createSlidePagerAdapter(weathers);
         getWeatherFromDb();
 
-        //TODO: get clicked item in search view and display the right view pager item
         //TODO: checkWeather for location and update view pager 
 
 //        String location = getIntent().getStringExtra("location");
@@ -96,9 +98,10 @@ public class MainActivity extends AppCompatActivity {
     private void getWeatherFromDb(){
         WeatherViewModel weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
         weatherViewModel.allForecastsFromDb();
-        weatherViewModel.getAllWeather().observe(this,
-                this::createWeatherFragments
-        );
+        weatherViewModel.getAllWeather().observe(this, weatherFromDb -> {
+            createWeatherFragments(weatherFromDb);
+            setCurrentViewPagerPosition();
+        });
     }
 
     private void createWeatherFragments(List<ForecastEntry> weatherFromDb) {
@@ -106,6 +109,11 @@ public class MainActivity extends AppCompatActivity {
             if (weathers.size() != weatherFromDb.size())
                 createFragmentAndUpdateAdapter(currentWeather);
         }
+    }
+
+    private void setCurrentViewPagerPosition(){
+        int position = getIntent().getIntExtra("position", 0);
+        new Handler().post(() -> viewPager.setCurrentItem(position, true));
     }
 
     private void createFragmentAndUpdateAdapter(ForecastEntry forecastEntry) {
@@ -177,5 +185,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setCurrentItem(getIntent().getIntExtra("position", 0));
         tabLayout.setupWithViewPager(viewPager);
     }
+
 }
 

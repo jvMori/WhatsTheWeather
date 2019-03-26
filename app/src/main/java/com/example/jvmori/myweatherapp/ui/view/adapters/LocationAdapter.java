@@ -44,7 +44,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             itemView.setOnClickListener(view -> {
                 int position = getAdapterPosition();
                 if (position != -1 )
-                    iOnClickListener.callback(currentWeathers.get(position));
+                    iOnClickListener.callback(position);
             });
 
             itemView.setOnLongClickListener(view -> {
@@ -95,8 +95,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         }
     }
 
-    public interface IOnClickListener{
-        void callback(ForecastEntry forecastEntry);
+    public interface IOnClickListener {
+        void callback(int position);
     }
 
     public interface ILongClickListener{

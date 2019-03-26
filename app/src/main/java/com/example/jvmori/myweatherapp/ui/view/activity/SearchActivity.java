@@ -113,10 +113,9 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
         recyclerView.setAdapter(locationsAdapter);
     }
 
-    void BackToMainActivity(ForecastEntry forecastEntry) {
+    void BackToMainActivity(int position) {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("location", forecastEntry.getLocation().mCityName);
-        intent.putExtra("isDeviceLoc", forecastEntry.isDeviceLocation);
+        intent.putExtra("position", position);
         startActivity(intent);
     }
 
@@ -128,8 +127,8 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
     }
 
     @Override
-    public void callback(ForecastEntry weather) {
-        BackToMainActivity(weather);
+    public void callback(int position) {
+        BackToMainActivity(position);
     }
 
     @Override
@@ -137,4 +136,5 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
         weatherViewModel.deleteWeather(location);
         locationsAdapter.notifyDataSetChanged();
     }
+
 }
