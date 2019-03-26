@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bindView();
-        
+
         //TODO: checkWeather for location and update view pager 
 
 //        String location = getIntent().getStringExtra("location");
