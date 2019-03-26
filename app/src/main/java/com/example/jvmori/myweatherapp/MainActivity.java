@@ -68,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
         createSlidePagerAdapter(weathers);
         getWeatherFromDb();
 
+        //TODO: get clicked item in search view and display the right view pager item
+        //TODO: checkWeather for location and update view pager 
+
 //        String location = getIntent().getStringExtra("location");
 //        boolean isDeviceLoc = getIntent().getBooleanExtra("isDeviceLoc", false);
 //
