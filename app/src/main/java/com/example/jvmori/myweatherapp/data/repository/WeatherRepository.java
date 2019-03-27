@@ -54,9 +54,9 @@ public class WeatherRepository {
                 .doOnSuccess(
                         it -> {
                             it.isDeviceLocation = isDeviceLoc;
-                            if (isDeviceLoc){
-                                deleteOldDeviceLocation();
-                            }
+//                            if (isDeviceLoc){
+//                                deleteOldDeviceLocation();
+//                            }
                             persistForecast(it);
                         }
                 );
