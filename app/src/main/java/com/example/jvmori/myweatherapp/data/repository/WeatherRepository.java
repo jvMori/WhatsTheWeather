@@ -55,9 +55,11 @@ public class WeatherRepository {
                         it -> {
                             it.isDeviceLocation = isDeviceLoc;
                             if (isDeviceLoc){
-                                deleteOldDeviceLocation();
+                                it.setTimestamp(System.currentTimeMillis());
+                                insertAdnDeleteOldLocation(it);
+                            }else{
+                                persistForecast(it);
                             }
-                            persistForecast(it);
                         }
                 );
     }
@@ -67,7 +69,12 @@ public class WeatherRepository {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
-
+    private void insertAdnDeleteOldLocation(ForecastEntry forecastEntry){
+        Completable.fromAction(() ->
+                    forecastDao.insertAndDeleteOldLocation(forecastEntry))
+                .subscribeOn(Schedulers.io())
+                .subscribe();
+    }
 
     private void persistForecast(ForecastEntry newForecastEntry) {
         newForecastEntry.setTimestamp(System.currentTimeMillis());

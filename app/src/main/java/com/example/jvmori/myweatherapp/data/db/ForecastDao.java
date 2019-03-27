@@ -10,26 +10,32 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 @Dao
-public interface ForecastDao
+public abstract class ForecastDao
 {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(ForecastEntry forecastEntry);
+    public abstract void insert(ForecastEntry forecastEntry);
 
     @Query("delete from forecast where isDeviceLocation = 1")
-    void deleteOldDeviceLocWeather();
+    public abstract void deleteOldDeviceLocWeather();
+
+    @Transaction
+    public void insertAndDeleteOldLocation(ForecastEntry forecastEntry){
+        deleteOldDeviceLocWeather();
+        insert(forecastEntry);
+    }
 
     @Query("delete from forecast where mCityName like :cityName")
-    void deleteForecast(String cityName);
+    public abstract void deleteForecast(String cityName);
 
     @Query("select * from forecast order by isDeviceLocation desc")
-    io.reactivex.Observable<List<ForecastEntry>> getAllWeather();
+    public abstract io.reactivex.Observable<List<ForecastEntry>> getAllWeather();
 
     @Query("select * from forecast where mCityName like :location")
-    Maybe<ForecastEntry> getWeather(String location);
-
+    public abstract Maybe<ForecastEntry> getWeather(String location);
 
 }

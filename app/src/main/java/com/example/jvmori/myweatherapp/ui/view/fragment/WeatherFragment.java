@@ -60,8 +60,10 @@ public class WeatherFragment extends Fragment {
     public void onViewCreated(@androidx.annotation.NonNull View view, @androidx.annotation.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         progressBarLayout.setVisibility(View.VISIBLE);
-        displayWeather(forecastEntry);
-        refreshWeather();
+        if(forecastEntry != null){
+            displayWeather(forecastEntry);
+            refreshWeather();
+        }
     }
 
     private void refreshWeather(){
