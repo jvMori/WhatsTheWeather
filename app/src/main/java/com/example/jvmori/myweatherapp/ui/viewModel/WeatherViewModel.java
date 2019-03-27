@@ -17,6 +17,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
+import io.reactivex.Maybe;
+import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -65,6 +67,15 @@ public class WeatherViewModel extends AndroidViewModel {
             );
         }
     }
+
+    public Observable<ForecastEntry> getWeather(WeatherParameters weatherParameters){
+        return weatherRepository.getWeather( weatherParameters.getLocation(),
+                weatherParameters.isDeviceLocation(),
+                weatherParameters.getDays())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
+    }
+
 
     public void fetchWeather(WeatherParameters weatherParameters, OnFailure onFailure) {
         disposable.add(
