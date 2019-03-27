@@ -36,6 +36,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
+import io.reactivex.disposables.CompositeDisposable;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ILoadImage iLoadImage;
     private WeatherViewModel weatherViewModel;
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -70,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
         weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
         bindView();
 
-        int position = getIntent().getIntExtra("position",-1);
+        int position = getIntent().getIntExtra("position", -1);
         if (position == -1) {
-           // CheckLocation();
+             CheckLocation();
         }
     }
 
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         getWeatherFromDb();
     }
 
-    private void bindView(){
+    private void bindView() {
         tabLayout = findViewById(R.id.tabLayout);
         lifecycleOwner = this;
         tvLocalization = findViewById(R.id.tvLocalization);
@@ -95,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         ivSearch.setOnClickListener((view) -> SearchActivity());
     }
 
-    private void getWeatherFromDb(){
+    private void getWeatherFromDb() {
         weatherViewModel.allForecastsFromDb();
         weatherViewModel.getAllWeather().observe(this, weatherFromDb -> {
             createWeatherFragments(weatherFromDb);
@@ -110,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setCurrentViewPagerPosition(){
+    private void setCurrentViewPagerPosition() {
         int position = getIntent().getIntExtra("position", 0);
         new Handler().post(() -> viewPager.setCurrentItem(position, true));
     }
@@ -121,24 +123,27 @@ public class MainActivity extends AppCompatActivity {
         slidePagerAdapter.notifyDataSetChanged();
     }
 
-    private WeatherFragment createFragment(ForecastEntry forecastEntry){
+    private WeatherFragment createFragment(ForecastEntry forecastEntry) {
         WeatherFragment weatherFragment = new WeatherFragment();
         weatherFragment.setForecastEntry(forecastEntry);
         weatherFragment.setImageLoader(iLoadImage);
         return weatherFragment;
     }
 
-    private void getWeather(WeatherParameters parameters){
-        weatherViewModel.fetchWeather(parameters, null);
-        weatherViewModel.getWeather().observe(this,
-                this::displayWeather
+    private void getWeather(WeatherParameters parameters) {
+        disposable.add(
+                weatherViewModel.getWeather(parameters).subscribe(
+                        this::displayWeather,
+                        error -> Log.i("WEATHER", "Error while loading data")
+                )
         );
     }
-    private void displayWeather(ForecastEntry forecastEntry){
-        if (weathers != null && weathers.size() > 0){
+
+    private void displayWeather(ForecastEntry forecastEntry) {
+        if (weathers != null && weathers.size() > 0) {
             weathers.set(0, createFragment(forecastEntry));
             slidePagerAdapter.notifyDataSetChanged();
-        }else{
+        } else {
             createFragmentAndUpdateAdapter(forecastEntry);
         }
     }
@@ -205,5 +210,10 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposable.clear();
+    }
 }
 
