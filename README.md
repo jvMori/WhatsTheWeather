@@ -3,6 +3,6 @@ Android app that fetch data from Apixu API. It shows current weather and forecas
 
 ##heading
 Screenshots
-![Screenshot_1553678970](https://user-images.githubusercontent.com/20950550/55065262-c7839680-507b-11e9-9a89-45cc3254791e.png)
 
-![Screenshot_1553678984](https://user-images.githubusercontent.com/20950550/55065275-ceaaa480-507b-11e9-8f1d-f934b9fbcc61.png)
+![Screenshot_1553678970](https://user-images.githubusercontent.com/20950550/55065770-b8e9af00-507c-11e9-98b9-08bc43a8bee0.png)
+![Screenshot_1553678984](https://user-images.githubusercontent.com/20950550/55065777-bb4c0900-507c-11e9-9230-be814016abd7.png)
