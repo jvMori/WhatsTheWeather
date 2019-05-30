@@ -42,16 +42,16 @@ import io.reactivex.disposables.CompositeDisposable;
 public class MainActivity extends AppCompatActivity {
 
     private SlidePagerAdapter slidePagerAdapter;
-    private ViewPager viewPager;
+  //  private ViewPager viewPager;
     ImageView ivSearch, ivMarker;
-    TextView tvLocalization;
+  //  TextView tvLocalization;
     LocationManager locationManager;
     LocationListener locationListener;
     SwipeRefreshLayout swipeRefreshLayout;
     LifecycleOwner lifecycleOwner;
     public static String deviceLocation;
     public static List<WeatherFragment> weathers;
-    private TabLayout tabLayout;
+   // private TabLayout tabLayout;
     private ILoadImage iLoadImage;
     private WeatherViewModel weatherViewModel;
     private CompositeDisposable disposable = new CompositeDisposable();
@@ -81,23 +81,27 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        weathers = new ArrayList<>();
-        createSlidePagerAdapter(weathers);
-        WeatherFragment weatherFragment = new WeatherFragment();
-        weatherFragment.setWeatherParameters(new WeatherParameters("Kleparz", false, "7"));
-        weatherFragment.setImageLoader(iLoadImage);
-        weathers.add(weatherFragment);
-        slidePagerAdapter.notifyDataSetChanged();
+        WeatherFragment fragment = findViewById(R.id.weatherFrag);
+        fragment.fetchWeather(
+                new WeatherParameters("Kleparz", false, "7")
+        );
+//        weathers = new ArrayList<>();
+//        createSlidePagerAdapter(weathers);
+//        WeatherFragment weatherFragment = new WeatherFragment();
+//        weatherFragment.setWeatherParameters(new WeatherParameters("Kleparz", false, "7"));
+//        weatherFragment.setImageLoader(iLoadImage);
+//        weathers.add(weatherFragment);
+//        slidePagerAdapter.notifyDataSetChanged();
         //getWeatherFromDb();
     }
 
     private void bindView() {
-        tabLayout = findViewById(R.id.tabLayout);
+       // tabLayout = findViewById(R.id.tabLayout);
         lifecycleOwner = this;
-        tvLocalization = findViewById(R.id.tvLocalization);
-        viewPager = findViewById(R.id.ViewPager);
+       // tvLocalization = findViewById(R.id.tvLocalization);
+       // viewPager = findViewById(R.id.ViewPager);
         ivSearch = findViewById(R.id.ivSearch);
-        ivMarker = findViewById(R.id.ivMarker);
+       // ivMarker = findViewById(R.id.ivMarker);
         iLoadImage = ((WeatherApplication) getApplication()).imageLoader();
         ivSearch.setOnClickListener((view) -> SearchActivity());
     }
@@ -119,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setCurrentViewPagerPosition() {
         int position = getIntent().getIntExtra("position", 0);
-        new Handler().post(() -> viewPager.setCurrentItem(position, true));
+       // new Handler().post(() -> viewPager.setCurrentItem(position, true));
     }
 
     private void createFragmentAndUpdateAdapter(ForecastEntry forecastEntry) {
@@ -210,9 +214,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void createSlidePagerAdapter(List<WeatherFragment> data) {
         slidePagerAdapter = new SlidePagerAdapter(this, getSupportFragmentManager(), data);
-        viewPager.setAdapter(slidePagerAdapter);
-        viewPager.setCurrentItem(getIntent().getIntExtra("position", 0));
-        tabLayout.setupWithViewPager(viewPager);
+        //viewPager.setAdapter(slidePagerAdapter);
+        //viewPager.setCurrentItem(getIntent().getIntExtra("position", 0));
+       // tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override

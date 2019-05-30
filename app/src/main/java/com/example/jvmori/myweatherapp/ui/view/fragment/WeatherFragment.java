@@ -29,7 +29,7 @@ public class WeatherFragment extends Fragment {
 
     private View view;
     private TextView mainTemp, feelsLike, desc, humidity, pressure, city;
-    private LinearLayout errorLayout, progressBarLayout;
+    //private LinearLayout errorLayout, progressBarLayout;
     private ImageView ivIcon;
     private RecyclerView recyclerView;
     private ForecastAdapter forecastAdapter;
@@ -65,14 +65,14 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onViewCreated(@androidx.annotation.NonNull View view, @androidx.annotation.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        progressBarLayout.setVisibility(View.VISIBLE);
-        fetchWeather();
+       // progressBarLayout.setVisibility(View.VISIBLE);
+        //fetchWeather();
 //        if(forecastEntry != null){
 //            displayWeather(forecastEntry);
 //            refreshWeather();
 //        }
     }
-    private void fetchWeather(){
+    public void fetchWeather(WeatherParameters weatherParameters){
         WeatherViewModel viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
         viewModel.fetchWeather(weatherParameters);
         viewModel.getWeather().observe(this, new Observer<ForecastEntry>() {
@@ -94,8 +94,8 @@ public class WeatherFragment extends Fragment {
     private void displayWeather(ForecastEntry forecastEntry) {
         if (forecastEntry != null) {
             createCurrentWeatherUi(forecastEntry);
-            errorLayout.setVisibility(View.GONE);
-            progressBarLayout.setVisibility(View.GONE);
+           // errorLayout.setVisibility(View.GONE);
+            //progressBarLayout.setVisibility(View.GONE);
         }
     }
 
@@ -121,7 +121,7 @@ public class WeatherFragment extends Fragment {
         iLoadImage.loadImage(url, ivIcon);
 
         createRecyclerView(forecastEntry);
-        progressBarLayout.setVisibility(View.GONE);
+        //progressBarLayout.setVisibility(View.GONE);
     }
 
     private void bindView(View view) {
@@ -131,10 +131,10 @@ public class WeatherFragment extends Fragment {
         pressure = view.findViewById(R.id.Pressure);
         ivIcon = view.findViewById(R.id.ivMainIcon);
         desc = view.findViewById(R.id.tvDescriptionMain);
-        errorLayout = view.findViewById(R.id.errorLayout);
+        //errorLayout = view.findViewById(R.id.errorLayout);
         city = view.findViewById(R.id.locationTextView);
         recyclerView = view.findViewById(R.id.RecyclerViewList);
-        progressBarLayout = view.findViewById(R.id.progressBarLayout);
+        //progressBarLayout = view.findViewById(R.id.progressBarLayout);
     }
 
 
