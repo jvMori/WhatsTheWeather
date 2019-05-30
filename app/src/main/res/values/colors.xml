@@ -6,4 +6,5 @@
     <color name="textSecondary">#a2b5c9</color>
     <color name="textPrimaryDark">#08081b</color>
     <color name="transparentBg">#40000000</color>
+    <color name="transparent">#00000000</color>
 </resources>

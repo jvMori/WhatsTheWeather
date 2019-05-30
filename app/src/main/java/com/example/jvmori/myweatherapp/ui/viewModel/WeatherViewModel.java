@@ -25,6 +25,9 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class WeatherViewModel extends AndroidViewModel {
+    private MutableLiveData<ForecastEntry> _weather;
+    public LiveData<ForecastEntry> getWeather() { return _weather;}
+
     private WeatherRepository weatherRepository;
     private MutableLiveData<ForecastEntry> weather = new MutableLiveData<>();
     private MutableLiveData<List<ForecastEntry>> allWeatherFromDb = new MutableLiveData<>();
@@ -36,40 +39,92 @@ public class WeatherViewModel extends AndroidViewModel {
         weatherRepository = ((WeatherApplication) application).weatherRepository();
     }
 
-    public LiveData<ForecastEntry> getFreshWeather(){
+    public void fetchWeather(WeatherParameters weatherParameters) {
+        _weather = new MutableLiveData<>();
+        disposable.add(
+                weatherRepository.getWeatherLocal(weatherParameters.getLocation())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .doAfterSuccess(succes ->{
+                            Log.i("WEATHER", "success");
+                        })
+                        .subscribe(success -> {
+                                    if (success != null) {
+                                        _weather.setValue(success);
+                                        checkIfRefreshNeeded(success, weatherParameters.isDeviceLocation(), weatherParameters.getDays());
+                                    } else {
+                                        fetchRemote(
+                                                weatherParameters.getLocation(),
+                                                weatherParameters.isDeviceLocation(),
+                                                weatherParameters.getDays()
+                                        );
+                                    }
+                                }, error -> {
+                                    Log.i("WEATHER", "Something went wrong!");
+                                }
+                        )
+        );
+    }
+
+    private void fetchRemote(String location, boolean isDeviceLocation, String days) {
+        disposable.add(
+                weatherRepository.getWeatherRemote(location, isDeviceLocation, days)
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                success -> {
+                                    _weather.setValue(success);
+                                }, error -> {
+                                    Log.i("WEATHER", "Something went wrong!");
+                                }
+                        )
+        );
+    }
+
+    private void checkIfRefreshNeeded(ForecastEntry oldWeather, boolean isDeviceLocation, String days) {
+        if (!isWeatherUpToDate(oldWeather)) {
+            fetchRemote(oldWeather.getLocation().mCityName, isDeviceLocation, days);
+        }
+    }
+
+    private boolean isWeatherUpToDate(ForecastEntry oldWeather) {
+        return oldWeather.getTimestamp() != 0L && System.currentTimeMillis() - oldWeather.getTimestamp() < Const.STALE_MS;
+    }
+
+
+    public LiveData<ForecastEntry> getFreshWeather() {
         return updatedWeather;
     }
 
-    public LiveData<ForecastEntry> getWeather() {
-        return weather;
-    }
+//    public LiveData<ForecastEntry> getWeather() {
+//        return weather;
+//    }
 
     public LiveData<List<ForecastEntry>> getAllWeather() {
         return allWeatherFromDb;
     }
 
     public void refreshWeather(ForecastEntry oldWeather) {
-        if (oldWeather != null && !weatherRepository.isUpToDate(oldWeather.getTimestamp()))
-        {
+        if (oldWeather != null && !weatherRepository.isUpToDate(oldWeather.getTimestamp())) {
             disposable.add(
                     weatherRepository.getWeatherRemote(
-                                oldWeather.getLocation().mCityName,
-                                oldWeather.isDeviceLocation,
-                                Const.FORECAST_DAYS)
+                            oldWeather.getLocation().mCityName,
+                            oldWeather.isDeviceLocation,
+                            Const.FORECAST_DAYS)
                             .observeOn(Schedulers.io())
                             .subscribeOn(AndroidSchedulers.mainThread())
                             .subscribe(
-                                    result-> updatedWeather.postValue(result),
+                                    result -> updatedWeather.postValue(result),
                                     error -> {
-                                       Log.i("WEATHER", "error");
+                                        Log.i("WEATHER", "error");
                                     }
                             )
             );
         }
     }
 
-    public Observable<ForecastEntry> getWeather(WeatherParameters weatherParameters){
-        return weatherRepository.getWeather( weatherParameters.getLocation(),
+    public Observable<ForecastEntry> getWeather(WeatherParameters weatherParameters) {
+        return weatherRepository.getWeather(weatherParameters.getLocation(),
                 weatherParameters.isDeviceLocation(),
                 weatherParameters.getDays())
                 .observeOn(AndroidSchedulers.mainThread())
