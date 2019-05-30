@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         int position = getIntent().getIntExtra("position", -1);
         if (position == -1) {
-             CheckLocation();
+             //CheckLocation();
         }
     }
 
@@ -83,7 +83,12 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         weathers = new ArrayList<>();
         createSlidePagerAdapter(weathers);
-        getWeatherFromDb();
+        WeatherFragment weatherFragment = new WeatherFragment();
+        weatherFragment.setWeatherParameters(new WeatherParameters("Kleparz", false, "7"));
+        weatherFragment.setImageLoader(iLoadImage);
+        weathers.add(weatherFragment);
+        slidePagerAdapter.notifyDataSetChanged();
+        //getWeatherFromDb();
     }
 
     private void bindView() {
@@ -171,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                         true,
                         Const.FORECAST_DAYS
                 );
-                getWeather(weatherParameters);
+                //getWeather(weatherParameters);
             }
 
             @Override

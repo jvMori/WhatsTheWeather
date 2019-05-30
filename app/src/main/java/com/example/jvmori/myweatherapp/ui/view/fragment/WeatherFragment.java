@@ -13,9 +13,11 @@ import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
 import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
+import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,9 +33,13 @@ public class WeatherFragment extends Fragment {
     private ImageView ivIcon;
     private RecyclerView recyclerView;
     private ForecastAdapter forecastAdapter;
-    // private WeatherParameters weatherParameters;
+    private WeatherParameters weatherParameters;
     private ILoadImage iLoadImage;
     private ForecastEntry forecastEntry;
+
+    public void setWeatherParameters(WeatherParameters weatherParameters){
+        this.weatherParameters = weatherParameters;
+    }
 
     public void setForecastEntry(ForecastEntry forecastEntry) {
         this.forecastEntry = forecastEntry;
@@ -60,10 +66,21 @@ public class WeatherFragment extends Fragment {
     public void onViewCreated(@androidx.annotation.NonNull View view, @androidx.annotation.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         progressBarLayout.setVisibility(View.VISIBLE);
-        if(forecastEntry != null){
-            displayWeather(forecastEntry);
-            refreshWeather();
-        }
+        fetchWeather();
+//        if(forecastEntry != null){
+//            displayWeather(forecastEntry);
+//            refreshWeather();
+//        }
+    }
+    private void fetchWeather(){
+        WeatherViewModel viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
+        viewModel.fetchWeather(weatherParameters);
+        viewModel.getWeather().observe(this, new Observer<ForecastEntry>() {
+            @Override
+            public void onChanged(ForecastEntry forecastEntry) {
+                displayWeather(forecastEntry);
+            }
+        });
     }
 
     private void refreshWeather(){
@@ -83,7 +100,6 @@ public class WeatherFragment extends Fragment {
     }
 
     private void createCurrentWeatherUi(ForecastEntry forecastEntry) {
-        //weatherParameters.setLocation(forecastEntry.getLocation().getName());
         CurrentWeather currentWeather = forecastEntry.getCurrentWeather();
 
         String cityAndCountry = String.format("%s, %s",
@@ -129,7 +145,4 @@ public class WeatherFragment extends Fragment {
         recyclerView.setAdapter(forecastAdapter);
     }
 
-//    public WeatherParameters getWeatherParameters() {
-//        return weatherParameters;
-//    }
 }
