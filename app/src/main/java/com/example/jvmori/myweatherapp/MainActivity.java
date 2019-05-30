@@ -10,7 +10,9 @@ import android.location.LocationManager;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,9 +31,11 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
   //  TextView tvLocalization;
     LocationManager locationManager;
     LocationListener locationListener;
+    ISetWeather iSetWeather;
     SwipeRefreshLayout swipeRefreshLayout;
     LifecycleOwner lifecycleOwner;
     public static String deviceLocation;
@@ -55,6 +60,10 @@ public class MainActivity extends AppCompatActivity {
     private ILoadImage iLoadImage;
     private WeatherViewModel weatherViewModel;
     private CompositeDisposable disposable = new CompositeDisposable();
+
+    public void SetISetWeather(ISetWeather iSetWeather){
+        this.iSetWeather = iSetWeather;
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -78,13 +87,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@Nullable View parent, @androidx.annotation.NonNull String name, @androidx.annotation.NonNull Context context, @androidx.annotation.NonNull AttributeSet attrs) {
+//        if (iSetWeather != null){
+//            iSetWeather.setWeatherParameters(
+//                    new WeatherParameters("Kleparz", false, "7")
+//            );
+//        }
+        return super.onCreateView(parent, name, context, attrs);
+    }
+
+    public interface ISetWeather {
+        void setWeatherParameters(WeatherParameters weatherParameters);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        WeatherFragment fragment = findViewById(R.id.weatherFrag);
-        fragment.fetchWeather(
-                new WeatherParameters("Kleparz", false, "7")
-        );
+
+
 //        weathers = new ArrayList<>();
 //        createSlidePagerAdapter(weathers);
 //        WeatherFragment weatherFragment = new WeatherFragment();

@@ -1,5 +1,6 @@
 package com.example.jvmori.myweatherapp.ui.view.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,24 +9,30 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.jvmori.myweatherapp.MainActivity;
 import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.application.WeatherApplication;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
+import com.example.jvmori.myweatherapp.di.component.WeatherApplicationComponent;
 import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
 import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import javax.inject.Inject;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WeatherFragment extends Fragment {
+public class WeatherFragment extends Fragment implements MainActivity.ISetWeather {
 
     private View view;
     private TextView mainTemp, feelsLike, desc, humidity, pressure, city;
@@ -34,11 +41,13 @@ public class WeatherFragment extends Fragment {
     private RecyclerView recyclerView;
     private ForecastAdapter forecastAdapter;
     private WeatherParameters weatherParameters;
-    private ILoadImage iLoadImage;
+    public ILoadImage iLoadImage;
     private ForecastEntry forecastEntry;
 
+    @Override
     public void setWeatherParameters(WeatherParameters weatherParameters){
         this.weatherParameters = weatherParameters;
+        fetchWeather(weatherParameters);
     }
 
     public void setForecastEntry(ForecastEntry forecastEntry) {
@@ -54,6 +63,15 @@ public class WeatherFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        MainActivity mainActivity = (MainActivity)context;
+        if(context.getApplicationContext() instanceof WeatherApplication)
+            iLoadImage = ((WeatherApplication) context.getApplicationContext()).imageLoader();
+        mainActivity.SetISetWeather(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -65,8 +83,8 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onViewCreated(@androidx.annotation.NonNull View view, @androidx.annotation.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-       // progressBarLayout.setVisibility(View.VISIBLE);
-        //fetchWeather();
+        //progressBarLayout.setVisibility(View.VISIBLE);
+        fetchWeather(new WeatherParameters("Kleparz", false, "7"));
 //        if(forecastEntry != null){
 //            displayWeather(forecastEntry);
 //            refreshWeather();
