@@ -36,26 +36,14 @@ public class WeatherFragment extends Fragment implements MainActivity.ISetWeathe
 
     private View view;
     private TextView mainTemp, feelsLike, desc, humidity, pressure, city;
-    //private LinearLayout errorLayout, progressBarLayout;
     private ImageView ivIcon;
     private RecyclerView recyclerView;
     private ForecastAdapter forecastAdapter;
-    private WeatherParameters weatherParameters;
-    public ILoadImage iLoadImage;
-    private ForecastEntry forecastEntry;
+    private ILoadImage iLoadImage;
 
     @Override
-    public void setWeatherParameters(WeatherParameters weatherParameters){
-        this.weatherParameters = weatherParameters;
+    public void setWeatherParameters(WeatherParameters weatherParameters) {
         fetchWeather(weatherParameters);
-    }
-
-    public void setForecastEntry(ForecastEntry forecastEntry) {
-        this.forecastEntry = forecastEntry;
-    }
-
-    public void setImageLoader(ILoadImage imageLoader) {
-        this.iLoadImage = imageLoader;
     }
 
     public WeatherFragment() {
@@ -65,8 +53,8 @@ public class WeatherFragment extends Fragment implements MainActivity.ISetWeathe
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        MainActivity mainActivity = (MainActivity)context;
-        if(context.getApplicationContext() instanceof WeatherApplication)
+        MainActivity mainActivity = (MainActivity) context;
+        if (context.getApplicationContext() instanceof WeatherApplication)
             iLoadImage = ((WeatherApplication) context.getApplicationContext()).imageLoader();
         mainActivity.SetISetWeather(this);
     }
@@ -80,46 +68,20 @@ public class WeatherFragment extends Fragment implements MainActivity.ISetWeathe
         return view;
     }
 
-    @Override
-    public void onViewCreated(@androidx.annotation.NonNull View view, @androidx.annotation.Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        //progressBarLayout.setVisibility(View.VISIBLE);
-       // fetchWeather(new WeatherParameters("Kleparz", false, "7"));
-//        if(forecastEntry != null){
-//            displayWeather(forecastEntry);
-//            refreshWeather();
-//        }
-    }
-    public void fetchWeather(WeatherParameters weatherParameters){
+    private void fetchWeather(WeatherParameters weatherParameters) {
         WeatherViewModel viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
         viewModel.fetchWeather(weatherParameters);
-        viewModel.getWeather().observe(this, new Observer<ForecastEntry>() {
-            @Override
-            public void onChanged(ForecastEntry forecastEntry) {
-                displayWeather(forecastEntry);
-            }
-        });
-    }
-
-    private void refreshWeather(){
-        WeatherViewModel viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
-        viewModel.refreshWeather(forecastEntry);
-        viewModel.getFreshWeather().observe(this,
-                this::displayWeather
-        );
+        viewModel.getWeather().observe(this, forecastEntry -> displayWeather(forecastEntry));
     }
 
     private void displayWeather(ForecastEntry forecastEntry) {
         if (forecastEntry != null) {
             createCurrentWeatherUi(forecastEntry);
-           // errorLayout.setVisibility(View.GONE);
-            //progressBarLayout.setVisibility(View.GONE);
         }
     }
 
     private void createCurrentWeatherUi(ForecastEntry forecastEntry) {
         CurrentWeather currentWeather = forecastEntry.getCurrentWeather();
-
         String cityAndCountry = String.format("%s, %s",
                 forecastEntry.getLocation().getName(),
                 forecastEntry.getLocation().getCountry());
@@ -137,9 +99,7 @@ public class WeatherFragment extends Fragment implements MainActivity.ISetWeathe
         pressure.setText(pressureTxt);
         String url = "http:" + currentWeather.mCondition.getIcon();
         iLoadImage.loadImage(url, ivIcon);
-
         createRecyclerView(forecastEntry);
-        //progressBarLayout.setVisibility(View.GONE);
     }
 
     private void bindView(View view) {
@@ -149,12 +109,9 @@ public class WeatherFragment extends Fragment implements MainActivity.ISetWeathe
         pressure = view.findViewById(R.id.Pressure);
         ivIcon = view.findViewById(R.id.ivMainIcon);
         desc = view.findViewById(R.id.tvDescriptionMain);
-        //errorLayout = view.findViewById(R.id.errorLayout);
         city = view.findViewById(R.id.locationTextView);
         recyclerView = view.findViewById(R.id.RecyclerViewList);
-        //progressBarLayout = view.findViewById(R.id.progressBarLayout);
     }
-
 
     private void createRecyclerView(ForecastEntry forecastEntry) {
         forecastAdapter = new ForecastAdapter(forecastEntry.getForecast().mFutureWeather, getContext());
@@ -162,5 +119,4 @@ public class WeatherFragment extends Fragment implements MainActivity.ISetWeathe
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(forecastAdapter);
     }
-
 }
