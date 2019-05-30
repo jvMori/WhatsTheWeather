@@ -84,7 +84,7 @@ public class WeatherFragment extends Fragment implements MainActivity.ISetWeathe
     public void onViewCreated(@androidx.annotation.NonNull View view, @androidx.annotation.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //progressBarLayout.setVisibility(View.VISIBLE);
-        fetchWeather(new WeatherParameters("Kleparz", false, "7"));
+       // fetchWeather(new WeatherParameters("Kleparz", false, "7"));
 //        if(forecastEntry != null){
 //            displayWeather(forecastEntry);
 //            refreshWeather();

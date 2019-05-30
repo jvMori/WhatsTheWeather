@@ -45,25 +45,22 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class MainActivity extends AppCompatActivity {
 
-    private SlidePagerAdapter slidePagerAdapter;
-  //  private ViewPager viewPager;
-    ImageView ivSearch, ivMarker;
-  //  TextView tvLocalization;
+    ImageView ivSearch;
     LocationManager locationManager;
     LocationListener locationListener;
     ISetWeather iSetWeather;
     SwipeRefreshLayout swipeRefreshLayout;
     LifecycleOwner lifecycleOwner;
     public static String deviceLocation;
-    public static List<WeatherFragment> weathers;
-   // private TabLayout tabLayout;
-    private ILoadImage iLoadImage;
-    private WeatherViewModel weatherViewModel;
     private CompositeDisposable disposable = new CompositeDisposable();
 
     public void SetISetWeather(ISetWeather iSetWeather){
         this.iSetWeather = iSetWeather;
     }
+    public interface ISetWeather {
+        void setWeatherParameters(WeatherParameters weatherParameters);
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -77,106 +74,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
         bindView();
 
         int position = getIntent().getIntExtra("position", -1);
         if (position == -1) {
-             //CheckLocation();
+             CheckLocation();
         }
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@Nullable View parent, @androidx.annotation.NonNull String name, @androidx.annotation.NonNull Context context, @androidx.annotation.NonNull AttributeSet attrs) {
-//        if (iSetWeather != null){
-//            iSetWeather.setWeatherParameters(
-//                    new WeatherParameters("Kleparz", false, "7")
-//            );
-//        }
-        return super.onCreateView(parent, name, context, attrs);
-    }
-
-    public interface ISetWeather {
-        void setWeatherParameters(WeatherParameters weatherParameters);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-
-//        weathers = new ArrayList<>();
-//        createSlidePagerAdapter(weathers);
-//        WeatherFragment weatherFragment = new WeatherFragment();
-//        weatherFragment.setWeatherParameters(new WeatherParameters("Kleparz", false, "7"));
-//        weatherFragment.setImageLoader(iLoadImage);
-//        weathers.add(weatherFragment);
-//        slidePagerAdapter.notifyDataSetChanged();
-        //getWeatherFromDb();
+        if (iSetWeather != null) {
+            iSetWeather.setWeatherParameters(
+                    new WeatherParameters("Kleparz", false, "7")
+            );
+        }
     }
 
     private void bindView() {
-       // tabLayout = findViewById(R.id.tabLayout);
         lifecycleOwner = this;
-       // tvLocalization = findViewById(R.id.tvLocalization);
-       // viewPager = findViewById(R.id.ViewPager);
         ivSearch = findViewById(R.id.ivSearch);
-       // ivMarker = findViewById(R.id.ivMarker);
-        iLoadImage = ((WeatherApplication) getApplication()).imageLoader();
         ivSearch.setOnClickListener((view) -> SearchActivity());
-    }
-
-    private void getWeatherFromDb() {
-        weatherViewModel.allForecastsFromDb();
-        weatherViewModel.getAllWeather().observe(this, weatherFromDb -> {
-            createWeatherFragments(weatherFromDb);
-            setCurrentViewPagerPosition();
-        });
-    }
-
-    private void createWeatherFragments(List<ForecastEntry> weatherFromDb) {
-        for (ForecastEntry currentWeather : weatherFromDb) {
-            if (weathers.size() != weatherFromDb.size())
-                createFragmentAndUpdateAdapter(currentWeather);
-        }
-    }
-
-    private void setCurrentViewPagerPosition() {
-        int position = getIntent().getIntExtra("position", 0);
-       // new Handler().post(() -> viewPager.setCurrentItem(position, true));
-    }
-
-    private void createFragmentAndUpdateAdapter(ForecastEntry forecastEntry) {
-        WeatherFragment weatherFragment = createFragment(forecastEntry);
-        weathers.add(weatherFragment);
-        slidePagerAdapter.notifyDataSetChanged();
-    }
-
-    private WeatherFragment createFragment(ForecastEntry forecastEntry) {
-        WeatherFragment weatherFragment = new WeatherFragment();
-        weatherFragment.setForecastEntry(forecastEntry);
-        weatherFragment.setImageLoader(iLoadImage);
-        return weatherFragment;
-    }
-
-    private void getWeather(WeatherParameters parameters) {
-        disposable.add(
-                weatherViewModel.getWeather(parameters).subscribe(
-                        this::displayWeather,
-                        error -> Log.i("WEATHER", "Error while loading data")
-                )
-        );
-    }
-
-    private void displayWeather(ForecastEntry forecastEntry) {
-        if (weathers != null && weathers.size() > 0) {
-            weathers.set(0, createFragment(forecastEntry));
-            slidePagerAdapter.notifyDataSetChanged();
-        } else {
-            createFragmentAndUpdateAdapter(forecastEntry);
-        }
     }
 
     private void startListening() {
@@ -202,7 +116,9 @@ public class MainActivity extends AppCompatActivity {
                         true,
                         Const.FORECAST_DAYS
                 );
-                //getWeather(weatherParameters);
+                if (iSetWeather != null) {
+                    iSetWeather.setWeatherParameters(weatherParameters);
+                }
             }
 
             @Override
@@ -232,13 +148,6 @@ public class MainActivity extends AppCompatActivity {
     private void SearchActivity() {
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
-    }
-
-    private void createSlidePagerAdapter(List<WeatherFragment> data) {
-        slidePagerAdapter = new SlidePagerAdapter(this, getSupportFragmentManager(), data);
-        //viewPager.setAdapter(slidePagerAdapter);
-        //viewPager.setCurrentItem(getIntent().getIntExtra("position", 0));
-       // tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override

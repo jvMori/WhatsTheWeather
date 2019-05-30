@@ -45,6 +45,9 @@ public class WeatherViewModel extends AndroidViewModel {
                 weatherRepository.getWeatherLocal(weatherParameters.getLocation())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
+                        .doAfterSuccess(succes ->{
+                            Log.i("WEATHER", "success");
+                        })
                         .subscribe(success -> {
                                     if (success != null) {
                                         _weather.setValue(success);
