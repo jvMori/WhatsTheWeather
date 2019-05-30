@@ -1,7 +1,5 @@
 package com.example.jvmori.myweatherapp.data.repository;
 
-import android.annotation.SuppressLint;
-
 import com.example.jvmori.myweatherapp.AppExecutors;
 import com.example.jvmori.myweatherapp.data.db.ForecastDao;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
@@ -19,7 +17,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import androidx.lifecycle.LiveData;
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -36,13 +33,13 @@ public class WeatherRepository {
     }
 
     public Observable<ForecastEntry> getWeather(String location, boolean isDeviceLoc, String days) {
-        return Maybe.concat(getWeatherFromDb(location), getWeatherRemote(location, isDeviceLoc, days))
+        return Maybe.concat(getWeatherLocal(location), getWeatherRemote(location, isDeviceLoc, days))
                 .filter(it -> it != null && isUpToDate(it.getTimestamp()))
                 .take(1)
                 .toObservable();
     }
 
-    private Maybe<ForecastEntry> getWeatherFromDb(String location) {
+    public Maybe<ForecastEntry> getWeatherLocal(String location) {
         return forecastDao.getWeather(location)
                 .subscribeOn(Schedulers.io());
     }
@@ -54,8 +51,9 @@ public class WeatherRepository {
                 .doOnSuccess(
                         it -> {
                             it.isDeviceLocation = isDeviceLoc;
+                            it.getLocation().mCityName = location;
+                            it.setTimestamp(System.currentTimeMillis());
                             if (isDeviceLoc){
-                                it.setTimestamp(System.currentTimeMillis());
                                 insertAdnDeleteOldLocation(it);
                             }else{
                                 persistForecast(it);
