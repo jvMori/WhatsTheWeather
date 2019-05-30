@@ -46,6 +46,7 @@ public class WeatherViewModel extends AndroidViewModel {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .doAfterSuccess(succes ->{
+                            //TODO: save in db
                             Log.i("WEATHER", "success");
                         })
                         .subscribe(success -> {
