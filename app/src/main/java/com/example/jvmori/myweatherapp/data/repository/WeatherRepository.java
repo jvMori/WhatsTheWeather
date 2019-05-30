@@ -37,7 +37,7 @@ public class WeatherRepository {
 
     public Observable<ForecastEntry> getWeather(String location, boolean isDeviceLoc, String days) {
         return Maybe.concat(getWeatherFromDb(location), getWeatherRemote(location, isDeviceLoc, days))
-                .filter(it -> isUpToDate(it.getTimestamp()))
+                .filter(it -> it != null && isUpToDate(it.getTimestamp()))
                 .take(1)
                 .toObservable();
     }
