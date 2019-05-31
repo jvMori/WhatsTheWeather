@@ -7,6 +7,7 @@ import com.example.jvmori.myweatherapp.AppExecutors;
 import com.example.jvmori.myweatherapp.application.WeatherApplication;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.util.Const;
+import com.example.jvmori.myweatherapp.util.CurrentLocation;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.data.repository.WeatherRepository;
 
@@ -63,7 +64,6 @@ public class WeatherViewModel extends AndroidViewModel {
                         .observeOn(AndroidSchedulers.mainThread())
                         .doAfterSuccess(succes ->{
                             //TODO: save in db
-                            weatherParameters.setLocation(succes.getLocation().mCityName);
                             Log.i("WEATHER", "success");
                         })
                         .subscribe(
