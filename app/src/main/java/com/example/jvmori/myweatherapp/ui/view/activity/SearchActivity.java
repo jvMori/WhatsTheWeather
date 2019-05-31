@@ -79,7 +79,7 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
     private void getWeatherForCity(String query) {
         searchCities(query);
         if (query != null && query.length() > 3) {
-            weatherViewModel.fetchWeather(new WeatherParameters(query, false, Const.FORECAST_DAYS), null);
+           // weatherViewModel.fetchWeather(new WeatherParameters(query, false, Const.FORECAST_DAYS), null);
             weatherViewModel.getWeather().observe(this, result -> {
                 if (result != null) {
                     locationsAdapter.addForecastAndNotifyAdapter(result);

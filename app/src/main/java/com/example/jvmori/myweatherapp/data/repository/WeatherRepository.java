@@ -34,19 +34,19 @@ public class WeatherRepository {
 
     public Observable<ForecastEntry> getWeatherLocal(String location) {
         return forecastDao.getWeather(location)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<ForecastEntry> getWeatherRemote(String location, boolean isDeviceLoc, String days) {
-        return weatherNetworkDataSource.fetchWeather(
-                new WeatherParameters(location, isDeviceLoc, days))
+    public Maybe<ForecastEntry> getWeatherRemote(WeatherParameters weatherParameters) {
+        return weatherNetworkDataSource.fetchWeather(weatherParameters)
                 .subscribeOn(Schedulers.io())
                 .doOnSuccess(
                         it -> {
-                            it.isDeviceLocation = isDeviceLoc;
-                            it.getLocation().mCityName = location;
+                            it.isDeviceLocation = weatherParameters.isDeviceLocation();
+                            it.getLocation().mCityName = weatherParameters.getLocation();
                             it.setTimestamp(System.currentTimeMillis());
-                            if (isDeviceLoc){
+                            if (weatherParameters.isDeviceLocation()){
                                 insertAdnDeleteOldLocation(it);
                             }else{
                                 persistForecast(it);

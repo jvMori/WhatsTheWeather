@@ -43,20 +43,12 @@ public class WeatherViewModel extends AndroidViewModel {
                 weatherRepository.getWeatherLocal(weatherParameters.getLocation())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
-                        .doOnNext(succes ->{
-                            //TODO: save in db
-                            Log.i("WEATHER", "success");
-                        })
                         .subscribe(success -> {
                                     if (success != null) {
                                         _weather.setValue(success);
                                         checkIfRefreshNeeded(success, weatherParameters.isDeviceLocation(), weatherParameters.getDays());
                                     } else {
-                                        fetchRemote(
-                                                weatherParameters.getLocation(),
-                                                weatherParameters.isDeviceLocation(),
-                                                weatherParameters.getDays()
-                                        );
+                                        fetchRemote(weatherParameters);
                                     }
                                 }, error -> {
                                     Log.i("WEATHER", "Something went wrong!");
@@ -65,11 +57,16 @@ public class WeatherViewModel extends AndroidViewModel {
         );
     }
 
-    private void fetchRemote(String location, boolean isDeviceLocation, String days) {
+    public void fetchRemote(WeatherParameters weatherParameters) {
         disposable.add(
-                weatherRepository.getWeatherRemote(location, isDeviceLocation, days)
+                weatherRepository.getWeatherRemote(weatherParameters)
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
+                        .doAfterSuccess(succes ->{
+                            //TODO: save in db
+                            weatherParameters.setLocation(succes.getLocation().mCityName);
+                            Log.i("WEATHER", "success");
+                        })
                         .subscribe(
                                 success -> {
                                     _weather.setValue(success);
@@ -82,7 +79,11 @@ public class WeatherViewModel extends AndroidViewModel {
 
     private void checkIfRefreshNeeded(ForecastEntry oldWeather, boolean isDeviceLocation, String days) {
         if (!isWeatherUpToDate(oldWeather)) {
-            fetchRemote(oldWeather.getLocation().mCityName, isDeviceLocation, days);
+            fetchRemote(new WeatherParameters(
+                    oldWeather.getLocation().mCityName,
+                    isDeviceLocation,
+                    days
+            ));
         }
     }
 

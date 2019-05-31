@@ -32,7 +32,7 @@ import javax.inject.Inject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WeatherFragment extends Fragment implements MainActivity.ISetWeather {
+public class WeatherFragment extends Fragment {
 
     private View view;
     private TextView mainTemp, feelsLike, desc, humidity, pressure, city;
@@ -42,11 +42,6 @@ public class WeatherFragment extends Fragment implements MainActivity.ISetWeathe
     private ILoadImage iLoadImage;
     WeatherViewModel viewModel;
 
-    @Override
-    public void setWeatherParameters(WeatherParameters weatherParameters) {
-        fetchWeather(weatherParameters);
-    }
-
     public WeatherFragment() {
         // Required empty public constructor
     }
@@ -54,10 +49,8 @@ public class WeatherFragment extends Fragment implements MainActivity.ISetWeathe
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        MainActivity mainActivity = (MainActivity) context;
         if (context.getApplicationContext() instanceof WeatherApplication)
             iLoadImage = ((WeatherApplication) context.getApplicationContext()).imageLoader();
-        mainActivity.SetISetWeather(this);
     }
 
     @Override
@@ -67,12 +60,8 @@ public class WeatherFragment extends Fragment implements MainActivity.ISetWeathe
         view = inflater.inflate(R.layout.fragment_weather, container, false);
         bindView(view);
         viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
-        return view;
-    }
-
-    private void fetchWeather(WeatherParameters weatherParameters) {
-        viewModel.fetchWeather(weatherParameters);
         viewModel.getWeather().observe(this, forecastEntry -> displayWeather(forecastEntry));
+        return view;
     }
 
     private void displayWeather(ForecastEntry forecastEntry) {

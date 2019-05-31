@@ -50,21 +50,12 @@ public class MainActivity extends AppCompatActivity {
     ImageView ivSearch;
     LocationManager locationManager;
     LocationListener locationListener;
-    ISetWeather iSetWeather;
     SwipeRefreshLayout swipeRefreshLayout;
     LifecycleOwner lifecycleOwner;
     public static String deviceLocation;
     private CompositeDisposable disposable = new CompositeDisposable();
     private Context context;
-
-    public void SetISetWeather(ISetWeather iSetWeather) {
-        this.iSetWeather = iSetWeather;
-    }
-
-    public interface ISetWeather {
-        void setWeatherParameters(WeatherParameters weatherParameters);
-    }
-
+    private WeatherViewModel viewModel;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -80,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         bindView();
         context = this;
+        viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
         int position = getIntent().getIntExtra("position", -1);
         if (position == -1) {
             CheckLocation();
@@ -120,9 +112,7 @@ public class MainActivity extends AppCompatActivity {
                         true,
                         Const.FORECAST_DAYS
                 );
-                if (iSetWeather != null) {
-                    iSetWeather.setWeatherParameters(weatherParameters);
-                }
+               viewModel.fetchRemote(weatherParameters);
             }
 
             @Override
