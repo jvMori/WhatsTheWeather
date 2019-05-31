@@ -3,7 +3,6 @@ package com.example.jvmori.myweatherapp.data.db;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 
 import java.util.List;
-import java.util.Observable;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -12,6 +11,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 import io.reactivex.Maybe;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 
 @Dao
@@ -36,6 +36,6 @@ public abstract class ForecastDao
     public abstract io.reactivex.Observable<List<ForecastEntry>> getAllWeather();
 
     @Query("select * from forecast where mCityName like :location")
-    public abstract Maybe<ForecastEntry> getWeather(String location);
+    public abstract Observable<ForecastEntry> getWeather(String location);
 
 }

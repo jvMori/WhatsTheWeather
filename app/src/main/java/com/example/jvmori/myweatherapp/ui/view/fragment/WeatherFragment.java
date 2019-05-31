@@ -40,6 +40,7 @@ public class WeatherFragment extends Fragment implements MainActivity.ISetWeathe
     private RecyclerView recyclerView;
     private ForecastAdapter forecastAdapter;
     private ILoadImage iLoadImage;
+    WeatherViewModel viewModel;
 
     @Override
     public void setWeatherParameters(WeatherParameters weatherParameters) {
@@ -65,11 +66,11 @@ public class WeatherFragment extends Fragment implements MainActivity.ISetWeathe
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_weather, container, false);
         bindView(view);
+        viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
         return view;
     }
 
     private void fetchWeather(WeatherParameters weatherParameters) {
-        WeatherViewModel viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
         viewModel.fetchWeather(weatherParameters);
         viewModel.getWeather().observe(this, forecastEntry -> displayWeather(forecastEntry));
     }

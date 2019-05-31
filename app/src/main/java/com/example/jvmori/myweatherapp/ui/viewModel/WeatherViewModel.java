@@ -29,10 +29,8 @@ public class WeatherViewModel extends AndroidViewModel {
     public LiveData<ForecastEntry> getWeather() { return _weather;}
 
     private WeatherRepository weatherRepository;
-    private MutableLiveData<ForecastEntry> weather = new MutableLiveData<>();
     private MutableLiveData<List<ForecastEntry>> allWeatherFromDb = new MutableLiveData<>();
     private CompositeDisposable disposable = new CompositeDisposable();
-    private MutableLiveData<ForecastEntry> updatedWeather = new MutableLiveData<>();
 
     public WeatherViewModel(@NonNull Application application) {
         super(application);
@@ -45,7 +43,7 @@ public class WeatherViewModel extends AndroidViewModel {
                 weatherRepository.getWeatherLocal(weatherParameters.getLocation())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
-                        .doAfterSuccess(succes ->{
+                        .doOnNext(succes ->{
                             //TODO: save in db
                             Log.i("WEATHER", "success");
                         })
@@ -92,63 +90,8 @@ public class WeatherViewModel extends AndroidViewModel {
         return oldWeather.getTimestamp() != 0L && System.currentTimeMillis() - oldWeather.getTimestamp() < Const.STALE_MS;
     }
 
-
-    public LiveData<ForecastEntry> getFreshWeather() {
-        return updatedWeather;
-    }
-
-//    public LiveData<ForecastEntry> getWeather() {
-//        return weather;
-//    }
-
     public LiveData<List<ForecastEntry>> getAllWeather() {
         return allWeatherFromDb;
-    }
-
-    public void refreshWeather(ForecastEntry oldWeather) {
-        if (oldWeather != null && !weatherRepository.isUpToDate(oldWeather.getTimestamp())) {
-            disposable.add(
-                    weatherRepository.getWeatherRemote(
-                            oldWeather.getLocation().mCityName,
-                            oldWeather.isDeviceLocation,
-                            Const.FORECAST_DAYS)
-                            .observeOn(Schedulers.io())
-                            .subscribeOn(AndroidSchedulers.mainThread())
-                            .subscribe(
-                                    result -> updatedWeather.postValue(result),
-                                    error -> {
-                                        Log.i("WEATHER", "error");
-                                    }
-                            )
-            );
-        }
-    }
-
-    public Observable<ForecastEntry> getWeather(WeatherParameters weatherParameters) {
-        return weatherRepository.getWeather(weatherParameters.getLocation(),
-                weatherParameters.isDeviceLocation(),
-                weatherParameters.getDays())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io());
-    }
-
-
-    public void fetchWeather(WeatherParameters weatherParameters, OnFailure onFailure) {
-        disposable.add(
-                weatherRepository.getWeather(
-                        weatherParameters.getLocation(),
-                        weatherParameters.isDeviceLocation(),
-                        weatherParameters.getDays())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(
-                                success -> weather.postValue(success),
-                                error -> {
-                                    if (onFailure != null)
-                                        onFailure.callback("Something went wrong!");
-                                }
-                        )
-        );
     }
 
     public void allForecastsFromDb() {

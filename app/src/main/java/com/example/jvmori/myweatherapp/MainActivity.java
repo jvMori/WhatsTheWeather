@@ -21,6 +21,7 @@ import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.ui.view.activity.SearchActivity;
 import com.example.jvmori.myweatherapp.ui.view.adapters.LocationAdapter;
 import com.example.jvmori.myweatherapp.util.Const;
+import com.example.jvmori.myweatherapp.util.CurrentLocation;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.ui.view.fragment.WeatherFragment;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
@@ -40,6 +41,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
+
 import io.reactivex.disposables.CompositeDisposable;
 
 
@@ -53,10 +55,12 @@ public class MainActivity extends AppCompatActivity {
     LifecycleOwner lifecycleOwner;
     public static String deviceLocation;
     private CompositeDisposable disposable = new CompositeDisposable();
+    private Context context;
 
-    public void SetISetWeather(ISetWeather iSetWeather){
+    public void SetISetWeather(ISetWeather iSetWeather) {
         this.iSetWeather = iSetWeather;
     }
+
     public interface ISetWeather {
         void setWeatherParameters(WeatherParameters weatherParameters);
     }
@@ -75,16 +79,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bindView();
-
+        context = this;
         int position = getIntent().getIntExtra("position", -1);
         if (position == -1) {
-             CheckLocation();
+            CheckLocation();
         }
-        if (iSetWeather != null) {
-            iSetWeather.setWeatherParameters(
-                    new WeatherParameters("Kleparz", false, "7")
-            );
-        }
+//        if (iSetWeather != null) {
+//            iSetWeather.setWeatherParameters(
+//                    new WeatherParameters("Kleparz", false, "7")
+//            );
+//        }
     }
 
     private void bindView() {

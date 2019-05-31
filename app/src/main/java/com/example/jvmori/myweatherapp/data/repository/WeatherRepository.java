@@ -32,14 +32,7 @@ public class WeatherRepository {
         this.forecastDao = forecastDao;
     }
 
-    public Observable<ForecastEntry> getWeather(String location, boolean isDeviceLoc, String days) {
-        return Maybe.concat(getWeatherLocal(location), getWeatherRemote(location, isDeviceLoc, days))
-                .filter(it -> it != null && isUpToDate(it.getTimestamp()))
-                .take(1)
-                .toObservable();
-    }
-
-    public Maybe<ForecastEntry> getWeatherLocal(String location) {
+    public Observable<ForecastEntry> getWeatherLocal(String location) {
         return forecastDao.getWeather(location)
                 .subscribeOn(Schedulers.io());
     }
