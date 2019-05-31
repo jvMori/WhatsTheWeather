@@ -2,6 +2,7 @@ package com.example.jvmori.myweatherapp.ui.view.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -32,7 +34,7 @@ import javax.inject.Inject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WeatherFragment extends Fragment {
+public class WeatherFragment extends Fragment implements MainActivity.IViewModel {
 
     private View view;
     private TextView mainTemp, feelsLike, desc, humidity, pressure, city;
@@ -47,8 +49,18 @@ public class WeatherFragment extends Fragment {
     }
 
     @Override
+    public void onViewModelCreated(WeatherViewModel viewModel) {
+        this.viewModel = viewModel;
+        viewModel.getWeather().observe(this, forecastEntry ->
+                displayWeather(forecastEntry)
+        );
+    }
+
+    @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        MainActivity mainActivity = (MainActivity)context;
+        mainActivity.SetIViewModel(this);
         if (context.getApplicationContext() instanceof WeatherApplication)
             iLoadImage = ((WeatherApplication) context.getApplicationContext()).imageLoader();
     }
@@ -59,8 +71,6 @@ public class WeatherFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_weather, container, false);
         bindView(view);
-        viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
-        viewModel.getWeather().observe(this, forecastEntry -> displayWeather(forecastEntry));
         return view;
     }
 
@@ -109,4 +119,6 @@ public class WeatherFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(forecastAdapter);
     }
+
+
 }

@@ -5,6 +5,7 @@ import com.example.jvmori.myweatherapp.data.repository.WeatherRepository;
 import com.example.jvmori.myweatherapp.di.component.DaggerWeatherApplicationComponent;
 import com.example.jvmori.myweatherapp.di.component.WeatherApplicationComponent;
 import com.example.jvmori.myweatherapp.di.module.ContextModule;
+import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
 public class WeatherApplication extends Application

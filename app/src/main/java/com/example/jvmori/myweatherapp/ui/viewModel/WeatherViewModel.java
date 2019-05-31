@@ -25,7 +25,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class WeatherViewModel extends AndroidViewModel {
-    private MutableLiveData<ForecastEntry> _weather;
+    private MutableLiveData<ForecastEntry> _weather =  new MutableLiveData<>();
     public LiveData<ForecastEntry> getWeather() { return _weather;}
 
     private WeatherRepository weatherRepository;
@@ -38,7 +38,6 @@ public class WeatherViewModel extends AndroidViewModel {
     }
 
     public void fetchWeather(WeatherParameters weatherParameters) {
-        _weather = new MutableLiveData<>();
         disposable.add(
                 weatherRepository.getWeatherLocal(weatherParameters.getLocation())
                         .observeOn(AndroidSchedulers.mainThread())

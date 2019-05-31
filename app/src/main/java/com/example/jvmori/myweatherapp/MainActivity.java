@@ -55,7 +55,16 @@ public class MainActivity extends AppCompatActivity {
     public static String deviceLocation;
     private CompositeDisposable disposable = new CompositeDisposable();
     private Context context;
-    private WeatherViewModel viewModel;
+    public WeatherViewModel viewModel;
+    private IViewModel iViewModel;
+
+    public void SetIViewModel(IViewModel iViewModel){
+        this.iViewModel = iViewModel;
+    }
+
+    public interface IViewModel {
+        void onViewModelCreated(WeatherViewModel viewModel);
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -72,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         bindView();
         context = this;
         viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
+        if(iViewModel!=null) iViewModel.onViewModelCreated(viewModel);
         int position = getIntent().getIntExtra("position", -1);
         if (position == -1) {
             CheckLocation();
