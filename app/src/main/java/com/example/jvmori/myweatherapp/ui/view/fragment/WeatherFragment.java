@@ -35,7 +35,7 @@ import javax.inject.Inject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WeatherFragment extends Fragment implements MainActivity.IViewModel {
+public class WeatherFragment extends Fragment {
 
     private View view;
     private TextView mainTemp, feelsLike, desc, humidity, pressure, city;
@@ -50,18 +50,8 @@ public class WeatherFragment extends Fragment implements MainActivity.IViewModel
     }
 
     @Override
-    public void onViewModelCreated(WeatherViewModel viewModel) {
-        this.viewModel = viewModel;
-        viewModel.getWeather().observe(this, forecastEntry ->
-                displayWeather(forecastEntry)
-        );
-    }
-
-    @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        MainActivity mainActivity = (MainActivity)context;
-        mainActivity.SetIViewModel(this);
         if (context.getApplicationContext() instanceof WeatherApplication)
             iLoadImage = ((WeatherApplication) context.getApplicationContext()).imageLoader();
     }
@@ -78,6 +68,9 @@ public class WeatherFragment extends Fragment implements MainActivity.IViewModel
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         navigateToSearch();
+        MainActivity.viewModel.getWeather().observe(this, forecastEntry ->
+                displayWeather(forecastEntry)
+        );
     }
 
     private void displayWeather(ForecastEntry forecastEntry) {

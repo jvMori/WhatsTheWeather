@@ -8,6 +8,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import com.example.jvmori.myweatherapp.ui.view.activity.SearchActivity;
 import com.example.jvmori.myweatherapp.util.Const;
@@ -15,6 +17,7 @@ import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -34,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     public static String deviceLocation;
     private CompositeDisposable disposable = new CompositeDisposable();
     private Context context;
-    public WeatherViewModel viewModel;
+    public static WeatherViewModel viewModel;
     private IViewModel iViewModel;
 
     public void SetIViewModel(IViewModel iViewModel){
@@ -60,16 +63,10 @@ public class MainActivity extends AppCompatActivity {
         bindView();
         context = this;
         viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
-        if(iViewModel!=null) iViewModel.onViewModelCreated(viewModel);
         int position = getIntent().getIntExtra("position", -1);
         if (position == -1) {
             CheckLocation();
         }
-//        if (iSetWeather != null) {
-//            iSetWeather.setWeatherParameters(
-//                    new WeatherParameters("Kleparz", false, "7")
-//            );
-//        }
     }
 
     private void bindView() {
