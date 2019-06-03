@@ -65,7 +65,7 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
 
             @Override
             public boolean onQueryTextChange(String query) {
-                searchCities(query.trim());
+
                 return true;
             }
         });
@@ -77,7 +77,6 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
     }
 
     private void getWeatherForCity(String query) {
-        searchCities(query);
         if (query != null && query.length() > 3) {
            // weatherViewModel.fetchWeather(new WeatherParameters(query, false, Const.FORECAST_DAYS), null);
             weatherViewModel.getWeather().observe(this, result -> {
@@ -88,12 +87,6 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
                 }
             });
         }
-    }
-
-    private void searchCities(String query) {
-        searchViewModel.getResultsForCity(query).observe(this, (searchResponse -> {
-            searchAdapter.setSearchedResult(searchResponse);
-        }));
     }
 
     private void currentWeatherViewModel() {
