@@ -43,6 +43,8 @@ public class WeatherFragment extends Fragment {
     private RecyclerView recyclerView;
     private ForecastAdapter forecastAdapter;
     private ILoadImage iLoadImage;
+
+    //TODO: inject this with dagger!
     WeatherViewModel viewModel;
 
     public WeatherFragment() {
