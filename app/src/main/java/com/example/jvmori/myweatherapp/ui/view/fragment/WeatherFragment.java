@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,7 +39,7 @@ public class WeatherFragment extends Fragment implements MainActivity.IViewModel
 
     private View view;
     private TextView mainTemp, feelsLike, desc, humidity, pressure, city;
-    private ImageView ivIcon;
+    private ImageView ivIcon, searchIcon;
     private RecyclerView recyclerView;
     private ForecastAdapter forecastAdapter;
     private ILoadImage iLoadImage;
@@ -72,6 +73,11 @@ public class WeatherFragment extends Fragment implements MainActivity.IViewModel
         view = inflater.inflate(R.layout.fragment_weather, container, false);
         bindView(view);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        navigateToSearch();
     }
 
     private void displayWeather(ForecastEntry forecastEntry) {
@@ -111,6 +117,7 @@ public class WeatherFragment extends Fragment implements MainActivity.IViewModel
         desc = view.findViewById(R.id.tvDescriptionMain);
         city = view.findViewById(R.id.locationTextView);
         recyclerView = view.findViewById(R.id.RecyclerViewList);
+        searchIcon = view.findViewById(R.id.navigateToSearch);
     }
 
     private void createRecyclerView(ForecastEntry forecastEntry) {
@@ -120,5 +127,9 @@ public class WeatherFragment extends Fragment implements MainActivity.IViewModel
         recyclerView.setAdapter(forecastAdapter);
     }
 
-
+    private void navigateToSearch(){
+//        searchIcon.setOnClickListener(v ->
+               // Navigation.createNavigateOnClickListener(R.id.searchFragment, null));
+               // Navigation.findNavController(view).navigate(R.id.action_weatherFragment_to_searchFragment));
+    }
 }

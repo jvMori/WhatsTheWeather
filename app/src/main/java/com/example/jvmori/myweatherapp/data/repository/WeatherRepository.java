@@ -1,6 +1,5 @@
 package com.example.jvmori.myweatherapp.data.repository;
 
-import com.example.jvmori.myweatherapp.AppExecutors;
 import com.example.jvmori.myweatherapp.data.db.ForecastDao;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.data.network.WeatherNetworkDataSource;
@@ -16,7 +15,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import androidx.lifecycle.LiveData;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -24,7 +22,6 @@ public class WeatherRepository {
 
     private ForecastDao forecastDao;
     private WeatherNetworkDataSource weatherNetworkDataSource;
-    private AppExecutors executors;
 
     @Inject
     public WeatherRepository(WeatherNetworkDataSource weatherNetworkDataSource, ForecastDao forecastDao) {

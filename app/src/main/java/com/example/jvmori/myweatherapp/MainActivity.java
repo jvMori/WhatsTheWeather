@@ -7,43 +7,22 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.example.jvmori.myweatherapp.application.WeatherApplication;
-import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.ui.view.activity.SearchActivity;
-import com.example.jvmori.myweatherapp.ui.view.adapters.LocationAdapter;
 import com.example.jvmori.myweatherapp.util.Const;
-import com.example.jvmori.myweatherapp.util.CurrentLocation;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
-import com.example.jvmori.myweatherapp.ui.view.fragment.WeatherFragment;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
-import com.example.jvmori.myweatherapp.ui.view.adapters.SlidePagerAdapter;
-import com.example.jvmori.myweatherapp.util.images.ILoadImage;
-import com.google.android.material.tabs.TabLayout;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager.widget.ViewPager;
 
 import io.reactivex.disposables.CompositeDisposable;
-
 
 public class MainActivity extends AppCompatActivity {
 
