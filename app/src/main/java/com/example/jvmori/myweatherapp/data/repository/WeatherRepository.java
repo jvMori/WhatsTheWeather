@@ -84,7 +84,7 @@ public class WeatherRepository {
                 .subscribe();
     }
 
-    public LiveData<List<Search>> getResultsForCity(String cityName) {
+    public Observable<List<Search>> getResultsForCity(String cityName) {
         return weatherNetworkDataSource.searchCity(cityName);
     }
 

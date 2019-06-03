@@ -6,6 +6,7 @@ import com.example.jvmori.myweatherapp.data.network.response.Search;
 import java.util.List;
 
 import io.reactivex.Maybe;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -17,5 +18,5 @@ public interface ApixuApi
     Maybe<ForecastEntry> getForecast(@Query("q") String location, @Query("lang") String lang, @Query("days") String days);
 
     @GET("search.json")
-    Call<List<Search>> searchCity (@Query("q") String cityName);
+    Observable<List<Search>> searchCity (@Query("q") String cityName);
 }

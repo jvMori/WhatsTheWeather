@@ -13,6 +13,9 @@ import javax.inject.Inject;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import io.reactivex.Maybe;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,12 +23,10 @@ import retrofit2.Response;
 
 public class WeatherNetworkDataSourceImpl implements WeatherNetworkDataSource {
 
-    private MutableLiveData<List<Search>> results;
     private ApixuApi service;
 
     @Inject
     public WeatherNetworkDataSourceImpl(ApixuApi service) {
-        results = new MutableLiveData<>();
         this.service = service;
     }
 
@@ -38,21 +39,9 @@ public class WeatherNetworkDataSourceImpl implements WeatherNetworkDataSource {
     }
 
     @Override
-    public LiveData<List<Search>> searchCity(String cityName) {
-        service.searchCity(cityName).enqueue(new Callback<List<Search>>() {
-            @Override
-            public void onResponse(Call<List<Search>> call, Response<List<Search>> response) {
-                if (!response.isSuccessful())
-                    return;
-                if (response.body() != null)
-                    results.postValue(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<List<Search>> call, Throwable t) {
-                Log.i("Failed", "Failed to fetch data!");
-            }
-        });
-        return results;
+    public Observable<List<Search>> searchCity(String cityName) {
+        return service.searchCity(cityName)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.computation());
     }
 }

@@ -8,11 +8,12 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import io.reactivex.Maybe;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.Call;
 
 public interface WeatherNetworkDataSource
 {
     Maybe<ForecastEntry> fetchWeather(WeatherParameters weatherParameters);
-    LiveData<List<Search>> searchCity(String cityName);
+    Observable<List<Search>> searchCity(String cityName);
 }
