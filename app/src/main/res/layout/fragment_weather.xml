@@ -4,8 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent"
+    android:background="@drawable/bg"
     android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/navigateToSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/locationTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/search" />
 
         <TextView
             android:id="@+id/locationTextView"
@@ -127,13 +136,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:orientation="vertical"
-            android:visibility="visible"
             android:clipToPadding="false"
+            android:orientation="vertical"
             android:paddingBottom="60dp"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Pressure" />
+            app:layout_constraintTop_toBottomOf="@+id/Pressure"
+            tools:itemCount="10"
+            tools:listitem="@layout/forecast_item" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline2"
