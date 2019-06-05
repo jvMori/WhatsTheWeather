@@ -26,7 +26,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -122,9 +124,10 @@ public class WeatherFragment extends Fragment {
         recyclerView.setAdapter(forecastAdapter);
     }
 
-    private void navigateToSearch(){
-//        searchIcon.setOnClickListener(v ->
-               // Navigation.createNavigateOnClickListener(R.id.searchFragment, null));
-               // Navigation.findNavController(view).navigate(R.id.action_weatherFragment_to_searchFragment));
+    private void navigateToSearch() {
+        searchIcon.setOnClickListener(v -> {
+            NavDirections directions = WeatherFragmentDirections.actionWeatherFragmentToSearchFragment();
+            NavHostFragment.findNavController(this).navigate(directions);
+        });
     }
 }
