@@ -1,6 +1,7 @@
 package com.example.jvmori.myweatherapp.ui.viewModel;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.example.jvmori.myweatherapp.application.WeatherApplication;
 import com.example.jvmori.myweatherapp.data.network.response.Search;
@@ -18,6 +19,7 @@ import androidx.lifecycle.MutableLiveData;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
@@ -63,8 +65,9 @@ public class SearchViewModel extends AndroidViewModel {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
-                                result -> _cities.setValue(result)
-                )
+                                searches -> _cities.setValue(searches),
+                                throwable -> Log.i("Error", "Something went wrong")
+                        )
         );
     }
 }
