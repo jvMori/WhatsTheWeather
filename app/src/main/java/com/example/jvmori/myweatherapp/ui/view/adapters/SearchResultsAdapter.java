@@ -45,7 +45,6 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         SearchViewHolder(@NonNull View itemView) {
             super(itemView);
             cityName = itemView.findViewById(R.id.cityName);
-
         }
     }
 }

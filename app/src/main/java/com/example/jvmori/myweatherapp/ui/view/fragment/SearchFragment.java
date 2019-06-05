@@ -1,6 +1,7 @@
 package com.example.jvmori.myweatherapp.ui.view.fragment;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +12,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.data.network.response.Search;
+import com.example.jvmori.myweatherapp.ui.view.adapters.SearchResultsAdapter;
 import com.example.jvmori.myweatherapp.ui.viewModel.SearchViewModel;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +31,7 @@ public class SearchFragment extends Fragment {
 
     private RecyclerView cities, locations;
     private SearchViewModel searchViewModel;
+    @Inject public Context context;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -59,5 +68,14 @@ public class SearchFragment extends Fragment {
         });
 
         searchViewModel.search(searchView);
+        searchViewModel.cities().observe(this, result -> showSugestions(result));
+    }
+
+    private void showSugestions(List<Search> searchList) {
+        cities.setVisibility(View.VISIBLE);
+        SearchResultsAdapter adapter = new SearchResultsAdapter();
+        adapter.setSearchedResult(searchList);
+        cities.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL, false));
+        cities.setAdapter(adapter);
     }
 }
