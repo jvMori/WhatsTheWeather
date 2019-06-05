@@ -44,6 +44,9 @@ public class SearchViewModel extends AndroidViewModel {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 subject.onComplete();
+                searchView.setQuery("", false);
+                searchView.setIconifiedByDefault(true);
+                searchView.clearFocus();
                 return true;
             }
             @Override
