@@ -2,6 +2,7 @@ package com.example.jvmori.myweatherapp.ui.viewModel;
 
 import android.app.Application;
 import android.util.Log;
+import android.view.View;
 
 import com.example.jvmori.myweatherapp.application.WeatherApplication;
 import com.example.jvmori.myweatherapp.data.network.response.Search;
@@ -15,6 +16,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.recyclerview.widget.RecyclerView;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -69,5 +71,10 @@ public class SearchViewModel extends AndroidViewModel {
                                 throwable -> Log.i("Error", "Something went wrong")
                         )
         );
+    }
+
+    @Override
+    protected void onCleared() {
+        disposable.clear();
     }
 }

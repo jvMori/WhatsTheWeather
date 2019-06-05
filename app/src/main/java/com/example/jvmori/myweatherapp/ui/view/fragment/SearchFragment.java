@@ -51,20 +51,10 @@ public class SearchFragment extends Fragment {
         SearchView searchView = view.findViewById(R.id.searchField);
         cities = view.findViewById(R.id.cities);
         locations = view.findViewById(R.id.locations);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                cities.setVisibility(View.GONE);
-                locations.setVisibility(View.VISIBLE);
-                return true;
-            }
-            @Override
-            public boolean onQueryTextChange(String text) {
-                cities.setVisibility(View.VISIBLE);
-                locations.setVisibility(View.GONE);
-                return true;
-            }
+        searchView.setOnCloseListener(() -> {
+            cities.setVisibility(View.GONE);
+            locations.setVisibility(View.VISIBLE);
+            return false;
         });
 
         searchViewModel.search(searchView);
@@ -73,6 +63,11 @@ public class SearchFragment extends Fragment {
 
     private void showSugestions(List<Search> searchList) {
         cities.setVisibility(View.VISIBLE);
+        locations.setVisibility(View.GONE);
+        createCitiesAdapter(searchList);
+    }
+
+    private void createCitiesAdapter(List<Search> searchList) {
         SearchResultsAdapter adapter = new SearchResultsAdapter();
         adapter.setSearchedResult(searchList);
         cities.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL, false));
