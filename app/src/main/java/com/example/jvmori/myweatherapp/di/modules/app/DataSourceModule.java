@@ -1,7 +1,6 @@
-package com.example.jvmori.myweatherapp.di_.modules.app;
+package com.example.jvmori.myweatherapp.di.modules.app;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.example.jvmori.myweatherapp.data.db.ForecastDao;
 import com.example.jvmori.myweatherapp.data.db.WeatherDatabase;
@@ -9,7 +8,7 @@ import com.example.jvmori.myweatherapp.data.network.ApixuApi;
 import com.example.jvmori.myweatherapp.data.network.WeatherNetworkDataSource;
 import com.example.jvmori.myweatherapp.data.network.WeatherNetworkDataSourceImpl;
 import com.example.jvmori.myweatherapp.data.repository.WeatherRepository;
-import com.example.jvmori.myweatherapp.di_.scope.ApplicationScope;
+import com.example.jvmori.myweatherapp.di.scope.ApplicationScope;
 
 import androidx.room.Room;
 import dagger.Module;

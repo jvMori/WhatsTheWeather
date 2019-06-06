@@ -1,4 +1,4 @@
-package com.example.jvmori.myweatherapp.di_;
+package com.example.jvmori.myweatherapp.di;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

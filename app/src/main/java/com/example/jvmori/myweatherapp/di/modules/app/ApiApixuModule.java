@@ -1,7 +1,7 @@
-package com.example.jvmori.myweatherapp.di_.modules.app;
+package com.example.jvmori.myweatherapp.di.modules.app;
 
 import com.example.jvmori.myweatherapp.data.network.ApixuApi;
-import com.example.jvmori.myweatherapp.di_.scope.ApplicationScope;
+import com.example.jvmori.myweatherapp.di.scope.ApplicationScope;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import dagger.Module;

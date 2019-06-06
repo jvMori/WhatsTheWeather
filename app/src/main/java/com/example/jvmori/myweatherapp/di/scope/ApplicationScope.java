@@ -1,4 +1,4 @@
-package com.example.jvmori.myweatherapp.di_.scope;
+package com.example.jvmori.myweatherapp.di.scope;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

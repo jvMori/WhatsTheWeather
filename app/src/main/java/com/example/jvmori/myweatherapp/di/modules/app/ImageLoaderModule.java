@@ -1,9 +1,8 @@
-package com.example.jvmori.myweatherapp.di_.modules.app;
+package com.example.jvmori.myweatherapp.di.modules.app;
 
 import android.app.Application;
-import android.content.Context;
 
-import com.example.jvmori.myweatherapp.di_.scope.ApplicationScope;
+import com.example.jvmori.myweatherapp.di.scope.ApplicationScope;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 import com.example.jvmori.myweatherapp.util.images.PicassoImgLoader;
 import com.squareup.picasso.OkHttp3Downloader;

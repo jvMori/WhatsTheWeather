@@ -1,8 +1,8 @@
-package com.example.jvmori.myweatherapp.di_.modules.main;
+package com.example.jvmori.myweatherapp.di.modules.main;
 
 import androidx.lifecycle.ViewModel;
 
-import com.example.jvmori.myweatherapp.di_.ViewModelKey;
+import com.example.jvmori.myweatherapp.di.ViewModelKey;
 import com.example.jvmori.myweatherapp.ui.viewModel.SearchViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
 

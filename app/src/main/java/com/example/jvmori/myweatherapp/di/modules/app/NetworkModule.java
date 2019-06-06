@@ -1,6 +1,6 @@
-package com.example.jvmori.myweatherapp.di_.modules.app;
+package com.example.jvmori.myweatherapp.di.modules.app;
 
-import com.example.jvmori.myweatherapp.di_.scope.ApplicationScope;
+import com.example.jvmori.myweatherapp.di.scope.ApplicationScope;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.HttpUrl;

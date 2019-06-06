@@ -1,10 +1,4 @@
-package com.example.jvmori.myweatherapp.di_.modules.app;
-
-import android.content.Context;
-import com.example.jvmori.myweatherapp.di_.scope.ApplicationScope;
-
-import dagger.Module;
-import dagger.Provides;
+package com.example.jvmori.myweatherapp.di.modules.app;
 
 
 public class ContextModule
