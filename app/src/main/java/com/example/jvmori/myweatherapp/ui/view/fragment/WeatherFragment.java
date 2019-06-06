@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.jvmori.myweatherapp.MainActivity;
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
@@ -54,7 +56,7 @@ public class WeatherFragment extends DaggerFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_weather, container, false);
-        viewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(WeatherViewModel.class);
+        //viewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(WeatherViewModel.class);
         bindView(view);
         return view;
     }
@@ -62,7 +64,7 @@ public class WeatherFragment extends DaggerFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         navigateToSearch();
-        viewModel.getWeather().observe(this, forecastEntry ->
+        MainActivity.viewModel.getWeather().observe(this, forecastEntry ->
                 displayWeather(forecastEntry)
         );
     }
