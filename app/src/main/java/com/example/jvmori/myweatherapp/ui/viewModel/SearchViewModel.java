@@ -2,9 +2,7 @@ package com.example.jvmori.myweatherapp.ui.viewModel;
 
 import android.app.Application;
 import android.util.Log;
-import android.view.View;
 
-import com.example.jvmori.myweatherapp.application.WeatherApplication;
 import com.example.jvmori.myweatherapp.data.network.response.Search;
 import com.example.jvmori.myweatherapp.data.repository.WeatherRepository;
 
@@ -16,12 +14,10 @@ import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.recyclerview.widget.RecyclerView;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
@@ -34,8 +30,8 @@ public class SearchViewModel extends AndroidViewModel {
 
     public SearchViewModel(@NonNull Application application) {
         super(application);
-        WeatherApplication weatherApplication = (WeatherApplication) application;
-        weatherRepository = weatherApplication.weatherRepository();
+
+        //weatherRepository = weatherApplication.weatherRepository();
     }
 
     private Observable<String> fromView(SearchView searchView) {

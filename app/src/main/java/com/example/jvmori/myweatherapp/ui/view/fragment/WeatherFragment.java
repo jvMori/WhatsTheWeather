@@ -2,37 +2,27 @@ package com.example.jvmori.myweatherapp.ui.view.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.MainActivity;
 import com.example.jvmori.myweatherapp.R;
-import com.example.jvmori.myweatherapp.application.WeatherApplication;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
-import com.example.jvmori.myweatherapp.di.component.WeatherApplicationComponent;
 import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
 import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
-import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import javax.inject.Inject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,8 +46,8 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context.getApplicationContext() instanceof WeatherApplication)
-            iLoadImage = ((WeatherApplication) context.getApplicationContext()).imageLoader();
+        //if (context.getApplicationContext() instanceof WeatherApplication)
+            //iLoadImage = ((WeatherApplication) context.getApplicationContext()).imageLoader();
     }
 
     @Override

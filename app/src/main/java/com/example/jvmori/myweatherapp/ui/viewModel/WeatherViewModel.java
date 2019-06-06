@@ -3,7 +3,6 @@ package com.example.jvmori.myweatherapp.ui.viewModel;
 import android.app.Application;
 import android.util.Log;
 
-import com.example.jvmori.myweatherapp.application.WeatherApplication;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
@@ -15,12 +14,15 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class WeatherViewModel extends AndroidViewModel {
+public class WeatherViewModel extends ViewModel {
     private MutableLiveData<ForecastEntry> _weather =  new MutableLiveData<>();
     public LiveData<ForecastEntry> getWeather() { return _weather;}
 
@@ -28,9 +30,9 @@ public class WeatherViewModel extends AndroidViewModel {
     private MutableLiveData<List<ForecastEntry>> allWeatherFromDb = new MutableLiveData<>();
     private CompositeDisposable disposable = new CompositeDisposable();
 
-    public WeatherViewModel(@NonNull Application application) {
-        super(application);
-        weatherRepository = ((WeatherApplication) application).weatherRepository();
+    @Inject
+    public WeatherViewModel(WeatherRepository weatherRepository) {
+        this.weatherRepository = weatherRepository;
     }
 
     public void fetchWeather(WeatherParameters weatherParameters) {
