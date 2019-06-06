@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import com.example.jvmori.myweatherapp.ui.view.activity.SearchActivity;
+import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
@@ -25,9 +26,12 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerAppCompatActivity;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends DaggerAppCompatActivity {
 
     ImageView ivSearch;
     LocationManager locationManager;
@@ -36,17 +40,9 @@ public class MainActivity extends AppCompatActivity {
     LifecycleOwner lifecycleOwner;
     public static String deviceLocation;
     private CompositeDisposable disposable = new CompositeDisposable();
-    private Context context;
     public static WeatherViewModel viewModel;
-    private IViewModel iViewModel;
-
-    public void SetIViewModel(IViewModel iViewModel){
-        this.iViewModel = iViewModel;
-    }
-
-    public interface IViewModel {
-        void onViewModelCreated(WeatherViewModel viewModel);
-    }
+    @Inject
+    ViewModelProviderFactory viewModelProviderFactory;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -61,8 +57,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bindView();
-        context = this;
-        viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
+        viewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(WeatherViewModel.class);
         int position = getIntent().getIntExtra("position", -1);
         if (position == -1) {
             CheckLocation();

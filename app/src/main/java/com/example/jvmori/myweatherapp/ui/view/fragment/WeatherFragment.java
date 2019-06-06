@@ -1,63 +1,54 @@
 package com.example.jvmori.myweatherapp.ui.view.fragment;
 
-import android.content.Context;
+
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.MainActivity;
 import com.example.jvmori.myweatherapp.R;
-import com.example.jvmori.myweatherapp.application.WeatherApplication;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
-import com.example.jvmori.myweatherapp.di.component.WeatherApplicationComponent;
 import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
 import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
+import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
-import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import javax.inject.Inject;
 
+import dagger.android.support.DaggerFragment;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WeatherFragment extends Fragment {
+public class WeatherFragment extends DaggerFragment {
 
     private View view;
     private TextView mainTemp, feelsLike, desc, humidity, pressure, city;
     private ImageView ivIcon, searchIcon;
     private RecyclerView recyclerView;
     private ForecastAdapter forecastAdapter;
-    private ILoadImage iLoadImage;
+    private WeatherViewModel viewModel;
 
-    //TODO: inject this with dagger!
-    WeatherViewModel viewModel;
+    @Inject
+    ViewModelProviderFactory viewModelProviderFactory;
+    @Inject
+    ILoadImage iLoadImage;
 
     public WeatherFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context.getApplicationContext() instanceof WeatherApplication)
-            iLoadImage = ((WeatherApplication) context.getApplicationContext()).imageLoader();
     }
 
     @Override
@@ -65,6 +56,7 @@ public class WeatherFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_weather, container, false);
+        //viewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(WeatherViewModel.class);
         bindView(view);
         return view;
     }

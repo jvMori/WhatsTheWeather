@@ -1,7 +1,7 @@
-package com.example.jvmori.myweatherapp.di.module;
+package com.example.jvmori.myweatherapp.di.modules.app;
 
 import com.example.jvmori.myweatherapp.data.network.ApixuApi;
-import com.example.jvmori.myweatherapp.di.scope.WeatherApplicationScope;
+import com.example.jvmori.myweatherapp.di.scope.ApplicationScope;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import dagger.Module;
@@ -16,13 +16,13 @@ public class ApiApixuModule {
     private static final String BASE_URL = "http://api.apixu.com/v1/";
 
     @Provides
-    @WeatherApplicationScope
+    @ApplicationScope
     public ApixuApi apixuApi(Retrofit retrofit){
         return retrofit.create(ApixuApi.class);
     }
 
     @Provides
-    @WeatherApplicationScope
+    @ApplicationScope
     public Retrofit retrofit(OkHttpClient okHttpClient){
         return new Retrofit.Builder()
                 .client(okHttpClient)
