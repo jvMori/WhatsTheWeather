@@ -19,6 +19,6 @@ public abstract class WeatherViewModelsModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(WeatherViewModel.class)
+    @ViewModelKey(SearchViewModel.class)
     public abstract ViewModel bindSearchViewModel(SearchViewModel searchViewModel);
 }
