@@ -13,16 +13,20 @@ import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
 import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
+import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import javax.inject.Inject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,20 +38,14 @@ public class WeatherFragment extends Fragment {
     private ImageView ivIcon, searchIcon;
     private RecyclerView recyclerView;
     private ForecastAdapter forecastAdapter;
-    private ILoadImage iLoadImage;
 
-    //TODO: inject this with dagger!
-    WeatherViewModel viewModel;
+    @Inject
+    ViewModelProviderFactory viewModelProviderFactory;
+    @Inject
+    ILoadImage iLoadImage;
 
     public WeatherFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        //if (context.getApplicationContext() instanceof WeatherApplication)
-            //iLoadImage = ((WeatherApplication) context.getApplicationContext()).imageLoader();
     }
 
     @Override
@@ -62,7 +60,8 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         navigateToSearch();
-        MainActivity.viewModel.getWeather().observe(this, forecastEntry ->
+        WeatherViewModel viewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(WeatherViewModel.class);
+        viewModel.getWeather().observe(this, forecastEntry ->
                 displayWeather(forecastEntry)
         );
     }

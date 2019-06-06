@@ -1,6 +1,7 @@
 package com.example.jvmori.myweatherapp.ui.view.fragment;
 
 
+import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.data.network.response.Search;
 import com.example.jvmori.myweatherapp.ui.view.adapters.SearchResultsAdapter;
 import com.example.jvmori.myweatherapp.ui.viewModel.SearchViewModel;
+import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 
 import java.util.List;
 
@@ -31,7 +33,8 @@ public class SearchFragment extends Fragment {
 
     private RecyclerView cities, locations;
     private SearchViewModel searchViewModel;
-    @Inject public Context context;
+    @Inject
+    ViewModelProviderFactory viewModelProviderFactory;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -41,7 +44,7 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        searchViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
+        searchViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(SearchViewModel.class);
         return inflater.inflate(R.layout.fragment_search, container, false);
     }
 
@@ -56,7 +59,6 @@ public class SearchFragment extends Fragment {
             locations.setVisibility(View.VISIBLE);
             return false;
         });
-
         searchViewModel.search(searchView);
         searchViewModel.cities().observe(this, result -> showSugestions(result));
     }
@@ -70,7 +72,7 @@ public class SearchFragment extends Fragment {
     private void createCitiesAdapter(List<Search> searchList) {
         SearchResultsAdapter adapter = new SearchResultsAdapter();
         adapter.setSearchedResult(searchList);
-        cities.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL, false));
+        cities.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
         cities.setAdapter(adapter);
     }
 }

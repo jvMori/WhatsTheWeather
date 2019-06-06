@@ -1,37 +1,31 @@
 package com.example.jvmori.myweatherapp.ui.viewModel;
 
-import android.app.Application;
 import android.util.Log;
-
 import com.example.jvmori.myweatherapp.data.network.response.Search;
 import com.example.jvmori.myweatherapp.data.repository.WeatherRepository;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-
+import androidx.lifecycle.ViewModel;
+import javax.inject.Inject;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
-public class SearchViewModel extends AndroidViewModel {
+public class SearchViewModel extends ViewModel {
+
     private WeatherRepository weatherRepository;
     private MutableLiveData<List<Search>> _cities = new MutableLiveData<>();
     private CompositeDisposable disposable = new CompositeDisposable();
-
     public LiveData<List<Search>> cities() {return _cities;}
 
-    public SearchViewModel(@NonNull Application application) {
-        super(application);
-
-        //weatherRepository = weatherApplication.weatherRepository();
+    @Inject
+    public SearchViewModel(WeatherRepository weatherRepository){
+        this.weatherRepository = weatherRepository;
     }
 
     private Observable<String> fromView(SearchView searchView) {
