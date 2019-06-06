@@ -56,7 +56,6 @@ public class WeatherFragment extends DaggerFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_weather, container, false);
-        //viewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(WeatherViewModel.class);
         bindView(view);
         return view;
     }
@@ -64,7 +63,14 @@ public class WeatherFragment extends DaggerFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         navigateToSearch();
-        MainActivity.viewModel.getWeather().observe(this, forecastEntry ->
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(getActivity() != null)
+            viewModel = ViewModelProviders.of(getActivity(), viewModelProviderFactory).get(WeatherViewModel.class);
+        viewModel.getWeather().observe(getViewLifecycleOwner(), forecastEntry ->
                 displayWeather(forecastEntry)
         );
     }
