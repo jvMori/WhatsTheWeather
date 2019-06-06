@@ -40,20 +40,9 @@ public class MainActivity extends DaggerAppCompatActivity {
     LifecycleOwner lifecycleOwner;
     public static String deviceLocation;
     private CompositeDisposable disposable = new CompositeDisposable();
-    private Context context;
     public static WeatherViewModel viewModel;
-    private IViewModel iViewModel;
-
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
-
-    public void SetIViewModel(IViewModel iViewModel){
-        this.iViewModel = iViewModel;
-    }
-
-    public interface IViewModel {
-        void onViewModelCreated(WeatherViewModel viewModel);
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -68,7 +57,6 @@ public class MainActivity extends DaggerAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bindView();
-        context = this;
         viewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(WeatherViewModel.class);
         int position = getIntent().getIntExtra("position", -1);
         if (position == -1) {

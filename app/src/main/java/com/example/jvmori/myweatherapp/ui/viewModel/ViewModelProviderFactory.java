@@ -6,7 +6,7 @@ import javax.inject.Provider;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-public class ViewModelProviderFactory implements ViewModelProvider.Factory {
+public final class ViewModelProviderFactory implements ViewModelProvider.Factory {
 
     private static final String TAG = "ViewModelProviderFactor";
 
