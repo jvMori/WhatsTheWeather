@@ -1,13 +1,10 @@
 package com.example.jvmori.myweatherapp.ui.view.fragment;
 
 
-import android.app.Application;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
@@ -26,10 +23,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.android.support.DaggerFragment;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends DaggerFragment {
 
     private RecyclerView cities, locations;
     private SearchViewModel searchViewModel;

@@ -1,14 +1,12 @@
 package com.example.jvmori.myweatherapp.ui.view.fragment;
 
-import android.content.Context;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.example.jvmori.myweatherapp.MainActivity;
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
@@ -28,16 +26,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import javax.inject.Inject;
 
+import dagger.android.support.DaggerFragment;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WeatherFragment extends Fragment {
+public class WeatherFragment extends DaggerFragment {
 
     private View view;
     private TextView mainTemp, feelsLike, desc, humidity, pressure, city;
     private ImageView ivIcon, searchIcon;
     private RecyclerView recyclerView;
     private ForecastAdapter forecastAdapter;
+    private WeatherViewModel viewModel;
 
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
@@ -53,6 +54,7 @@ public class WeatherFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_weather, container, false);
+        viewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(WeatherViewModel.class);
         bindView(view);
         return view;
     }
@@ -60,7 +62,6 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         navigateToSearch();
-        WeatherViewModel viewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(WeatherViewModel.class);
         viewModel.getWeather().observe(this, forecastEntry ->
                 displayWeather(forecastEntry)
         );
