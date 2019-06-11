@@ -19,7 +19,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.data.network.response.Search;
+import com.example.jvmori.myweatherapp.ui.view.adapters.LocationAdapter;
 import com.example.jvmori.myweatherapp.ui.view.adapters.SearchResultsAdapter;
 import com.example.jvmori.myweatherapp.ui.viewModel.SearchViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
@@ -61,6 +63,10 @@ public class SearchFragment extends DaggerFragment implements SearchResultsAdapt
         super.onActivityCreated(savedInstanceState);
         if (getActivity() != null) {
             weatherViewModel = ViewModelProviders.of(getActivity(), viewModelProviderFactory).get(WeatherViewModel.class);
+            weatherViewModel.allForecastsFromDb();
+            weatherViewModel.allWeatherFromDb().observe( this, result ->
+                    createLocationsAdapter(result)
+            );
         }
     }
 
@@ -77,9 +83,6 @@ public class SearchFragment extends DaggerFragment implements SearchResultsAdapt
         });
         searchViewModel.search(searchView);
         searchViewModel.cities().observe(this, result -> showSugestions(result));
-        if (weatherViewModel != null) weatherViewModel.allWeatherFromDb().observe(this,
-                result ->
-                        Log.i("Weather", "success"));
     }
 
     private void showSugestions(List<Search> searchList) {
@@ -95,8 +98,10 @@ public class SearchFragment extends DaggerFragment implements SearchResultsAdapt
         cities.setAdapter(adapter);
     }
 
-    private void createLocationsAdapter() {
-
+    private void createLocationsAdapter(List<ForecastEntry> forecastEntries) {
+        LocationAdapter adapter = new LocationAdapter(forecastEntries, null, null);
+        locations.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
+        locations.setAdapter(adapter);
     }
 
 

@@ -24,8 +24,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     public LocationAdapter(List<ForecastEntry> locations,
                            IOnClickListener iOnClickListener,
-                           ILongClickListener iLongClickListener,
-                           Context ctx) {
+                           ILongClickListener iLongClickListener
+                           ) {
         this.currentWeathers = locations;
         this.iOnClickListener = iOnClickListener;
         this.iLongClickListener = iLongClickListener;
@@ -43,13 +43,13 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
             itemView.setOnClickListener(view -> {
                 int position = getAdapterPosition();
-                if (position != -1 )
+                if (position != -1 && iOnClickListener != null)
                     iOnClickListener.callback(position);
             });
 
             itemView.setOnLongClickListener(view -> {
                 int position = getAdapterPosition();
-                if (position != -1 )
+                if (position != -1 && iLongClickListener != null)
                     iLongClickListener.onLongClick(currentWeathers.get(position).getLocation().mCityName);
                 return true;
             });
@@ -62,7 +62,6 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.location_item, viewGroup, false);
        return  new ViewHolder(view);
     }
-
 
     @Override
     public void onBindViewHolder(@NonNull LocationAdapter.ViewHolder viewHolder, int i) {

@@ -100,7 +100,7 @@ public class SearchActivity extends AppCompatActivity implements LocationAdapter
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        locationsAdapter = new LocationAdapter(responses, this, this, this);
+        locationsAdapter = new LocationAdapter(responses, this, this);
         recyclerView.setAdapter(locationsAdapter);
     }
 
