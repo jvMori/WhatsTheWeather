@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import com.example.jvmori.myweatherapp.ui.view.activity.SearchActivity;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.util.Const;
+import com.example.jvmori.myweatherapp.util.CurrentLocation;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
 
@@ -43,7 +44,7 @@ public class MainActivity extends DaggerAppCompatActivity {
     public static WeatherViewModel viewModel;
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
-
+    private  Context context;
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -57,6 +58,7 @@ public class MainActivity extends DaggerAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bindView();
+        context = this;
         viewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(WeatherViewModel.class);
         int position = getIntent().getIntExtra("position", -1);
         if (position == -1) {
@@ -87,9 +89,10 @@ public class MainActivity extends DaggerAppCompatActivity {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                String loc = CurrentLocation.getCity(location, context);
                 deviceLocation = location.getLatitude() + "," + location.getLongitude();
                 WeatherParameters weatherParameters = new WeatherParameters(
-                        deviceLocation,
+                        loc,
                         true,
                         Const.FORECAST_DAYS
                 );

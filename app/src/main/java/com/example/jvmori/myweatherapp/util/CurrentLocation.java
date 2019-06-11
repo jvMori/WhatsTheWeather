@@ -18,7 +18,7 @@ public class CurrentLocation {
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses != null && addresses.size() > 0)
-                return addresses.get(0).getPostalCode();
+                return addresses.get(0).getLocality();
         } catch (IOException e) {
             e.printStackTrace();
         }
