@@ -14,12 +14,13 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.SearchViewHolder>
-{
-    private List<Search> items =  new ArrayList<>();
+public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.SearchViewHolder> {
+    private List<Search> items = new ArrayList<>();
+    private IOnItemClicked iOnItemClicked;
 
-    public void setSearchedResult(List<Search> items){
+    public void setSearchedResult(List<Search> items, IOnItemClicked iOnItemClicked) {
         this.items = items;
+        this.iOnItemClicked = iOnItemClicked;
         notifyDataSetChanged();
     }
 
@@ -33,6 +34,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     @Override
     public void onBindViewHolder(@NonNull SearchViewHolder holder, int position) {
         holder.cityName.setText(items.get(position).getName());
+        holder.addClickListener(position);
     }
 
     @Override
@@ -42,9 +44,21 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
     class SearchViewHolder extends RecyclerView.ViewHolder {
         private TextView cityName;
+
         SearchViewHolder(@NonNull View itemView) {
             super(itemView);
             cityName = itemView.findViewById(R.id.cityName);
         }
+
+        private void addClickListener(int position) {
+            itemView.setOnClickListener(listener -> {
+                if (iOnItemClicked != null && position > -1)
+                    iOnItemClicked.onClick(items.get(position));
+            });
+        }
+    }
+
+    public interface IOnItemClicked {
+        void onClick(Search item);
     }
 }

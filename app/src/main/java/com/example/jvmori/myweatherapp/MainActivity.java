@@ -90,7 +90,8 @@ public class MainActivity extends DaggerAppCompatActivity {
             @Override
             public void onLocationChanged(Location location) {
                 String loc = CurrentLocation.getCity(location, context);
-                deviceLocation = location.getLatitude() + "," + location.getLongitude();
+                if (loc == null)
+                    loc = location.getLatitude() + "," + location.getLongitude();
                 WeatherParameters weatherParameters = new WeatherParameters(
                         loc,
                         true,
