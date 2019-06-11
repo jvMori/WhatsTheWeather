@@ -19,6 +19,8 @@ import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavDirections;
@@ -41,6 +43,7 @@ public class WeatherFragment extends DaggerFragment {
     private RecyclerView recyclerView;
     private ForecastAdapter forecastAdapter;
     private WeatherViewModel viewModel;
+    private Toolbar toolbar;
 
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
@@ -68,8 +71,10 @@ public class WeatherFragment extends DaggerFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(getActivity() != null)
+        if(getActivity() != null){
+            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
             viewModel = ViewModelProviders.of(getActivity(), viewModelProviderFactory).get(WeatherViewModel.class);
+        }
         viewModel.getWeather().observe(getViewLifecycleOwner(), forecastEntry ->
                 displayWeather(forecastEntry)
         );
@@ -113,6 +118,7 @@ public class WeatherFragment extends DaggerFragment {
         city = view.findViewById(R.id.locationTextView);
         recyclerView = view.findViewById(R.id.RecyclerViewList);
         searchIcon = view.findViewById(R.id.navigateToSearch);
+        toolbar = view.findViewById(R.id.toolbar);
     }
 
     private void createRecyclerView(ForecastEntry forecastEntry) {
