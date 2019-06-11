@@ -46,7 +46,7 @@ public class WeatherRepository {
                             if (weatherParameters.isDeviceLocation()){
                                 insertAdnDeleteOldLocation(it);
                             }else{
-                                persistForecast(it);
+                                persistWeather(it);
                             }
                         }
                 );
@@ -64,9 +64,11 @@ public class WeatherRepository {
                 .subscribe();
     }
 
-    private void persistForecast(ForecastEntry newForecastEntry) {
+    public void persistWeather(ForecastEntry newForecastEntry) {
         newForecastEntry.setTimestamp(System.currentTimeMillis());
-        forecastDao.insert(newForecastEntry);
+        Completable.fromAction(() -> forecastDao.updateWeather(newForecastEntry))
+                .subscribeOn(Schedulers.io())
+                .subscribe();
     }
 
     public void deleteWeather(String location) {

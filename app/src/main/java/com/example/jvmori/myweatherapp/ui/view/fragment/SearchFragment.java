@@ -2,9 +2,11 @@ package com.example.jvmori.myweatherapp.ui.view.fragment;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,10 +59,11 @@ public class SearchFragment extends DaggerFragment implements SearchResultsAdapt
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (getActivity() != null){
+        if (getActivity() != null) {
             weatherViewModel = ViewModelProviders.of(getActivity(), viewModelProviderFactory).get(WeatherViewModel.class);
         }
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -74,6 +77,9 @@ public class SearchFragment extends DaggerFragment implements SearchResultsAdapt
         });
         searchViewModel.search(searchView);
         searchViewModel.cities().observe(this, result -> showSugestions(result));
+        if (weatherViewModel != null) weatherViewModel.allWeatherFromDb().observe(this,
+                result ->
+                        Log.i("Weather", "success"));
     }
 
     private void showSugestions(List<Search> searchList) {
@@ -87,6 +93,10 @@ public class SearchFragment extends DaggerFragment implements SearchResultsAdapt
         adapter.setSearchedResult(searchList, this);
         cities.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
         cities.setAdapter(adapter);
+    }
+
+    private void createLocationsAdapter() {
+
     }
 
 
@@ -105,7 +115,7 @@ public class SearchFragment extends DaggerFragment implements SearchResultsAdapt
         weatherViewModel.fetchRemote(weatherParameters);
     }
 
-    private void navigateToWeatherFragment(){
+    private void navigateToWeatherFragment() {
         NavDirections directions = SearchFragmentDirections.actionSearchFragmentToWeatherFragment();
         NavHostFragment.findNavController(this).navigate(directions);
     }

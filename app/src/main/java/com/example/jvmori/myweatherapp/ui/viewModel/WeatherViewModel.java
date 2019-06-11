@@ -1,23 +1,15 @@
 package com.example.jvmori.myweatherapp.ui.viewModel;
 
-import android.app.Application;
 import android.util.Log;
-
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.data.repository.WeatherRepository;
-
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
 import javax.inject.Inject;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -25,9 +17,10 @@ import io.reactivex.schedulers.Schedulers;
 public class WeatherViewModel extends ViewModel {
     private MutableLiveData<ForecastEntry> _weather =  new MutableLiveData<>();
     public LiveData<ForecastEntry> getWeather() { return _weather;}
+    private MutableLiveData<List<ForecastEntry>> _allWeatherFromDb = new MutableLiveData<>();
+    public LiveData<List<ForecastEntry>> allWeatherFromDb() {return _allWeatherFromDb;}
 
     private WeatherRepository weatherRepository;
-    private MutableLiveData<List<ForecastEntry>> allWeatherFromDb = new MutableLiveData<>();
     private CompositeDisposable disposable = new CompositeDisposable();
 
     @Inject
@@ -60,8 +53,7 @@ public class WeatherViewModel extends ViewModel {
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doAfterSuccess(succes ->{
-                            //TODO: save in db
-                            Log.i("WEATHER", "success");
+                           weatherRepository.persistWeather(succes);
                         })
                         .subscribe(
                                 success -> {
@@ -88,7 +80,7 @@ public class WeatherViewModel extends ViewModel {
     }
 
     public LiveData<List<ForecastEntry>> getAllWeather() {
-        return allWeatherFromDb;
+        return _allWeatherFromDb;
     }
 
     public void allForecastsFromDb() {
@@ -96,19 +88,13 @@ public class WeatherViewModel extends ViewModel {
                 weatherRepository.getAllForecast()
                         .subscribe(
                                 next -> {
-                                    allWeatherFromDb.postValue(next);
+                                    _allWeatherFromDb.postValue(next);
                                 },
                                 error -> {
                                     Log.i("Error", "error");
-                                },
-                                () -> Log.i("Error", "error")
-
+                                }
                         )
         );
-    }
-
-    public interface OnFailure {
-        void callback(String message);
     }
 
     public void deleteWeather(String location) {

@@ -28,6 +28,11 @@ public abstract class ForecastDao
         deleteOldDeviceLocWeather();
         insert(forecastEntry);
     }
+    @Transaction
+    public void updateWeather(ForecastEntry forecastEntry){
+        deleteForecast(forecastEntry.getLocation().mCityName);
+        insert(forecastEntry);
+    }
 
     @Query("delete from forecast where mCityName like :cityName")
     public abstract void deleteForecast(String cityName);
