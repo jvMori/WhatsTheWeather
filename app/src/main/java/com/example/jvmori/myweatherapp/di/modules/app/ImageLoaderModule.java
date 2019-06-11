@@ -3,6 +3,7 @@ package com.example.jvmori.myweatherapp.di.modules.app;
 import android.app.Application;
 
 import com.example.jvmori.myweatherapp.di.scope.ApplicationScope;
+import com.example.jvmori.myweatherapp.di.scope.MainActivityScope;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 import com.example.jvmori.myweatherapp.util.images.PicassoImgLoader;
 import com.squareup.picasso.OkHttp3Downloader;
