@@ -38,7 +38,10 @@ import dagger.android.support.DaggerFragment;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends DaggerFragment implements SearchResultsAdapter.IOnItemClicked {
+public class SearchFragment extends DaggerFragment implements
+        SearchResultsAdapter.IOnItemClicked,
+        LocationAdapter.IOnClickListener
+{
 
     private RecyclerView cities, locations;
     private SearchViewModel searchViewModel;
@@ -99,18 +102,27 @@ public class SearchFragment extends DaggerFragment implements SearchResultsAdapt
     }
 
     private void createLocationsAdapter(List<ForecastEntry> forecastEntries) {
-        LocationAdapter adapter = new LocationAdapter(forecastEntries, null, null);
+        LocationAdapter adapter = new LocationAdapter(forecastEntries, this, null);
         locations.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
         locations.setAdapter(adapter);
     }
 
-
     @Override
-    public void onClick(Search item) {
+    public void onSearchedItemClicked(Search item) {
         fetchWeather(item);
         navigateToWeatherFragment();
     }
 
+    @Override
+    public void onLocationClicked(ForecastEntry forecastEntry) {
+        WeatherParameters weatherParameters = new WeatherParameters(
+                forecastEntry.getLocation().mCityName,
+                forecastEntry.isDeviceLocation,
+                Const.FORECAST_DAYS
+        );
+        weatherViewModel.fetchWeather(weatherParameters);
+        navigateToWeatherFragment();
+    }
     private void fetchWeather(Search item) {
         WeatherParameters weatherParameters = new WeatherParameters(
                 item.getName(),
@@ -124,4 +136,5 @@ public class SearchFragment extends DaggerFragment implements SearchResultsAdapt
         NavDirections directions = SearchFragmentDirections.actionSearchFragmentToWeatherFragment();
         NavHostFragment.findNavController(this).navigate(directions);
     }
+
 }

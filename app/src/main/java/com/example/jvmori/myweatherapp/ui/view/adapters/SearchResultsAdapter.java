@@ -53,12 +53,12 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         private void addClickListener(int position) {
             itemView.setOnClickListener(listener -> {
                 if (iOnItemClicked != null && position > -1)
-                    iOnItemClicked.onClick(items.get(position));
+                    iOnItemClicked.onSearchedItemClicked(items.get(position));
             });
         }
     }
 
     public interface IOnItemClicked {
-        void onClick(Search item);
+        void onSearchedItemClicked(Search item);
     }
 }

@@ -1,6 +1,5 @@
 package com.example.jvmori.myweatherapp.ui.view.adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             itemView.setOnClickListener(view -> {
                 int position = getAdapterPosition();
                 if (position != -1 && iOnClickListener != null)
-                    iOnClickListener.callback(position);
+                    iOnClickListener.onLocationClicked(currentWeathers.get(position));
             });
 
             itemView.setOnLongClickListener(view -> {
@@ -97,7 +96,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     }
 
     public interface IOnClickListener {
-        void callback(int position);
+        void onLocationClicked(ForecastEntry forecastEntry);
     }
 
     public interface ILongClickListener{

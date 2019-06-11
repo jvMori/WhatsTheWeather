@@ -2,25 +2,18 @@ package com.example.jvmori.myweatherapp;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
-import com.example.jvmori.myweatherapp.ui.view.activity.SearchActivity;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.CurrentLocation;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
@@ -69,7 +62,6 @@ public class MainActivity extends DaggerAppCompatActivity {
     private void bindView() {
         lifecycleOwner = this;
         ivSearch = findViewById(R.id.ivSearch);
-        ivSearch.setOnClickListener((view) -> SearchActivity());
     }
 
     private void startListening() {
@@ -122,11 +114,6 @@ public class MainActivity extends DaggerAppCompatActivity {
             startListening();
         }
 
-    }
-
-    private void SearchActivity() {
-        Intent intent = new Intent(this, SearchActivity.class);
-        startActivity(intent);
     }
 
     @Override
