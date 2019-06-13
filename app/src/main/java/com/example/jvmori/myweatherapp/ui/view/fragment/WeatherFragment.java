@@ -8,13 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.jvmori.myweatherapp.MainActivity;
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
 import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
+import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
 import androidx.annotation.NonNull;
@@ -48,6 +48,7 @@ public class WeatherFragment extends DaggerFragment {
     private Toolbar toolbar;
     private Group weatherView;
     private ConstraintLayout loading;
+    private WeatherParameters weatherParameters = null;
 
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
@@ -69,18 +70,39 @@ public class WeatherFragment extends DaggerFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        navigateToSearch();
-        loading.setVisibility(View.VISIBLE);
-        weatherView.setVisibility(View.GONE);
+        navigateToSearchListener();
+        getWeatherParams();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        createWeatherViewModel();
+        fetchWeatherWhenSearched();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loading.setVisibility(View.VISIBLE);
+        weatherView.setVisibility(View.GONE);
+    }
+
+    private void getWeatherParams() {
+        if (getArguments() != null)
+            weatherParameters = WeatherFragmentArgs.fromBundle(getArguments()).getWeatherParam();
+    }
+
+    private void createWeatherViewModel() {
         if (getActivity() != null) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             viewModel = ViewModelProviders.of(getActivity(), viewModelProviderFactory).get(WeatherViewModel.class);
         }
+    }
+
+    private void fetchWeatherWhenSearched() {
+        if (weatherParameters != null)
+            viewModel.fetchRemote(weatherParameters);
         viewModel.getWeather().observe(getViewLifecycleOwner(), forecastEntry ->
                 {
                     loading.setVisibility(View.GONE);
@@ -140,7 +162,7 @@ public class WeatherFragment extends DaggerFragment {
         recyclerView.setAdapter(forecastAdapter);
     }
 
-    private void navigateToSearch() {
+    private void navigateToSearchListener() {
         searchIcon.setOnClickListener(v -> {
             NavDirections directions = WeatherFragmentDirections.actionWeatherFragmentToSearchFragment();
             NavHostFragment.findNavController(this).navigate(directions);

@@ -1,9 +1,12 @@
 package com.example.jvmori.myweatherapp.util;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.Nullable;
 
-public class WeatherParameters
+public class WeatherParameters implements Parcelable
 {
     private String location;
     private boolean isDeviceLocation;
@@ -22,6 +25,25 @@ public class WeatherParameters
         this.lang = "en";
         this.days = days;
     }
+
+    protected WeatherParameters(Parcel in) {
+        location = in.readString();
+        isDeviceLocation = in.readByte() != 0;
+        lang = in.readString();
+        days = in.readString();
+    }
+
+    public static final Creator<WeatherParameters> CREATOR = new Creator<WeatherParameters>() {
+        @Override
+        public WeatherParameters createFromParcel(Parcel in) {
+            return new WeatherParameters(in);
+        }
+
+        @Override
+        public WeatherParameters[] newArray(int size) {
+            return new WeatherParameters[size];
+        }
+    };
 
     @Override
     public boolean equals(@Nullable Object obj) {
@@ -58,5 +80,18 @@ public class WeatherParameters
 
     public void setDays(String days) {
         this.days = days;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(location);
+        dest.writeByte((byte) (isDeviceLocation ? 1 : 0));
+        dest.writeString(lang);
+        dest.writeString(days);
     }
 }

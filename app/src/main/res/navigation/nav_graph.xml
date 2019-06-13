@@ -13,6 +13,11 @@
         <action
             android:id="@+id/action_weatherFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <argument
+            android:name="weatherParam"
+            app:argType="com.example.jvmori.myweatherapp.util.WeatherParameters"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"

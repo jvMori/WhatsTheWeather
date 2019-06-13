@@ -113,8 +113,13 @@ public class SearchFragment extends DaggerFragment implements
 
     @Override
     public void onSearchedItemClicked(Search item) {
-        fetchWeather(item);
-        navigateToWeatherFragment();
+        String loc = item.getName().split(",")[0];
+        WeatherParameters weatherParameters = new WeatherParameters(
+                loc,
+                false,
+                Const.FORECAST_DAYS
+        );
+        navigateToWeatherFragment(weatherParameters);
     }
 
     @Override
@@ -124,20 +129,11 @@ public class SearchFragment extends DaggerFragment implements
                 forecastEntry.isDeviceLocation,
                 Const.FORECAST_DAYS
         );
-        weatherViewModel.fetchWeather(weatherParameters);
-        navigateToWeatherFragment();
-    }
-    private void fetchWeather(Search item) {
-        WeatherParameters weatherParameters = new WeatherParameters(
-                item.getName(),
-                false,
-                Const.FORECAST_DAYS
-        );
-        weatherViewModel.fetchRemote(weatherParameters);
+        navigateToWeatherFragment(weatherParameters);
     }
 
-    private void navigateToWeatherFragment() {
-        NavDirections directions = SearchFragmentDirections.actionSearchFragmentToWeatherFragment();
+    private void navigateToWeatherFragment(WeatherParameters parameters) {
+        NavDirections directions = SearchFragmentDirections.actionSearchFragmentToWeatherFragment().setWeatherParam(parameters);
         NavHostFragment.findNavController(this).navigate(directions);
     }
 
