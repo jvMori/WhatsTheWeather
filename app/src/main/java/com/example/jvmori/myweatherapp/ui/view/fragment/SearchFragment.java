@@ -84,6 +84,10 @@ public class SearchFragment extends DaggerFragment implements
             locations.setVisibility(View.VISIBLE);
             return false;
         });
+        searchView.setOnSearchClickListener(v -> {
+            cities.setVisibility(View.VISIBLE);
+            locations.setVisibility(View.GONE);
+        });
         searchViewModel.search(searchView);
         searchViewModel.cities().observe(this, result -> showSugestions(result));
     }

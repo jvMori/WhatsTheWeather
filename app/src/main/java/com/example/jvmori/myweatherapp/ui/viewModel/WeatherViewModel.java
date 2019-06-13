@@ -79,10 +79,6 @@ public class WeatherViewModel extends ViewModel {
         return oldWeather.getTimestamp() != 0L && System.currentTimeMillis() - oldWeather.getTimestamp() < Const.STALE_MS;
     }
 
-    public LiveData<List<ForecastEntry>> getAllWeather() {
-        return _allWeatherFromDb;
-    }
-
     public void allForecastsFromDb() {
         disposable.add(
                 weatherRepository.getAllForecast()
