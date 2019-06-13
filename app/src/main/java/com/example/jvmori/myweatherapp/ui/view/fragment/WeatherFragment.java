@@ -21,6 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.Group;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavDirections;
@@ -44,6 +46,8 @@ public class WeatherFragment extends DaggerFragment {
     private ForecastAdapter forecastAdapter;
     private WeatherViewModel viewModel;
     private Toolbar toolbar;
+    private Group weatherView;
+    private ConstraintLayout loading;
 
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
@@ -66,17 +70,23 @@ public class WeatherFragment extends DaggerFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         navigateToSearch();
+        loading.setVisibility(View.VISIBLE);
+        weatherView.setVisibility(View.GONE);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(getActivity() != null){
-            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        if (getActivity() != null) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             viewModel = ViewModelProviders.of(getActivity(), viewModelProviderFactory).get(WeatherViewModel.class);
         }
         viewModel.getWeather().observe(getViewLifecycleOwner(), forecastEntry ->
-                displayWeather(forecastEntry)
+                {
+                    loading.setVisibility(View.GONE);
+                    weatherView.setVisibility(View.VISIBLE);
+                    displayWeather(forecastEntry);
+                }
         );
     }
 
@@ -119,6 +129,8 @@ public class WeatherFragment extends DaggerFragment {
         recyclerView = view.findViewById(R.id.RecyclerViewList);
         searchIcon = view.findViewById(R.id.navigateToSearch);
         toolbar = view.findViewById(R.id.toolbar);
+        weatherView = view.findViewById(R.id.view);
+        loading = view.findViewById(R.id.loading);
     }
 
     private void createRecyclerView(ForecastEntry forecastEntry) {
