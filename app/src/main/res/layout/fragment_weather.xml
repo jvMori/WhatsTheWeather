@@ -23,6 +23,7 @@
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/loading"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
@@ -135,19 +136,16 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/RecyclerViewList"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="24dp"
-                android:layout_marginBottom="8dp"
                 android:clipToPadding="false"
                 android:orientation="vertical"
                 android:paddingBottom="8dp"
                 android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/Pressure"
-                app:layout_constraintVertical_bias="0.0"
                 tools:itemCount="10"
                 tools:listitem="@layout/forecast_item" />
 
@@ -172,6 +170,6 @@
         android:id="@+id/view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="toolbar,nestedScrollView"
-        tools:visibility="gone" />
+        android:visibility="visible"
+        app:constraint_referenced_ids="toolbar,nestedScrollView" />
 </androidx.constraintlayout.widget.ConstraintLayout>
