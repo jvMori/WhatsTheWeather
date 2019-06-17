@@ -124,10 +124,10 @@ public class WeatherFragment extends DaggerFragment {
                 forecastEntry.getLocation().getName(),
                 forecastEntry.getLocation().getCountry());
         String description = currentWeather.mCondition.getText();
-        String feelslike = "Feels like: " + currentWeather.mFeelslikeC.toString() + "°";
+        String feelslike = "Feels like: " + currentWeather.mFeelslikeC.intValue() + "°C";
         String humidityTxt = "Humidity: " + currentWeather.mHumidity.toString() + " %";
         String pressureTxt = currentWeather.mPressureMb.toString() + " hPa";
-        String temp = currentWeather.mTempC.toString() + "°";
+        String temp = currentWeather.mTempC.intValue() + "°C";
 
         city.setText(cityAndCountry);
         desc.setText(description);
