@@ -39,7 +39,7 @@
                 android:layout_height="90dp"
                 android:layout_gravity="center"
                 android:layout_marginStart="40dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:layout_weight="1"
                 android:background="#00FFFFFF"
                 android:src="@color/colorPrimary"
@@ -71,12 +71,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="8dp"
                 android:gravity="center"
                 android:text="Mostly Sunny"
                 android:textColor="#fff"
-                android:textSize="25sp"
+                android:textSize="30sp"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -96,43 +96,61 @@
                 app:layout_constraintStart_toStartOf="@+id/tvMainCurrTemp"
                 app:layout_constraintTop_toBottomOf="@+id/tvMainCurrTemp" />
 
-            <TextView
+            <com.example.jvmori.myweatherapp.ui.view.customViews.ConditionInfo
                 android:id="@+id/Humidity"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Humidity: 90%"
-                android:textColor="#fff"
-                android:textSize="17sp"
-                android:visibility="gone"
+                app:desc="Humidity"
+                app:icon="@drawable/humidity"
+                app:layout_constraintBottom_toBottomOf="@+id/Visibility"
+                app:layout_constraintEnd_toStartOf="@+id/Visibility"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:value="90%" />
+
+            <com.example.jvmori.myweatherapp.ui.view.customViews.ConditionInfo
+                android:id="@+id/Visibility"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:desc="Precipitation"
+                app:icon="@drawable/prec"
+                app:layout_constraintBottom_toBottomOf="@+id/Wind"
+                app:layout_constraintEnd_toStartOf="@+id/Wind"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/Humidity"
+                app:value="90%" />
+
+            <com.example.jvmori.myweatherapp.ui.view.customViews.ConditionInfo
+                android:id="@+id/Wind"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:desc="Wind"
+                app:icon="@drawable/wind"
                 app:layout_constraintBottom_toBottomOf="@+id/Pressure"
                 app:layout_constraintEnd_toStartOf="@+id/Pressure"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/feelsTemp"
-                app:layout_constraintTop_toTopOf="@+id/Pressure" />
+                app:layout_constraintStart_toEndOf="@+id/Visibility"
+                app:value="90%" />
 
-            <TextView
+            <com.example.jvmori.myweatherapp.ui.view.customViews.ConditionInfo
                 android:id="@+id/Pressure"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="1010.0 hPa"
-                android:textColor="#fff"
-                android:textSize="17sp"
-                android:visibility="gone"
+                android:layout_marginTop="24dp"
+                app:desc="Pressure"
+                app:icon="@drawable/humidity"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/Humidity"
-                app:layout_constraintTop_toBottomOf="@+id/tvDescriptionMain" />
+                app:layout_constraintStart_toEndOf="@+id/Wind"
+                app:layout_constraintTop_toBottomOf="@+id/tvDescriptionMain"
+                app:value="90%" />
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/RecyclerViewList"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:clipToPadding="false"
                 android:orientation="vertical"
                 android:paddingBottom="8dp"
@@ -140,7 +158,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvDescriptionMain"
+                app:layout_constraintTop_toBottomOf="@+id/Humidity"
                 tools:itemCount="10"
                 tools:listitem="@layout/forecast_item" />
 

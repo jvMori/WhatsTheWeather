@@ -12,6 +12,7 @@ import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
 import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
+import com.example.jvmori.myweatherapp.ui.view.customViews.ConditionInfo;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
@@ -40,7 +41,8 @@ import dagger.android.support.DaggerFragment;
 public class WeatherFragment extends DaggerFragment {
 
     private View view;
-    private TextView mainTemp, feelsLike, desc, humidity, pressure, city;
+    private TextView mainTemp, feelsLike, desc, city;
+    private ConditionInfo humidity, pressure, wind, visibility;
     private ImageView ivIcon, searchIcon;
     private RecyclerView recyclerView;
     private ForecastAdapter forecastAdapter;
@@ -125,16 +127,21 @@ public class WeatherFragment extends DaggerFragment {
                 forecastEntry.getLocation().getCountry());
         String description = currentWeather.mCondition.getText();
         String feelslike = "Feels like: " + currentWeather.mFeelslikeC.intValue() + "°C";
-        String humidityTxt = "Humidity: " + currentWeather.mHumidity.toString() + " %";
-        String pressureTxt = currentWeather.mPressureMb.toString() + " hPa";
+        String humidityTxt = currentWeather.mHumidity.toString() + " %";
         String temp = currentWeather.mTempC.intValue() + "°C";
+        String prec = currentWeather.mPrecipMm + " mm/km";
+        String windTxt = currentWeather.mWindKph + " kph";
+        String pressureTxt = currentWeather.mPressureMb.intValue() + " hPa";
+
 
         city.setText(cityAndCountry);
         desc.setText(description);
         mainTemp.setText(temp);
         feelsLike.setText(feelslike);
-        humidity.setText(humidityTxt);
-        pressure.setText(pressureTxt);
+        humidity.setValue(humidityTxt);
+        visibility.setValue(prec);
+        wind.setValue(windTxt);
+        pressure.setValue(pressureTxt);
         String url = "http:" + currentWeather.mCondition.getIcon();
         iLoadImage.loadImage(url, ivIcon);
         createRecyclerView(forecastEntry);
@@ -143,7 +150,6 @@ public class WeatherFragment extends DaggerFragment {
     private void bindView(View view) {
         mainTemp = view.findViewById(R.id.tvMainCurrTemp);
         feelsLike = view.findViewById(R.id.feelsTemp);
-        humidity = view.findViewById(R.id.Humidity);
         pressure = view.findViewById(R.id.Pressure);
         ivIcon = view.findViewById(R.id.ivMainIcon);
         desc = view.findViewById(R.id.tvDescriptionMain);
@@ -153,6 +159,10 @@ public class WeatherFragment extends DaggerFragment {
         toolbar = view.findViewById(R.id.toolbar);
         weatherView = view.findViewById(R.id.view);
         loading = view.findViewById(R.id.loading);
+        humidity = view.findViewById(R.id.Humidity);
+        pressure = view.findViewById(R.id.Pressure);
+        wind = view.findViewById(R.id.Wind);
+        visibility = view.findViewById(R.id.Visibility);
     }
 
     private void createRecyclerView(ForecastEntry forecastEntry) {

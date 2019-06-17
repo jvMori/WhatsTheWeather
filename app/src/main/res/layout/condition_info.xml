@@ -5,18 +5,18 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:background="#222">
+    android:background="@color/transparent"
+    >
 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="40dp"
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toEndOf="@+id/description"
         app:layout_constraintStart_toStartOf="@+id/description"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_36" />
+        app:srcCompat="@drawable/humidity" />
 
     <TextView
         android:id="@+id/description"
@@ -27,7 +27,7 @@
         android:layout_marginEnd="16dp"
         android:text="Perception"
         android:textColor="#fff"
-        android:textSize="18sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/icon" />
@@ -37,10 +37,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="8dp"
         android:text="5%"
         android:textColor="#fff"
-        android:textSize="24sp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/description"
         app:layout_constraintStart_toStartOf="@+id/description"
