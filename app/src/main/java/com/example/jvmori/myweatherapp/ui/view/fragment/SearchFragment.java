@@ -51,6 +51,8 @@ public class SearchFragment extends DaggerFragment implements
     private LocationAdapter locationAdapter;
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
+
+    //TODO: inject with dagger
     DeleteLocationItem deleteLocationItem;
 
     public SearchFragment() {
@@ -110,7 +112,9 @@ public class SearchFragment extends DaggerFragment implements
     }
 
     private void createLocationsAdapter(List<ForecastEntry> forecastEntries) {
-        locationAdapter= new LocationAdapter(forecastEntries, this, null);
+        locationAdapter= new LocationAdapter();
+        locationAdapter.setCurrentWeathers(forecastEntries);
+        locationAdapter.setiOnClickListener(this);
         locations.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
         locations.setAdapter(locationAdapter);
         deleteLocationItem = new DeleteLocationItemOnSwipe(weatherViewModel, locationAdapter);

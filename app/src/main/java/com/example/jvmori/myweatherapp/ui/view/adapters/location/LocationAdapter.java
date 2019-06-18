@@ -22,14 +22,26 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     private IOnClickListener iOnClickListener;
     private ILongClickListener iLongClickListener;
 
-    public LocationAdapter(List<ForecastEntry> locations,
-                           IOnClickListener iOnClickListener,
-                           ILongClickListener iLongClickListener
-                           ) {
-        this.currentWeathers = locations;
-        this.iOnClickListener = iOnClickListener;
+    public void setiLongClickListener(ILongClickListener iLongClickListener) {
         this.iLongClickListener = iLongClickListener;
     }
+
+    public void setiOnClickListener(IOnClickListener iOnClickListener) {
+        this.iOnClickListener = iOnClickListener;
+    }
+
+    public void setCurrentWeathers(List<ForecastEntry> currentWeathers) {
+        this.currentWeathers = currentWeathers;
+    }
+
+//    public LocationAdapter(List<ForecastEntry> locations,
+//                           IOnClickListener iOnClickListener,
+//                           ILongClickListener iLongClickListener
+//                           ) {
+//        this.currentWeathers = locations;
+//        this.iOnClickListener = iOnClickListener;
+//        this.iLongClickListener = iLongClickListener;
+//    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvCityName, tvCurrentTemp;

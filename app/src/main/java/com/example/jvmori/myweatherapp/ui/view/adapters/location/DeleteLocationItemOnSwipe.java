@@ -22,9 +22,13 @@ public class DeleteLocationItemOnSwipe implements DeleteLocationItem, RecyclerIt
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof LocationAdapter.ViewHolder){
-            String loc = locationAdapter.getItemAtPosition(position).mCityName;
-            weatherViewModel.deleteWeather(loc);
-            locationAdapter.removeItem(position);
+            String loc ="";
+            if (locationAdapter != null)
+                loc = locationAdapter.getItemAtPosition(position).mCityName;
+            if(weatherViewModel != null)
+                weatherViewModel.deleteWeather(loc);
+            if(locationAdapter != null)
+                locationAdapter.removeItem(position);
         }
     }
 
