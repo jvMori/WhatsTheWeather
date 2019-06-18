@@ -1,4 +1,4 @@
-package com.example.jvmori.myweatherapp.ui.view.adapters;
+package com.example.jvmori.myweatherapp.ui.view.adapters.location;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.data.db.entity.Location;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.squareup.picasso.Picasso;
 
@@ -86,6 +87,13 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         return currentWeathers.size();
     }
 
+    public Location getItemAtPosition(int position){
+        return currentWeathers.get(position).getLocation();
+    }
+    public void removeItem(int position){
+        currentWeathers.remove(position);
+        notifyItemRemoved(position);
+    }
     public void addForecastAndNotifyAdapter(ForecastEntry forecastEntry){
         for (ForecastEntry weather: currentWeathers) {
             if (weather.getLocation().mCityName.equals(forecastEntry.getLocation().mCityName))

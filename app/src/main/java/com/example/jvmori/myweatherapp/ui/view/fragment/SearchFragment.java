@@ -2,27 +2,27 @@ package com.example.jvmori.myweatherapp.ui.view.fragment;
 
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.data.network.response.Search;
-import com.example.jvmori.myweatherapp.ui.view.adapters.LocationAdapter;
+import com.example.jvmori.myweatherapp.ui.view.adapters.location.LocationAdapter;
 import com.example.jvmori.myweatherapp.ui.view.adapters.SearchResultsAdapter;
+import com.example.jvmori.myweatherapp.ui.view.adapters.location.RecyclerItemTouchHelper;
 import com.example.jvmori.myweatherapp.ui.viewModel.SearchViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
@@ -40,12 +40,14 @@ import dagger.android.support.DaggerFragment;
  */
 public class SearchFragment extends DaggerFragment implements
         SearchResultsAdapter.IOnItemClicked,
-        LocationAdapter.IOnClickListener
+        LocationAdapter.IOnClickListener,
+        RecyclerItemTouchHelper.IOnSwipeListener
 {
 
     private RecyclerView cities, locations;
     private SearchViewModel searchViewModel;
     private WeatherViewModel weatherViewModel;
+    private LocationAdapter locationAdapter;
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
 
@@ -106,9 +108,15 @@ public class SearchFragment extends DaggerFragment implements
     }
 
     private void createLocationsAdapter(List<ForecastEntry> forecastEntries) {
-        LocationAdapter adapter = new LocationAdapter(forecastEntries, this, null);
+        locationAdapter= new LocationAdapter(forecastEntries, this, null);
         locations.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
-        locations.setAdapter(adapter);
+        locations.setAdapter(locationAdapter);
+        deleteOnSwipe();
+    }
+
+    private void deleteOnSwipe() {
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(locations);
     }
 
     @Override
@@ -137,4 +145,12 @@ public class SearchFragment extends DaggerFragment implements
         NavHostFragment.findNavController(this).navigate(directions);
     }
 
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof LocationAdapter.ViewHolder){
+            String loc = locationAdapter.getItemAtPosition(position).mCityName;
+            weatherViewModel.deleteWeather(loc);
+            locationAdapter.removeItem(position);
+        }
+    }
 }
