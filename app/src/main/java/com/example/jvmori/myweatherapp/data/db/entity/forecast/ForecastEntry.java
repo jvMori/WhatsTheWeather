@@ -10,7 +10,6 @@ import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-//indices = {@Index(value = {"mCityName"}, unique = true)}
 @Entity(tableName = "forecast", primaryKeys = {"mCityName"})
 public class ForecastEntry {
     public boolean isDeviceLocation;
