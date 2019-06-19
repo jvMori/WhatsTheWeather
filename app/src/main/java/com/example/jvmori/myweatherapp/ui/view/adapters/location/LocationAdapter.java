@@ -34,15 +34,6 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         this.currentWeathers = currentWeathers;
     }
 
-//    public LocationAdapter(List<ForecastEntry> locations,
-//                           IOnClickListener iOnClickListener,
-//                           ILongClickListener iLongClickListener
-//                           ) {
-//        this.currentWeathers = locations;
-//        this.iOnClickListener = iOnClickListener;
-//        this.iLongClickListener = iLongClickListener;
-//    }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvCityName, tvCurrentTemp;
         ImageView ivMarker, ivIcon;
@@ -102,17 +93,17 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     public Location getItemAtPosition(int position){
         return currentWeathers.get(position).getLocation();
     }
+    public ForecastEntry getWeatherAtPosition(int position){
+        return currentWeathers.get(position);
+    }
     public void removeItem(int position){
         currentWeathers.remove(position);
         notifyItemRemoved(position);
     }
-    public void addForecastAndNotifyAdapter(ForecastEntry forecastEntry){
-        for (ForecastEntry weather: currentWeathers) {
-            if (weather.getLocation().mCityName.equals(forecastEntry.getLocation().mCityName))
-                return;
-        }
-        currentWeathers.add(forecastEntry);
-        notifyDataSetChanged();
+
+    public void restoreItem(ForecastEntry item, int position) {
+        currentWeathers.add(position, item);
+        notifyItemInserted(position);
     }
 
     public interface IOnClickListener {

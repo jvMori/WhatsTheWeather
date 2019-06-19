@@ -1,6 +1,7 @@
 package com.example.jvmori.myweatherapp.ui.view.fragment;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavDirections;
@@ -30,6 +32,7 @@ import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -42,12 +45,14 @@ import dagger.android.support.DaggerFragment;
  */
 public class SearchFragment extends DaggerFragment implements
         SearchResultsAdapter.IOnItemClicked,
-        LocationAdapter.IOnClickListener
+        LocationAdapter.IOnClickListener,
+        DeleteLocationItemOnSwipe.IOnDeletedAction
 {
 
     private RecyclerView cities, locations;
     private SearchViewModel searchViewModel;
     private WeatherViewModel weatherViewModel;
+    private ConstraintLayout constraintLayout;
     @Inject
     LocationAdapter locationAdapter;
     @Inject
@@ -85,6 +90,7 @@ public class SearchFragment extends DaggerFragment implements
         SearchView searchView = view.findViewById(R.id.searchField);
         cities = view.findViewById(R.id.cities);
         locations = view.findViewById(R.id.locations);
+        constraintLayout = view.findViewById(R.id.searchLayout);
         searchView.setOnCloseListener(() -> {
             cities.setVisibility(View.GONE);
             locations.setVisibility(View.VISIBLE);
@@ -117,6 +123,19 @@ public class SearchFragment extends DaggerFragment implements
         locations.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
         locations.setAdapter(locationAdapter);
         deleteLocationItem.delete(locations);
+        deleteLocationItem.setiOnDeletedAction(this);
+    }
+    @Override
+    public void onDeleted(int deletedIndex, ForecastEntry deletedItem) {
+        showUndoSnackBar(constraintLayout, deletedItem.getLocation().mCityName, deletedIndex, deletedItem);
+    }
+
+    private void showUndoSnackBar(ConstraintLayout parentLayout, String name, int deletedIndex, ForecastEntry deletedItem){
+        Snackbar snackbar = Snackbar
+                .make(parentLayout, name + " removed from cart!", Snackbar.LENGTH_LONG);
+        snackbar.setAction("UNDO", view -> locationAdapter.restoreItem(deletedItem, deletedIndex));
+        snackbar.setActionTextColor(Color.YELLOW);
+        snackbar.show();
     }
 
     @Override
@@ -144,4 +163,5 @@ public class SearchFragment extends DaggerFragment implements
         NavDirections directions = SearchFragmentDirections.actionSearchFragmentToWeatherFragment().setWeatherParam(parameters);
         NavHostFragment.findNavController(this).navigate(directions);
     }
+
 }
