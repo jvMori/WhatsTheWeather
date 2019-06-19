@@ -10,7 +10,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public abstract class WeatherFragmentModule {
+public class WeatherFragmentModule {
 
     @Provides
     @MainActivityScope

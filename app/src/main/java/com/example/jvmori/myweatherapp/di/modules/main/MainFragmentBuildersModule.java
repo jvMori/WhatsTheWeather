@@ -1,5 +1,6 @@
 package com.example.jvmori.myweatherapp.di.modules.main;
 
+import com.example.jvmori.myweatherapp.di.scope.MainActivityScope;
 import com.example.jvmori.myweatherapp.ui.view.fragment.SearchFragment;
 import com.example.jvmori.myweatherapp.ui.view.fragment.WeatherFragment;
 
@@ -11,6 +12,11 @@ public abstract class MainFragmentBuildersModule {
     @ContributesAndroidInjector
     abstract WeatherFragment contributeWeatherFragment();
 
-    @ContributesAndroidInjector
+    @MainActivityScope
+    @ContributesAndroidInjector(
+            modules = {
+                    WeatherFragmentModule.class
+            }
+    )
     abstract SearchFragment contributeSearchFragment();
 }
