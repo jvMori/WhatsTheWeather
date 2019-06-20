@@ -1,5 +1,8 @@
 package com.example.jvmori.myweatherapp.ui.viewModel;
 
+import android.location.Location;
+
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.jvmori.myweatherapp.data.LocationProvider;
@@ -13,6 +16,13 @@ public class LocationViewModel  extends ViewModel {
     @Inject
     public LocationViewModel(LocationProvider locationProvider) {
         this.locationProvider = locationProvider;
+    }
+
+    public void CheckLocation(){
+        locationProvider.CheckLocation();
+    }
+    public LiveData<Location> getDeviceLocation(){
+        return locationProvider.deviceLocation();
     }
 }
 

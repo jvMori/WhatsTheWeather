@@ -8,11 +8,12 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class LocationModule {
+public class LocationModule  {
 
     @ApplicationScope
     @Provides
     public LocationProvider provideLocation(){
         return new LocationProviderImpl();
     }
+
 }
