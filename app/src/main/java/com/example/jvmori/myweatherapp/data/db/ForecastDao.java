@@ -24,7 +24,7 @@ public abstract class ForecastDao
     public abstract void deleteOldDeviceLocWeather();
 
     @Transaction
-    public void insertAndDeleteOldLocation(ForecastEntry forecastEntry){
+    public void updateDeviceLocWeather(ForecastEntry forecastEntry){
         deleteOldDeviceLocWeather();
         insert(forecastEntry);
     }
