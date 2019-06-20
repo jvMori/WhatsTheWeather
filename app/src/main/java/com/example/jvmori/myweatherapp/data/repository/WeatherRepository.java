@@ -59,7 +59,7 @@ public class WeatherRepository {
     }
     private void insertAdnDeleteOldLocation(ForecastEntry forecastEntry){
         Completable.fromAction(() ->
-                    forecastDao.insertAndDeleteOldLocation(forecastEntry))
+                    forecastDao.updateDeviceLocWeather(forecastEntry))
                 .subscribeOn(Schedulers.io())
                 .subscribe();
     }

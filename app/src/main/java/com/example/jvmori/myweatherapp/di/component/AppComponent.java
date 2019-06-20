@@ -6,6 +6,7 @@ import com.example.jvmori.myweatherapp.di.modules.ActivityBuildersModule;
 import com.example.jvmori.myweatherapp.di.modules.ViewModelFactoryModule;
 import com.example.jvmori.myweatherapp.di.modules.app.DataSourceModule;
 import com.example.jvmori.myweatherapp.di.modules.app.ImageLoaderModule;
+import com.example.jvmori.myweatherapp.di.modules.main.LocationModule;
 import com.example.jvmori.myweatherapp.di.modules.main.MainFragmentBuildersModule;
 import com.example.jvmori.myweatherapp.di.modules.main.WeatherFragmentModule;
 import com.example.jvmori.myweatherapp.di.modules.main.WeatherViewModelsModule;
@@ -22,7 +23,8 @@ import dagger.android.support.AndroidSupportInjectionModule;
                 ActivityBuildersModule.class,
                 DataSourceModule.class,
                 ImageLoaderModule.class,
-                ViewModelFactoryModule.class
+                ViewModelFactoryModule.class,
+                LocationModule.class
         }
 )
 public interface AppComponent extends AndroidInjector<BaseApplication> {
