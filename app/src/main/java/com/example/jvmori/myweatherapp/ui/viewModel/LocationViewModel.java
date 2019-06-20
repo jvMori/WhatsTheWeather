@@ -24,5 +24,11 @@ public class LocationViewModel  extends ViewModel {
     public LiveData<Location> getDeviceLocation(){
         return locationProvider.deviceLocation();
     }
+    public String getCityName(Location location){
+        if (location != null) {
+            return  location.getLatitude() + "," + location.getLongitude();
+        }
+        return  null;
+    }
 }
 

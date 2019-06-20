@@ -8,6 +8,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.ImageView;
+
+import com.example.jvmori.myweatherapp.ui.viewModel.LocationViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.CurrentLocation;
@@ -17,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -32,6 +35,7 @@ public class MainActivity extends DaggerAppCompatActivity {
 
     public static String deviceLocation;
     public static WeatherViewModel viewModel;
+    private LocationViewModel locationViewModel;
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
 
@@ -40,20 +44,29 @@ public class MainActivity extends DaggerAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        bindView();
 
+        bindView();
         viewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(WeatherViewModel.class);
+        locationViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(LocationViewModel.class);
+        locationViewModel.CheckLocation();
+        locationViewModel.getDeviceLocation().observe(this, new Observer<Location>() {
+            @Override
+            public void onChanged(Location location) {
+                String loc = locationViewModel.getCityName(location);
+                WeatherParameters weatherParameters = new WeatherParameters(
+                        loc,
+                        true,
+                        Const.FORECAST_DAYS
+                );
+                viewModel.fetchRemote(weatherParameters);
+            }
+        });
     }
 
     private void bindView() {
         ivSearch = findViewById(R.id.ivSearch);
     }
 
-    private String getDeviceLocation(Location location){
-        if (location != null) {
-           return  deviceLocation = location.getLatitude() + "," + location.getLongitude();
-        }
-        return  null;
-    }
+
 }
 
