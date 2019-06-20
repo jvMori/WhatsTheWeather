@@ -13,7 +13,7 @@ public class LocationModule  {
 
     @ApplicationScope
     @Provides
-    public LocationProvider provideLocation(MainActivity mainActivity){
-        return new LocationProviderImpl(mainActivity);
+    public LocationProvider provideLocation(){
+        return new LocationProviderImpl();
     }
 }

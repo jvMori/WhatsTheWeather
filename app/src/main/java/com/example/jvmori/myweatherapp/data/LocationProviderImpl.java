@@ -21,11 +21,7 @@ public class LocationProviderImpl implements LocationProvider, ActivityCompat.On
     LocationListener locationListener;
     private MutableLiveData<Location> _deviceLocation = new MutableLiveData<>();
 
-
     private Activity activity;
-    public LocationProviderImpl(Activity activity){
-        this.activity = activity;
-    }
 
     @Override
     public LiveData<Location> deviceLocation() {
@@ -80,5 +76,10 @@ public class LocationProviderImpl implements LocationProvider, ActivityCompat.On
             startListening();
         }
 
+    }
+
+    @Override
+    public void setActivity(Activity activity) {
+        this.activity = activity;
     }
 }
