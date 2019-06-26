@@ -85,12 +85,6 @@ public class WeatherFragment extends DaggerFragment {
         fetchWeatherWhenSearched();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
-
     private void getWeatherParams() {
         if (getArguments() != null)
             weatherParameters = WeatherFragmentArgs.fromBundle(getArguments()).getWeatherParam();
@@ -108,9 +102,20 @@ public class WeatherFragment extends DaggerFragment {
             viewModel.fetchRemote(weatherParameters);
         viewModel.getWeather().observe(getViewLifecycleOwner(), forecastEntry ->
                 {
-                    loading.setVisibility(View.GONE);
-                    weatherView.setVisibility(View.VISIBLE);
-                    displayWeather(forecastEntry);
+                    switch (forecastEntry.status){
+                        case LOADING:
+                            loading.setVisibility(View.VISIBLE);
+                            weatherView.setVisibility(View.GONE);
+                            break;
+                        case SUCCESS:
+                            displayWeather(forecastEntry.data);
+                            loading.setVisibility(View.GONE);
+                            weatherView.setVisibility(View.VISIBLE);
+                            break;
+                        case ERROR:
+                            loading.setVisibility(View.GONE);
+                            break;
+                    }
                 }
         );
     }

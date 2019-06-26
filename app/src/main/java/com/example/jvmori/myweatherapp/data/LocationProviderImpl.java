@@ -51,7 +51,7 @@ public class LocationProviderImpl implements LocationProvider, ActivityCompat.On
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-               _deviceLocation.setValue(location);
+                _deviceLocation.setValue(location);
             }
 
             @Override
