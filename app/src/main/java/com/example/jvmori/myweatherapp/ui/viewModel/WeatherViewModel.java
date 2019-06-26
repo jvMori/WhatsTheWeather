@@ -70,10 +70,12 @@ public class WeatherViewModel extends ViewModel {
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doAfterSuccess(succes -> {
+                            succes.getLocation().mCityName = weatherParameters.getCityName();
                             weatherRepository.persistWeather(succes);
                         })
                         .subscribe(
                                 success -> {
+                                    success.getLocation().mCityName = weatherParameters.getCityName();
                                     _weather.setValue(Resource.success(success));
                                 }, error -> {
                                     _weather.setValue(Resource.error(error.getMessage(), null));
@@ -86,6 +88,7 @@ public class WeatherViewModel extends ViewModel {
     private void checkIfRefreshNeeded(ForecastEntry oldWeather, boolean isDeviceLocation, String days) {
         if (!isWeatherUpToDate(oldWeather)) {
             fetchRemote(new WeatherParameters(
+                    oldWeather.getLocation().mCityName,
                     oldWeather.getLocation().mCityName,
                     isDeviceLocation,
                     days

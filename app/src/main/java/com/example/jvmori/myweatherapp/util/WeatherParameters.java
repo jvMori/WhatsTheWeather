@@ -9,18 +9,21 @@ import androidx.annotation.Nullable;
 public class WeatherParameters implements Parcelable
 {
     private String location;
+    private String cityName;
     private boolean isDeviceLocation;
     private String lang;
     private String days;
 
-    public WeatherParameters(String location, boolean isDeviceLocation, String lang, String days) {
+    public WeatherParameters(String location, String cityName, boolean isDeviceLocation, String lang, String days) {
         this.location = location;
+        this.cityName = cityName;
         this.isDeviceLocation = isDeviceLocation;
         this.lang = lang;
         this.days = days;
     }
-    public WeatherParameters(String location, boolean isDeviceLocation, String days) {
+    public WeatherParameters(String location, String cityName, boolean isDeviceLocation, String days) {
         this.location = location;
+        this.cityName = cityName;
         this.isDeviceLocation = isDeviceLocation;
         this.lang = "en";
         this.days = days;
@@ -28,6 +31,7 @@ public class WeatherParameters implements Parcelable
 
     protected WeatherParameters(Parcel in) {
         location = in.readString();
+        cityName = in.readString();
         isDeviceLocation = in.readByte() != 0;
         lang = in.readString();
         days = in.readString();
@@ -61,6 +65,8 @@ public class WeatherParameters implements Parcelable
     public String getLocation() {
         return location;
     }
+    public String getCityName() { return cityName;}
+    public void setCityName(String cityName){this.cityName = cityName;}
 
     public void setLocation(String location) {
         this.location = location;
@@ -90,6 +96,7 @@ public class WeatherParameters implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(location);
+        dest.writeString(cityName);
         dest.writeByte((byte) (isDeviceLocation ? 1 : 0));
         dest.writeString(lang);
         dest.writeString(days);

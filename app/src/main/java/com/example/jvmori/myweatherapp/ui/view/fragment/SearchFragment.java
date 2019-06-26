@@ -168,6 +168,7 @@ public class SearchFragment extends DaggerFragment implements
         String loc = item.getName().split(",")[0];
         WeatherParameters weatherParameters = new WeatherParameters(
                 loc,
+                loc,
                 false,
                 Const.FORECAST_DAYS
         );
@@ -177,6 +178,7 @@ public class SearchFragment extends DaggerFragment implements
     @Override
     public void onLocationClicked(ForecastEntry forecastEntry) {
         WeatherParameters weatherParameters = new WeatherParameters(
+                forecastEntry.getLocation().mCityName,
                 forecastEntry.getLocation().mCityName,
                 forecastEntry.isDeviceLocation,
                 Const.FORECAST_DAYS

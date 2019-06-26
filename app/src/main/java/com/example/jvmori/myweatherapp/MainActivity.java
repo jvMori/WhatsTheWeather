@@ -38,9 +38,11 @@ public class MainActivity extends DaggerAppCompatActivity {
         locationViewModel.setLocationProviderActivity(this);
         locationViewModel.CheckLocation();
         locationViewModel.getDeviceLocation().observe(this, location -> {
-            String loc = locationViewModel.getCity(location, this);
+            String city = locationViewModel.getCity(location, this);
+            String loc = location.getLatitude() + "," + location.getLongitude();
             WeatherParameters weatherParameters = new WeatherParameters(
                     loc,
+                    city,
                     true,
                     Const.FORECAST_DAYS
             );
