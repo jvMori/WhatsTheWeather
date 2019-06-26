@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +16,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,7 +26,6 @@ import com.example.jvmori.myweatherapp.ui.view.adapters.location.DeleteLocationI
 import com.example.jvmori.myweatherapp.ui.view.adapters.location.DeleteLocationItemOnSwipe;
 import com.example.jvmori.myweatherapp.ui.view.adapters.location.LocationAdapter;
 import com.example.jvmori.myweatherapp.ui.view.adapters.SearchResultsAdapter;
-import com.example.jvmori.myweatherapp.ui.view.adapters.location.RecyclerItemTouchHelper;
 import com.example.jvmori.myweatherapp.ui.viewModel.SearchViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
@@ -46,10 +45,11 @@ import dagger.android.support.DaggerFragment;
 public class SearchFragment extends DaggerFragment implements
         SearchResultsAdapter.IOnItemClicked,
         LocationAdapter.IOnClickListener,
-        DeleteLocationItemOnSwipe.IOnDeletedAction
-{
+        DeleteLocationItemOnSwipe.IOnDeletedAction {
 
     private RecyclerView cities, locations;
+    private ProgressBar progressBar;
+    private SearchView searchView;
     private SearchViewModel searchViewModel;
     private WeatherViewModel weatherViewModel;
     private ConstraintLayout constraintLayout;
@@ -78,7 +78,7 @@ public class SearchFragment extends DaggerFragment implements
         if (getActivity() != null) {
             weatherViewModel = ViewModelProviders.of(getActivity(), viewModelProviderFactory).get(WeatherViewModel.class);
             weatherViewModel.allForecastsFromDb();
-            weatherViewModel.allWeatherFromDb().observe( this, result ->
+            weatherViewModel.allWeatherFromDb().observe(this, result ->
                     createLocationsAdapter(result)
             );
         }
@@ -87,10 +87,7 @@ public class SearchFragment extends DaggerFragment implements
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        SearchView searchView = view.findViewById(R.id.searchField);
-        cities = view.findViewById(R.id.cities);
-        locations = view.findViewById(R.id.locations);
-        constraintLayout = view.findViewById(R.id.searchLayout);
+        bindView(view);
         searchView.setOnCloseListener(() -> {
             cities.setVisibility(View.GONE);
             locations.setVisibility(View.VISIBLE);
@@ -101,10 +98,37 @@ public class SearchFragment extends DaggerFragment implements
             locations.setVisibility(View.GONE);
         });
         searchViewModel.search(searchView);
-        searchViewModel.cities().observe(this, result -> showSugestions(result));
+        searchViewModel.cities().observe(this, result -> {
+            switch (result.status) {
+                case LOADING:
+                    progressBar.setVisibility(View.VISIBLE);
+                    cities.setVisibility(View.GONE);
+                    break;
+
+                case SUCCESS:
+                    showSuggestions(result.data);
+                    progressBar.setVisibility(View.GONE);
+                    cities.setVisibility(View.VISIBLE);
+                    break;
+
+                case ERROR:
+                    progressBar.setVisibility(View.GONE);
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
-    private void showSugestions(List<Search> searchList) {
+    private void bindView(@NonNull View view) {
+        searchView = view.findViewById(R.id.searchField);
+        cities = view.findViewById(R.id.cities);
+        locations = view.findViewById(R.id.locations);
+        constraintLayout = view.findViewById(R.id.searchLayout);
+        progressBar = view.findViewById(R.id.citiesProgressBar);
+    }
+
+    private void showSuggestions(List<Search> searchList) {
         cities.setVisibility(View.VISIBLE);
         locations.setVisibility(View.GONE);
         createCitiesAdapter(searchList);
@@ -125,12 +149,13 @@ public class SearchFragment extends DaggerFragment implements
         deleteLocationItem.delete(locations);
         deleteLocationItem.setiOnDeletedAction(this);
     }
+
     @Override
     public void onDeleted(int deletedIndex, ForecastEntry deletedItem) {
         showUndoSnackBar(constraintLayout, deletedItem.getLocation().mCityName, deletedIndex, deletedItem);
     }
 
-    private void showUndoSnackBar(ConstraintLayout parentLayout, String name, int deletedIndex, ForecastEntry deletedItem){
+    private void showUndoSnackBar(ConstraintLayout parentLayout, String name, int deletedIndex, ForecastEntry deletedItem) {
         Snackbar snackbar = Snackbar
                 .make(parentLayout, name + " removed from cart!", Snackbar.LENGTH_LONG);
         snackbar.setAction("UNDO", view -> locationAdapter.restoreItem(deletedItem, deletedIndex));

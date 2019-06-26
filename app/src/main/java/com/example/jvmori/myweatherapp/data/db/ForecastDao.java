@@ -41,6 +41,6 @@ public abstract class ForecastDao
     public abstract io.reactivex.Observable<List<ForecastEntry>> getAllWeather();
 
     @Query("select * from forecast where mCityName like :location")
-    public abstract Observable<ForecastEntry> getWeather(String location);
+    public abstract Maybe<ForecastEntry> getWeather(String location);
 
 }

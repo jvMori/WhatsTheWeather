@@ -44,7 +44,7 @@ public class MainActivity extends DaggerAppCompatActivity {
                     true,
                     Const.FORECAST_DAYS
             );
-            viewModel.fetchRemote(weatherParameters);
+            viewModel.fetchWeather(weatherParameters);
         });
     }
 

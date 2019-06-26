@@ -29,7 +29,7 @@ public class WeatherRepository {
         this.forecastDao = forecastDao;
     }
 
-    public Observable<ForecastEntry> getWeatherLocal(String location) {
+    public Maybe<ForecastEntry> getWeatherLocal(String location) {
         return forecastDao.getWeather(location)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
