@@ -99,7 +99,7 @@ public class WeatherFragment extends DaggerFragment {
 
     private void fetchWeatherWhenSearched() {
         if (weatherParameters != null)
-            viewModel.fetchRemote(weatherParameters);
+            viewModel.fetchWeather(weatherParameters);
         viewModel.getWeather().observe(getViewLifecycleOwner(), forecastEntry ->
                 {
                     switch (forecastEntry.status){
