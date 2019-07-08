@@ -1,13 +1,18 @@
 package com.example.jvmori.myweatherapp;
 
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.ImageView;
+
+import com.example.jvmori.myweatherapp.data.LocationProvider;
 import com.example.jvmori.myweatherapp.ui.viewModel.LocationViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import javax.inject.Inject;
@@ -22,6 +27,15 @@ public class MainActivity extends DaggerAppCompatActivity {
     private LocationViewModel locationViewModel;
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
+    @Inject
+    LocationProvider locationProvider;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            locationProvider.startListening();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

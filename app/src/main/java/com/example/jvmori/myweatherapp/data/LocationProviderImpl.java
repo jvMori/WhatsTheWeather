@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -15,10 +16,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 
-public class LocationProviderImpl implements LocationProvider, ActivityCompat.OnRequestPermissionsResultCallback  {
+public class LocationProviderImpl implements LocationProvider {
 
-    LocationManager locationManager;
-    LocationListener locationListener;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
     private MutableLiveData<Location> _deviceLocation = new MutableLiveData<>();
 
     private Activity activity;
@@ -28,7 +29,8 @@ public class LocationProviderImpl implements LocationProvider, ActivityCompat.On
         return _deviceLocation;
     }
 
-    private void startListening() {
+    @Override
+    public void startListening() {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
             assert locationManager != null;
@@ -36,12 +38,6 @@ public class LocationProviderImpl implements LocationProvider, ActivityCompat.On
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
             _deviceLocation.setValue(location);
-        }
-    }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            startListening();
         }
     }
 
@@ -72,10 +68,8 @@ public class LocationProviderImpl implements LocationProvider, ActivityCompat.On
 
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        } else {
-            startListening();
         }
-
+        startListening();
     }
 
     @Override

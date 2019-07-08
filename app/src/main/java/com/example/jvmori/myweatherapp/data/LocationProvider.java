@@ -10,5 +10,7 @@ public interface LocationProvider {
 
     void CheckLocation();
 
+    void startListening();
+
     void setActivity(Activity activity);
 }
