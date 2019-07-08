@@ -1,12 +1,14 @@
 package com.example.jvmori.myweatherapp.ui.view.fragment;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
@@ -82,7 +84,7 @@ public class WeatherFragment extends DaggerFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         createWeatherViewModel();
-        fetchWeatherWhenSearched();
+        fetchWeatherWhenSearched(this.getContext());
     }
 
     private void getWeatherParams() {
@@ -97,7 +99,7 @@ public class WeatherFragment extends DaggerFragment {
         }
     }
 
-    private void fetchWeatherWhenSearched() {
+    private void fetchWeatherWhenSearched(Context context) {
         if (weatherParameters != null)
             viewModel.fetchWeather(weatherParameters);
         viewModel.getWeather().observe(getViewLifecycleOwner(), forecastEntry ->
@@ -114,8 +116,10 @@ public class WeatherFragment extends DaggerFragment {
                             break;
                         case ERROR:
                             loading.setVisibility(View.GONE);
-                           
-                            break;
+                            weatherView.setVisibility(View.VISIBLE);
+                            //TODO: create error layout 
+                            viewModel.fetchLocalWeatherForDeviceLocation();
+                            Toast.makeText(context, "Could not fetch weather!", Toast.LENGTH_SHORT).show();
                     }
                 }
         );

@@ -77,14 +77,14 @@ public class WeatherRepository {
                 .subscribe();
     }
 
-    private void deleteOldDeviceLocation() {
-        Completable.fromAction(()-> forecastDao.deleteOldDeviceLocWeather())
-                .subscribeOn(Schedulers.io())
-                .subscribe();
-    }
-
     public Observable<List<Search>> getResultsForCity(String cityName) {
         return weatherNetworkDataSource.searchCity(cityName);
+    }
+
+    public Observable<ForecastEntry> getWeatherForDeviceLocation(){
+        return forecastDao.getWeatherForDeviceLocation()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public boolean isUpToDate(Long lastUpdate) {

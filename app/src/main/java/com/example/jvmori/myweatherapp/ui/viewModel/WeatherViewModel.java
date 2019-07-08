@@ -10,6 +10,7 @@ import com.example.jvmori.myweatherapp.data.repository.WeatherRepository;
 
 import java.util.List;
 
+import androidx.core.content.PermissionChecker;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -41,6 +42,20 @@ public class WeatherViewModel extends ViewModel {
     public WeatherViewModel(WeatherRepository weatherRepository) {
         this.weatherRepository = weatherRepository;
     }
+    public void fetchLocalWeatherForDeviceLocation(){
+        disposable.add(
+                weatherRepository.getWeatherForDeviceLocation()
+                .subscribe(
+                        success -> {
+                            _weather.setValue(Resource.success(success));
+                        }, error -> {
+                            _weather.setValue(Resource.error("something went wrong!", null));
+                            Log.i("WEATHER", "something went wrong!");
+                        }
+                )
+        );
+    }
+
 
     public void fetchWeather(WeatherParameters weatherParameters) {
         _weather.setValue(Resource.loading(null));

@@ -43,4 +43,7 @@ public abstract class ForecastDao
     @Query("select * from forecast where mCityName like :location")
     public abstract Maybe<ForecastEntry> getWeather(String location);
 
+    @Query("select * from forecast where isDeviceLocation")
+    public abstract Observable<ForecastEntry> getWeatherForDeviceLocation();
+
 }

@@ -7,6 +7,12 @@
     android:background="@drawable/bg"
     android:orientation="vertical">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <include
         android:id="@+id/loading"
         layout="@layout/loading"
@@ -15,6 +21,7 @@
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
