@@ -52,15 +52,17 @@ public class MainActivity extends DaggerAppCompatActivity {
         locationViewModel.setLocationProviderActivity(this);
         locationViewModel.CheckLocation();
         locationViewModel.getDeviceLocation().observe(this, location -> {
-            String city = locationViewModel.getCity(location, this);
-            String loc = location.getLatitude() + "," + location.getLongitude();
-            WeatherParameters weatherParameters = new WeatherParameters(
-                    loc,
-                    city,
-                    true,
-                    Const.FORECAST_DAYS
-            );
-            viewModel.fetchWeather(weatherParameters);
+            if(location != null){
+                String city = locationViewModel.getCity(location, this);
+                String loc = location.getLatitude() + "," + location.getLongitude();
+                WeatherParameters weatherParameters = new WeatherParameters(
+                        loc,
+                        city,
+                        true,
+                        Const.FORECAST_DAYS
+                );
+                if(city!= null) viewModel.fetchWeather(weatherParameters);
+            }
         });
     }
 
