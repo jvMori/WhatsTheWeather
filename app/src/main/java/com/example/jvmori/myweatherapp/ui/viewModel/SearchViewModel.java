@@ -24,36 +24,20 @@ public class SearchViewModel extends ViewModel {
     private MutableLiveData<Resource<List<Search>>> _cities = new MutableLiveData<>();
     private CompositeDisposable disposable = new CompositeDisposable();
     public LiveData<Resource<List<Search>>> cities() {return _cities;}
+    final PublishSubject<String> subject = PublishSubject.create();
 
     @Inject
     public SearchViewModel(WeatherRepository weatherRepository){
         this.weatherRepository = weatherRepository;
     }
 
-    private Observable<String> fromView(SearchView searchView) {
-        final PublishSubject<String> subject = PublishSubject.create();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                subject.onComplete();
-                searchView.setQuery("", false);
-                searchView.setIconifiedByDefault(true);
-                searchView.clearFocus();
-                return true;
-            }
-            @Override
-            public boolean onQueryTextChange(String text) {
-                subject.onNext(text);
-                return true;
-            }
-        });
-        return subject;
+    public void subjectOnNext(String query){
+        subject.onNext(query);
     }
 
-    public void search(SearchView searchView){
+    public void listenForSearchChanges(){
         disposable.add(
-                fromView(searchView)
-                        .debounce(300, TimeUnit.MILLISECONDS)
+                subject.debounce(300, TimeUnit.MILLISECONDS)
                         .filter( result -> !result.isEmpty())
                         .distinctUntilChanged()
                         .switchMap(query ->

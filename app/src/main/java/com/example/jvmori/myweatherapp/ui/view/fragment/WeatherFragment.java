@@ -114,6 +114,7 @@ public class WeatherFragment extends DaggerFragment {
                             break;
                         case ERROR:
                             loading.setVisibility(View.GONE);
+                           
                             break;
                     }
                 }

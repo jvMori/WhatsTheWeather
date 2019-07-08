@@ -69,9 +69,9 @@ public class WeatherViewModel extends ViewModel {
                 weatherRepository.getWeatherRemote(weatherParameters)
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .doAfterSuccess(succes -> {
-                            succes.getLocation().mCityName = weatherParameters.getCityName();
-                            weatherRepository.persistWeather(succes);
+                        .doAfterSuccess(success -> {
+                            success.getLocation().mCityName = weatherParameters.getCityName();
+                            weatherRepository.persistWeather(success);
                         })
                         .subscribe(
                                 success -> {

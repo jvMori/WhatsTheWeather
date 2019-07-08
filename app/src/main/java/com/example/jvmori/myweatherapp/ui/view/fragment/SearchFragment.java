@@ -88,6 +88,7 @@ public class SearchFragment extends DaggerFragment implements
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bindView(view);
+
         searchView.setOnCloseListener(() -> {
             cities.setVisibility(View.GONE);
             locations.setVisibility(View.VISIBLE);
@@ -97,7 +98,29 @@ public class SearchFragment extends DaggerFragment implements
             cities.setVisibility(View.VISIBLE);
             locations.setVisibility(View.GONE);
         });
-        searchViewModel.search(searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                WeatherParameters weatherParameters = new WeatherParameters(
+                        s,
+                        s,
+                        false,
+                        Const.FORECAST_DAYS
+                );
+                searchView.setQuery("", false);
+                searchView.setIconifiedByDefault(true);
+                searchView.clearFocus();
+                navigateToWeatherFragment(weatherParameters);
+                return true;
+            }
+            @Override
+            public boolean onQueryTextChange(String text) {
+                searchViewModel.subjectOnNext(text);
+                return true;
+            }
+        });
+        searchViewModel.listenForSearchChanges();
+
         searchViewModel.cities().observe(this, result -> {
             switch (result.status) {
                 case LOADING:
