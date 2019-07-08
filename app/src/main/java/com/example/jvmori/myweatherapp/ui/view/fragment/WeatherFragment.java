@@ -117,7 +117,7 @@ public class WeatherFragment extends DaggerFragment {
                         case ERROR:
                             loading.setVisibility(View.GONE);
                             weatherView.setVisibility(View.VISIBLE);
-                            //TODO: create error layout 
+                            //TODO: create error layout
                             viewModel.fetchLocalWeatherForDeviceLocation();
                             Toast.makeText(context, "Could not fetch weather!", Toast.LENGTH_SHORT).show();
                     }
