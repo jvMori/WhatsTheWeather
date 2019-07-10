@@ -2,10 +2,12 @@ package com.example.jvmori.myweatherapp;
 
 
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.example.jvmori.myweatherapp.data.LocationProvider;
+import com.example.jvmori.myweatherapp.ui.Resource;
 import com.example.jvmori.myweatherapp.ui.viewModel.LocationViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.util.Const;
@@ -52,19 +54,35 @@ public class MainActivity extends DaggerAppCompatActivity {
         locationViewModel.setLocationProviderActivity(this);
         locationViewModel.CheckLocation();
         locationViewModel.getDeviceLocation().observe(this, location -> {
-            if(location != null){
-                String city = locationViewModel.getCity(location, this);
-                String loc = location.getLatitude() + "," + location.getLongitude();
-                WeatherParameters weatherParameters = new WeatherParameters(
-                        loc,
-                        city,
-                        true,
-                        Const.FORECAST_DAYS
-                );
-                if(city!= null) viewModel.fetchWeather(weatherParameters);
+            switch(location.status){
+                case LOADING:
+                    break;
+                case SUCCESS:
+                    onSuccess(location);
+                    break;
+                case ERROR:
+                    onError();
+                    break;
             }
+
         });
     }
+
+    private void onSuccess(Resource<Location> location) {
+        if (location.data != null){
+            String city = locationViewModel.getCity(location.data, this);
+            String loc = location.data.getLatitude() + "," + location.data.getLongitude();
+            WeatherParameters weatherParameters = new WeatherParameters(
+                    loc,
+                    city,
+                    true,
+                    Const.FORECAST_DAYS
+            );
+            if(city!= null) viewModel.fetchWeather(weatherParameters);
+        }
+    }
+    private void onError(){}
+
 
     private void bindView() {
         ivSearch = findViewById(R.id.ivSearch);

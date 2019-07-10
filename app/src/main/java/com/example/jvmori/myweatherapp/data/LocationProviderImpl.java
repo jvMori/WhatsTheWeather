@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -15,17 +16,19 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.jvmori.myweatherapp.ui.Resource;
+
 
 public class LocationProviderImpl implements LocationProvider {
 
     private LocationManager locationManager;
     private LocationListener locationListener;
-    private MutableLiveData<Location> _deviceLocation = new MutableLiveData<>();
+    private MutableLiveData<Resource<Location>> _deviceLocation = new MutableLiveData<>();
 
     private Activity activity;
 
     @Override
-    public LiveData<Location> deviceLocation() {
+    public LiveData<Resource<Location>> deviceLocation() {
         return _deviceLocation;
     }
 
@@ -37,17 +40,18 @@ public class LocationProviderImpl implements LocationProvider {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3600, 5000, locationListener);
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-            _deviceLocation.setValue(location);
+            _deviceLocation.setValue(Resource.success(location));
         }
     }
 
     @Override
     public void CheckLocation() {
+        _deviceLocation.setValue(Resource.loading(null));
         locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                _deviceLocation.setValue(location);
+                _deviceLocation.setValue(Resource.success(location));
             }
 
             @Override
@@ -62,7 +66,8 @@ public class LocationProviderImpl implements LocationProvider {
 
             @Override
             public void onProviderDisabled(String s) {
-
+                _deviceLocation.setValue(Resource.error(s +" not enabled", null));
+                Log.i("Weather", "disable");
             }
         };
 

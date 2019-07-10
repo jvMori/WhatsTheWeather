@@ -5,8 +5,10 @@ import android.location.Location;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.jvmori.myweatherapp.ui.Resource;
+
 public interface LocationProvider {
-    LiveData<Location> deviceLocation();
+    LiveData<Resource<Location>> deviceLocation();
 
     void CheckLocation();
 

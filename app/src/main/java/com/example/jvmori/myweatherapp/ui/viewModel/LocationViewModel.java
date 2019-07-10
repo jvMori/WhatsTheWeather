@@ -9,6 +9,7 @@ import android.location.Location;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.jvmori.myweatherapp.data.LocationProvider;
+import com.example.jvmori.myweatherapp.ui.Resource;
 
 
 import java.io.IOException;
@@ -30,7 +31,7 @@ public class LocationViewModel  extends ViewModel {
         locationProvider.CheckLocation();
     }
 
-    public LiveData<Location> getDeviceLocation(){
+    public LiveData<Resource<Location>> getDeviceLocation(){
         return locationProvider.deviceLocation();
     }
 
