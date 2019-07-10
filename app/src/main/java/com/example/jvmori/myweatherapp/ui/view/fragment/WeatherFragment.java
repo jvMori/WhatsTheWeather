@@ -74,7 +74,7 @@ public class WeatherFragment extends DaggerFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        loading.setVisibility(View.VISIBLE);
+        //loading.setVisibility(View.VISIBLE);
         weatherView.setVisibility(View.GONE);
         navigateToSearchListener();
         getWeatherParams();

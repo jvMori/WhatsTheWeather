@@ -4,6 +4,7 @@ package com.example.jvmori.myweatherapp;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.jvmori.myweatherapp.data.LocationProvider;
@@ -53,6 +54,19 @@ public class MainActivity extends DaggerAppCompatActivity {
         locationViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(LocationViewModel.class);
         locationViewModel.setLocationProviderActivity(this);
         locationViewModel.CheckLocation();
+        locationViewModel.getProviderStatus().observe(this, providerStatus -> {
+            switch (providerStatus){
+                case disabled:
+                    handleDisabledLocationProvider();
+                    break;
+                case enabled:
+                    fetchDeviceLocation();
+                    break;
+            }
+        });
+    }
+
+    private void fetchDeviceLocation() {
         locationViewModel.getDeviceLocation().observe(this, location -> {
             switch(location.status){
                 case LOADING:
@@ -64,8 +78,11 @@ public class MainActivity extends DaggerAppCompatActivity {
                     onError();
                     break;
             }
-
         });
+    }
+
+    private void handleDisabledLocationProvider() {
+        Log.i("Weather", "disable");
     }
 
     private void onSuccess(Resource<Location> location) {

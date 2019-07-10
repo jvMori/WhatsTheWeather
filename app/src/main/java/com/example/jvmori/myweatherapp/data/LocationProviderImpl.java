@@ -18,18 +18,23 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.jvmori.myweatherapp.ui.Resource;
 
-
 public class LocationProviderImpl implements LocationProvider {
 
     private LocationManager locationManager;
     private LocationListener locationListener;
     private MutableLiveData<Resource<Location>> _deviceLocation = new MutableLiveData<>();
+    private MutableLiveData<ProviderStatus> _providerStatus = new MutableLiveData<>();
 
     private Activity activity;
 
     @Override
     public LiveData<Resource<Location>> deviceLocation() {
         return _deviceLocation;
+    }
+
+    @Override
+    public LiveData<ProviderStatus> providerStatus() {
+        return _providerStatus;
     }
 
     @Override
@@ -61,11 +66,12 @@ public class LocationProviderImpl implements LocationProvider {
 
             @Override
             public void onProviderEnabled(String s) {
-
+                _providerStatus.setValue(ProviderStatus.enabled);
             }
 
             @Override
             public void onProviderDisabled(String s) {
+                _providerStatus.setValue(ProviderStatus.disabled);
                 _deviceLocation.setValue(Resource.error(s +" not enabled", null));
                 Log.i("Weather", "disable");
             }

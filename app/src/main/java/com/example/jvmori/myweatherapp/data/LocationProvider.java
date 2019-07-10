@@ -9,6 +9,7 @@ import com.example.jvmori.myweatherapp.ui.Resource;
 
 public interface LocationProvider {
     LiveData<Resource<Location>> deviceLocation();
+    LiveData<ProviderStatus> providerStatus();
 
     void CheckLocation();
 

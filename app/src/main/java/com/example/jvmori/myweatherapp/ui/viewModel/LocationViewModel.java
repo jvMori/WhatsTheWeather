@@ -5,10 +5,12 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.provider.ContactsContract;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.jvmori.myweatherapp.data.LocationProvider;
+import com.example.jvmori.myweatherapp.data.ProviderStatus;
 import com.example.jvmori.myweatherapp.ui.Resource;
 
 
@@ -34,6 +36,11 @@ public class LocationViewModel  extends ViewModel {
     public LiveData<Resource<Location>> getDeviceLocation(){
         return locationProvider.deviceLocation();
     }
+
+    public  LiveData<ProviderStatus> getProviderStatus(){
+        return locationProvider.providerStatus();
+    }
+
 
     public  String getCity(Location location, Context context){
         double latitude = location.getLatitude();
