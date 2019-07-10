@@ -47,7 +47,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ForecastAdapter.ViewHolder viewHolder, int i) {
-        String dayDate = forecast.get(i).getDate();
+        String dayDate = forecast.get(i).getDayOfWeek();
         int minTemp = forecast.get(i).getDay().getMintempC().intValue();
         int highTemp = forecast.get(i).getDay().getMaxtempC().intValue();
         String minMax = String.format("%s° / %s°", highTemp, minTemp);

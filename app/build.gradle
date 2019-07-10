@@ -5,7 +5,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.jvmori.myweatherapp"
-        minSdkVersion 23
+        minSdkVersion 26
         targetSdkVersion 28
         versionCode 4
         versionName "1.0"

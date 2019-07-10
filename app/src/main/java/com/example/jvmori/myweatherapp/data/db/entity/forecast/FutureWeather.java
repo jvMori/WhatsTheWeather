@@ -7,6 +7,13 @@ import com.google.gson.annotations.SerializedName;
 import androidx.room.Embedded;
 import androidx.room.TypeConverters;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.Locale;
+
 public class FutureWeather {
 
     @SerializedName("date")
@@ -31,6 +38,12 @@ public class FutureWeather {
 
     public void setDay(Day day) {
         mDay = day;
+    }
+
+    public String getDayOfWeek(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E, MMM d");
+        LocalDate localDate = LocalDate.parse(mDate);
+        return  formatter.format(localDate);
     }
 
 }
