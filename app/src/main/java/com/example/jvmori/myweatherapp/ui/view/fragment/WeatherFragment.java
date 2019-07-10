@@ -50,6 +50,7 @@ public class WeatherFragment extends DaggerFragment {
     private RecyclerView recyclerView;
     private ForecastAdapter forecastAdapter;
     private WeatherViewModel viewModel;
+    private Group errorLayout;
     private Toolbar toolbar;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Group weatherView;
@@ -125,10 +126,9 @@ public class WeatherFragment extends DaggerFragment {
                             break;
                         case ERROR:
                             loading.setVisibility(View.GONE);
-                            weatherView.setVisibility(View.VISIBLE);
+                            weatherView.setVisibility(View.GONE);
+                            errorLayout.setVisibility(View.VISIBLE);
                             swipeRefreshLayout.setRefreshing(false);
-                            //TODO: create error layout
-                            //viewModel.fetchLocalWeatherForDeviceLocation();
                             Toast.makeText(context, "Could not fetch weather!", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -185,6 +185,7 @@ public class WeatherFragment extends DaggerFragment {
         wind = view.findViewById(R.id.Wind);
         visibility = view.findViewById(R.id.Visibility);
         swipeRefreshLayout = view.findViewById(R.id.swipe);
+        errorLayout = view.findViewById(R.id.errorLayout);
     }
 
     private void createRecyclerView(ForecastEntry forecastEntry) {
