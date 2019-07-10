@@ -20,7 +20,6 @@ import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import javax.inject.Inject;
 import dagger.android.support.DaggerAppCompatActivity;
 
@@ -28,7 +27,6 @@ import dagger.android.support.DaggerAppCompatActivity;
 public class MainActivity extends DaggerAppCompatActivity implements LocationServiceDialog.IClickable {
 
     ImageView ivSearch;
-    SwipeRefreshLayout swipeRefreshLayout;
     public static WeatherViewModel viewModel;
     private LocationViewModel locationViewModel;
     private LocationServiceDialog locationServiceDialog;
@@ -65,7 +63,6 @@ public class MainActivity extends DaggerAppCompatActivity implements LocationSer
                     handleDisabledLocationProvider();
                     break;
                 case enabled:
-                    //fetchDeviceLocation();
                     break;
             }
         });
@@ -106,7 +103,9 @@ public class MainActivity extends DaggerAppCompatActivity implements LocationSer
             if(city!= null) viewModel.fetchWeather(weatherParameters);
         }
     }
-    private void onError(){}
+    private void onError(){
+        fetchDefaultWeather();
+    }
 
 
     private void bindView() {
@@ -121,6 +120,10 @@ public class MainActivity extends DaggerAppCompatActivity implements LocationSer
 
     @Override
     public void onCancel() {
+        fetchDefaultWeather();
+    }
+
+    private void fetchDefaultWeather() {
         WeatherParameters weatherParameters = new WeatherParameters(
                 "Gdynia",
                 "Gdynia",

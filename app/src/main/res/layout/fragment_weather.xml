@@ -20,170 +20,181 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/loading"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        tools:visibility="visible">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/loading"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            tools:visibility="visible">
 
-            <ImageView
-                android:id="@+id/ivMainIcon"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="24dp"
-                android:layout_weight="1"
-                android:background="#00FFFFFF"
-                android:src="@color/colorPrimary"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="@+id/tvMainCurrTemp"
-                app:layout_constraintStart_toEndOf="@+id/tvMainCurrTemp"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@color/transparent" />
-
-            <TextView
-                android:id="@+id/tvMainCurrTemp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="56dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="220dp"
-                android:layout_weight="1"
-                android:text="16°C"
-                android:textColor="#fff"
-                android:textSize="80sp"
-                android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tvDescriptionMain"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="8dp"
-                android:gravity="center"
-                android:text="Mostly Sunny"
-                android:textColor="#fff"
-                android:textSize="30sp"
-                android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/feelsTemp" />
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/feelsTemp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Feels like: 17°C"
-                android:textColor="#fff"
-                android:textSize="17sp"
-                android:visibility="visible"
-                app:layout_constraintStart_toStartOf="@+id/tvMainCurrTemp"
-                app:layout_constraintTop_toBottomOf="@+id/tvMainCurrTemp" />
+                <ImageView
+                    android:id="@+id/ivMainIcon"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_weight="1"
+                    android:background="#00FFFFFF"
+                    android:src="@color/colorPrimary"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvMainCurrTemp"
+                    app:layout_constraintStart_toEndOf="@+id/tvMainCurrTemp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@color/transparent" />
 
-            <com.example.jvmori.myweatherapp.ui.view.customViews.ConditionInfo
-                android:id="@+id/Humidity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:desc="Humidity"
-                app:icon="@drawable/humidity"
-                app:layout_constraintBottom_toBottomOf="@+id/Visibility"
-                app:layout_constraintEnd_toStartOf="@+id/Visibility"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:value="90%" />
+                <TextView
+                    android:id="@+id/tvMainCurrTemp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="56dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="220dp"
+                    android:layout_weight="1"
+                    android:text="16°C"
+                    android:textColor="#fff"
+                    android:textSize="80sp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <com.example.jvmori.myweatherapp.ui.view.customViews.ConditionInfo
-                android:id="@+id/Visibility"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:desc="Precipitation"
-                app:icon="@drawable/prec"
-                app:layout_constraintBottom_toBottomOf="@+id/Wind"
-                app:layout_constraintEnd_toStartOf="@+id/Wind"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/Humidity"
-                app:value="90%" />
+                <TextView
+                    android:id="@+id/tvDescriptionMain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="center"
+                    android:text="Mostly Sunny"
+                    android:textColor="#fff"
+                    android:textSize="30sp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/feelsTemp" />
 
-            <com.example.jvmori.myweatherapp.ui.view.customViews.ConditionInfo
-                android:id="@+id/Wind"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:desc="Wind"
-                app:icon="@drawable/wind"
-                app:layout_constraintBottom_toBottomOf="@+id/Pressure"
-                app:layout_constraintEnd_toStartOf="@+id/Pressure"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/Visibility"
-                app:value="90%" />
+                <TextView
+                    android:id="@+id/feelsTemp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Feels like: 17°C"
+                    android:textColor="#fff"
+                    android:textSize="17sp"
+                    android:visibility="visible"
+                    app:layout_constraintStart_toStartOf="@+id/tvMainCurrTemp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvMainCurrTemp" />
 
-            <com.example.jvmori.myweatherapp.ui.view.customViews.ConditionInfo
-                android:id="@+id/Pressure"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                app:desc="Pressure"
-                app:icon="@drawable/pressure"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/Wind"
-                app:layout_constraintTop_toBottomOf="@+id/tvDescriptionMain"
-                app:value="90%" />
+                <com.example.jvmori.myweatherapp.ui.view.customViews.ConditionInfo
+                    android:id="@+id/Humidity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:desc="Humidity"
+                    app:icon="@drawable/humidity"
+                    app:layout_constraintBottom_toBottomOf="@+id/Visibility"
+                    app:layout_constraintEnd_toStartOf="@+id/Visibility"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:value="90%" />
+
+                <com.example.jvmori.myweatherapp.ui.view.customViews.ConditionInfo
+                    android:id="@+id/Visibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:desc="Precipitation"
+                    app:icon="@drawable/prec"
+                    app:layout_constraintBottom_toBottomOf="@+id/Wind"
+                    app:layout_constraintEnd_toStartOf="@+id/Wind"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/Humidity"
+                    app:value="90%" />
+
+                <com.example.jvmori.myweatherapp.ui.view.customViews.ConditionInfo
+                    android:id="@+id/Wind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:desc="Wind"
+                    app:icon="@drawable/wind"
+                    app:layout_constraintBottom_toBottomOf="@+id/Pressure"
+                    app:layout_constraintEnd_toStartOf="@+id/Pressure"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/Visibility"
+                    app:value="90%" />
+
+                <com.example.jvmori.myweatherapp.ui.view.customViews.ConditionInfo
+                    android:id="@+id/Pressure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    app:desc="Pressure"
+                    app:icon="@drawable/pressure"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/Wind"
+                    app:layout_constraintTop_toBottomOf="@+id/tvDescriptionMain"
+                    app:value="90%" />
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/RecyclerViewList"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="24dp"
-                android:clipToPadding="false"
-                android:orientation="vertical"
-                android:paddingBottom="8dp"
-                android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/Humidity"
-                tools:itemCount="10"
-                tools:listitem="@layout/forecast_item" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/RecyclerViewList"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="24dp"
+                    android:clipToPadding="false"
+                    android:orientation="vertical"
+                    android:paddingBottom="8dp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/Humidity"
+                    tools:itemCount="10"
+                    tools:listitem="@layout/forecast_item" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_begin="76dp" />
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_begin="76dp" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_begin="99dp" />
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_begin="99dp" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:constraint_referenced_ids="toolbar,nestedScrollView" />
+        android:visibility="visible"
+        app:constraint_referenced_ids="toolbar,swipe" />
 </androidx.constraintlayout.widget.ConstraintLayout>
