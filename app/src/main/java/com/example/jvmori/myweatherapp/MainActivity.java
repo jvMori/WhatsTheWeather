@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import dagger.android.support.DaggerAppCompatActivity;
 
 
-public class MainActivity extends DaggerAppCompatActivity implements LocationServiceDialog.IOnPositiveBtnListener {
+public class MainActivity extends DaggerAppCompatActivity implements LocationServiceDialog.IClickable {
 
     ImageView ivSearch;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -65,7 +65,7 @@ public class MainActivity extends DaggerAppCompatActivity implements LocationSer
                     handleDisabledLocationProvider();
                     break;
                 case enabled:
-                    fetchDeviceLocation();
+                    //fetchDeviceLocation();
                     break;
             }
         });
@@ -89,7 +89,7 @@ public class MainActivity extends DaggerAppCompatActivity implements LocationSer
     private void handleDisabledLocationProvider() {
         Log.i("Weather", "disable");
         locationServiceDialog = new LocationServiceDialog();
-        locationServiceDialog.setiOnPositiveBtnListener(this);
+        locationServiceDialog.setiClickable(this);
         locationServiceDialog.show(getSupportFragmentManager(), "location");
     }
 
@@ -114,9 +114,20 @@ public class MainActivity extends DaggerAppCompatActivity implements LocationSer
     }
 
     @Override
-    public void onClick() {
+    public void onPositiveBtn() {
         Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
         startActivity(intent);
+    }
+
+    @Override
+    public void onCancel() {
+        WeatherParameters weatherParameters = new WeatherParameters(
+                "Gdynia",
+                "Gdynia",
+                false,
+                Const.FORECAST_DAYS
+        );
+        viewModel.fetchWeather(weatherParameters);
     }
 }
 

@@ -11,7 +11,7 @@ import com.example.jvmori.myweatherapp.R;
 
 public class LocationServiceDialog extends DialogFragment {
 
-    private IOnPositiveBtnListener iOnPositiveBtnListener;
+    private IClickable iClickable;
 
     @NonNull
     @Override
@@ -19,19 +19,20 @@ public class LocationServiceDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.dialog_location)
                 .setPositiveButton(R.string.settings, (dialog, id) -> {
-                    if (iOnPositiveBtnListener != null) iOnPositiveBtnListener.onClick();
+                    if (iClickable != null) iClickable.onPositiveBtn();
                 })
                 .setNegativeButton(R.string.cancel, (dialog, id) -> {
-                    // User cancelled the dialog
+                   if(iClickable != null) iClickable.onCancel();
                 });
         return builder.create();
     }
 
-    public void setiOnPositiveBtnListener(IOnPositiveBtnListener iOnPositiveBtnListener) {
-        this.iOnPositiveBtnListener = iOnPositiveBtnListener;
+    public void setiClickable(IClickable iClickable) {
+        this.iClickable = iClickable;
     }
 
-    public interface IOnPositiveBtnListener{
-        void onClick();
+    public interface IClickable {
+        void onPositiveBtn();
+        void onCancel();
     }
 }

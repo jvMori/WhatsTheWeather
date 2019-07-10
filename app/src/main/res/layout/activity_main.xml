@@ -19,7 +19,8 @@
         android:clickable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/search" />
+        app:srcCompat="@drawable/search"
+        android:contentDescription="search" />
 
     <fragment
         android:id="@+id/my_nav_host_fragment"
