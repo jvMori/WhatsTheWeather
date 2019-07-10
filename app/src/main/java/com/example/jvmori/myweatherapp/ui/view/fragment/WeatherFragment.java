@@ -32,6 +32,7 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import javax.inject.Inject;
 
@@ -50,6 +51,7 @@ public class WeatherFragment extends DaggerFragment {
     private ForecastAdapter forecastAdapter;
     private WeatherViewModel viewModel;
     private Toolbar toolbar;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private Group weatherView;
     private ConstraintLayout loading;
     private WeatherParameters weatherParameters = null;
@@ -74,17 +76,19 @@ public class WeatherFragment extends DaggerFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        //loading.setVisibility(View.VISIBLE);
         weatherView.setVisibility(View.GONE);
         navigateToSearchListener();
         getWeatherParams();
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            fetchWeather(this.getContext());
+        });
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         createWeatherViewModel();
-        fetchWeatherWhenSearched(this.getContext());
+        fetchWeather(this.getContext());
     }
 
     private void getWeatherParams() {
@@ -99,9 +103,13 @@ public class WeatherFragment extends DaggerFragment {
         }
     }
 
-    private void fetchWeatherWhenSearched(Context context) {
+    private void fetchWeather(Context context) {
         if (weatherParameters != null)
             viewModel.fetchWeather(weatherParameters);
+        observeWeather(context);
+    }
+
+    private void observeWeather(Context context) {
         viewModel.getWeather().observe(getViewLifecycleOwner(), forecastEntry ->
                 {
                     switch (forecastEntry.status){
@@ -113,10 +121,12 @@ public class WeatherFragment extends DaggerFragment {
                             displayWeather(forecastEntry.data);
                             loading.setVisibility(View.GONE);
                             weatherView.setVisibility(View.VISIBLE);
+                            swipeRefreshLayout.setRefreshing(false);
                             break;
                         case ERROR:
                             loading.setVisibility(View.GONE);
                             weatherView.setVisibility(View.VISIBLE);
+                            swipeRefreshLayout.setRefreshing(false);
                             //TODO: create error layout
                             //viewModel.fetchLocalWeatherForDeviceLocation();
                             Toast.makeText(context, "Could not fetch weather!", Toast.LENGTH_SHORT).show();
@@ -174,6 +184,7 @@ public class WeatherFragment extends DaggerFragment {
         pressure = view.findViewById(R.id.Pressure);
         wind = view.findViewById(R.id.Wind);
         visibility = view.findViewById(R.id.Visibility);
+        swipeRefreshLayout = view.findViewById(R.id.swipe);
     }
 
     private void createRecyclerView(ForecastEntry forecastEntry) {
