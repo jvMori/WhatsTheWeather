@@ -4,4 +4,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search_hint">Enter a city...</string>
+    <string name="dialog_location">The location service is disabled. Access \"Settings\" to check.</string>
+    <string name="settings">SETTINGS</string>
+    <string name="cancel">CANCEL</string>
 </resources>

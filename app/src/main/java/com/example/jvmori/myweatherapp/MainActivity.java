@@ -1,14 +1,17 @@
 package com.example.jvmori.myweatherapp;
 
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.jvmori.myweatherapp.data.LocationProvider;
 import com.example.jvmori.myweatherapp.ui.Resource;
+import com.example.jvmori.myweatherapp.ui.view.fragment.LocationServiceDialog;
 import com.example.jvmori.myweatherapp.ui.viewModel.LocationViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.util.Const;
@@ -22,12 +25,13 @@ import javax.inject.Inject;
 import dagger.android.support.DaggerAppCompatActivity;
 
 
-public class MainActivity extends DaggerAppCompatActivity {
+public class MainActivity extends DaggerAppCompatActivity implements LocationServiceDialog.IOnPositiveBtnListener {
 
     ImageView ivSearch;
     SwipeRefreshLayout swipeRefreshLayout;
     public static WeatherViewModel viewModel;
     private LocationViewModel locationViewModel;
+    private LocationServiceDialog locationServiceDialog;
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
     @Inject
@@ -48,6 +52,7 @@ public class MainActivity extends DaggerAppCompatActivity {
         bindView();
         viewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(WeatherViewModel.class);
         getWeatherForLocation();
+        fetchDeviceLocation();
     }
 
     private void getWeatherForLocation() {
@@ -83,6 +88,9 @@ public class MainActivity extends DaggerAppCompatActivity {
 
     private void handleDisabledLocationProvider() {
         Log.i("Weather", "disable");
+        locationServiceDialog = new LocationServiceDialog();
+        locationServiceDialog.setiOnPositiveBtnListener(this);
+        locationServiceDialog.show(getSupportFragmentManager(), "location");
     }
 
     private void onSuccess(Resource<Location> location) {
@@ -105,5 +113,10 @@ public class MainActivity extends DaggerAppCompatActivity {
         ivSearch = findViewById(R.id.ivSearch);
     }
 
+    @Override
+    public void onClick() {
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivity(intent);
+    }
 }
 
