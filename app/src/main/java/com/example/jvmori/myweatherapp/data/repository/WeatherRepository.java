@@ -1,5 +1,7 @@
 package com.example.jvmori.myweatherapp.data.repository;
 
+import android.util.Log;
+
 import com.example.jvmori.myweatherapp.data.db.ForecastDao;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.data.network.WeatherNetworkDataSource;

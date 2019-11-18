@@ -11,7 +11,7 @@ import okhttp3.Request;
 @Module
 public class NetworkModule {
 
-    private static final String API_KEY = "7a5ba9d2d18041f38e0135842190602";
+    private static final String API_KEY = "8b83631c9a25b07bccfd9329894c4311";
 
     @Provides
     @ApplicationScope
@@ -20,7 +20,7 @@ public class NetworkModule {
             HttpUrl url = chain.request()
                     .url()
                     .newBuilder()
-                    .addQueryParameter("key", API_KEY)
+                    .addQueryParameter("access_key", API_KEY)
                     .build();
             Request request = chain.request()
                     .newBuilder().url(url).build();

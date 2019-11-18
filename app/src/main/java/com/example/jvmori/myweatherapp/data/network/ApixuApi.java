@@ -14,9 +14,9 @@ import retrofit2.http.Query;
 
 public interface ApixuApi
 {
-    @GET("forecast.json")
-    Maybe<ForecastEntry> getForecast(@Query("q") String location, @Query("lang") String lang, @Query("days") String days);
+    @GET("forecast")
+    Maybe<ForecastEntry> getForecast(@Query("query") String location, @Query("lang") String lang, @Query("days") String days);
 
-    @GET("search.json")
-    Observable<List<Search>> searchCity (@Query("q") String cityName);
+    @GET("autocomplete")
+    Observable<List<Search>> searchCity (@Query("query") String cityName);
 }
