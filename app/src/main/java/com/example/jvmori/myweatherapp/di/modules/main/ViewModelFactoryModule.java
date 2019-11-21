@@ -1,4 +1,4 @@
-package com.example.jvmori.myweatherapp.di.modules;
+package com.example.jvmori.myweatherapp.di.modules.main;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.jvmori.myweatherapp.di.scope.MainActivityScope;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
