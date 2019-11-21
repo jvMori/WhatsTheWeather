@@ -1,5 +1,7 @@
 package com.example.jvmori.myweatherapp.data.network;
 
+import com.example.jvmori.myweatherapp.data.current.response.CurrentWeatherResponse;
+import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.data.network.response.Search;
 
@@ -20,5 +22,10 @@ public interface Api
     @GET("search.json")
     Observable<List<Search>> searchCity (@Query("q") String cityName);
 
+    @GET("weather")
+    Maybe<CurrentWeatherResponse> getCurrentWeatherByCity(@Query("q") String city);
+
+    @GET("weather")
+    Maybe<CurrentWeatherResponse> getCurrentWeatherByGeographic(@Query("lat") String latitude, @Query("lon") String longitude);
 
 }
