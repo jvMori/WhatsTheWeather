@@ -73,7 +73,7 @@ public class LocationProviderImpl implements LocationProvider {
             public void onProviderDisabled(String s) {
                 _providerStatus.setValue(ProviderStatus.disabled);
                 _deviceLocation.setValue(Resource.error(s +" not enabled", null));
-                Log.i("Weather", "disable");
+                Log.i("Description", "disable");
             }
         };
 

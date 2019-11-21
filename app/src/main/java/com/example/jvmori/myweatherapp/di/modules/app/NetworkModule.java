@@ -1,6 +1,6 @@
 package com.example.jvmori.myweatherapp.di.modules.app;
 
-import com.example.jvmori.myweatherapp.data.network.ApixuApi;
+import com.example.jvmori.myweatherapp.data.network.Api;
 import com.example.jvmori.myweatherapp.data.network.WeatherNetworkDataSource;
 import com.example.jvmori.myweatherapp.data.network.WeatherNetworkDataSourceImpl;
 import com.example.jvmori.myweatherapp.di.scope.ApplicationScope;
@@ -18,12 +18,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class NetworkModule {
 
-    private static final String API_KEY = "7a5ba9d2d18041f38e0135842190602";
-    private static final String BASE_URL = "http://api.apixu.com/v1/";
+    private static final String API_KEY = "de9ae73d4c60863925bc392529501ab7";
+    private static final String BASE_URL = "api.openweathermap.org/data/2.5/";
+    private static final String UNITS = "metric";
 
     @Provides
     @ApplicationScope
-    public WeatherNetworkDataSource weatherNetworkDataSource(ApixuApi apixuApi) {
+    public WeatherNetworkDataSource weatherNetworkDataSource(Api apixuApi) {
         return new WeatherNetworkDataSourceImpl(apixuApi);
     }
 
@@ -34,7 +35,8 @@ public class NetworkModule {
             HttpUrl url = chain.request()
                     .url()
                     .newBuilder()
-                    .addQueryParameter("key", API_KEY)
+                    .addQueryParameter("units", UNITS)
+                    .addQueryParameter("appid", API_KEY)
                     .build();
             Request request = chain.request()
                     .newBuilder().url(url).build();
@@ -65,8 +67,8 @@ public class NetworkModule {
 
     @Provides
     @ApplicationScope
-    public ApixuApi apixuApi(Retrofit retrofit){
-        return retrofit.create(ApixuApi.class);
+    public Api apixuApi(Retrofit retrofit){
+        return retrofit.create(Api.class);
     }
 }
 

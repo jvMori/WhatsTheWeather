@@ -84,7 +84,7 @@ public class MainActivity extends DaggerAppCompatActivity implements LocationSer
     }
 
     private void handleDisabledLocationProvider() {
-        Log.i("Weather", "disable");
+        Log.i("Description", "disable");
         locationServiceDialog = new LocationServiceDialog();
         locationServiceDialog.setiClickable(this);
         locationServiceDialog.show(getSupportFragmentManager(), "location");
