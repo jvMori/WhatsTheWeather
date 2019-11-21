@@ -6,16 +6,19 @@ public class CurrentWeatherUI {
     private String mainDescription;
     private String detailedDescription;
     private String iconUrl;
-    private Double mainTemp;
-    private Double pressure;
-    private Double humidity;
+    private String mainTemp;
+    private String pressure;
+    private String humidity;
     private String minTemp;
     private String maxTemp;
-    private Double windDir;
+    private String windDir;
+    private String windSpeed;
+    private Long timestamp;
 
-    public CurrentWeatherUI(){}
+    public CurrentWeatherUI( ){}
 
-    public CurrentWeatherUI(String city, String country, String mainDescription, String detailedDescription, String iconUrl, Double mainTemp, Double pressure, Double humidity, String minTemp, String maxTemp, Double windDir) {
+    public CurrentWeatherUI(Long timestamp, String city, String country, String mainDescription, String detailedDescription, String iconUrl, String mainTemp, String pressure, String humidity, String minTemp, String maxTemp, String windDir, String windSpeed) {
+        this.timestamp = timestamp;
         this.city = city;
         this.country = country;
         this.mainDescription = mainDescription;
@@ -27,6 +30,7 @@ public class CurrentWeatherUI {
         this.minTemp = minTemp;
         this.maxTemp = maxTemp;
         this.windDir = windDir;
+        this.windSpeed = windSpeed;
     }
 
     public String getCity() {
@@ -69,27 +73,27 @@ public class CurrentWeatherUI {
         this.iconUrl = iconUrl;
     }
 
-    public Double getMainTemp() {
+    public String getMainTemp() {
         return mainTemp;
     }
 
-    public void setMainTemp(Double mainTemp) {
+    public void setMainTemp(String mainTemp) {
         this.mainTemp = mainTemp;
     }
 
-    public Double getPressure() {
+    public String getPressure() {
         return pressure;
     }
 
-    public void setPressure(Double pressure) {
+    public void setPressure(String pressure) {
         this.pressure = pressure;
     }
 
-    public Double getHumidity() {
+    public String getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(Double humidity) {
+    public void setHumidity(String humidity) {
         this.humidity = humidity;
     }
 
@@ -109,11 +113,27 @@ public class CurrentWeatherUI {
         this.maxTemp = maxTemp;
     }
 
-    public Double getWindDir() {
+    public String getWindDir() {
         return windDir;
     }
 
-    public void setWindDir(Double windDir) {
+    public void setWindDir(String windDir) {
         this.windDir = windDir;
+    }
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getWindSpeed() {
+        return windSpeed;
+    }
+
+    public void setWindSpeed(String windSpeed) {
+        this.windSpeed = windSpeed;
     }
 }

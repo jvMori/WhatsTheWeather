@@ -4,9 +4,11 @@ import com.example.jvmori.myweatherapp.data.current.response.CurrentWeatherRespo
 import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.data.network.response.Search;
+import com.example.jvmori.myweatherapp.ui.Resource;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -23,7 +25,7 @@ public interface Api
     Observable<List<Search>> searchCity (@Query("q") String cityName);
 
     @GET("weather")
-    Maybe<CurrentWeatherResponse> getCurrentWeatherByCity(@Query("q") String city);
+    Flowable<Resource<CurrentWeatherResponse>> getCurrentWeatherByCity(@Query("q") String city);
 
     @GET("weather")
     Maybe<CurrentWeatherResponse> getCurrentWeatherByGeographic(@Query("lat") String latitude, @Query("lon") String longitude);

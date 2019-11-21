@@ -1,7 +1,7 @@
 package com.example.jvmori.myweatherapp.data.current;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.LiveDataReactiveStreams;
 
 import com.example.jvmori.myweatherapp.data.NetworkBoundResource;
 import com.example.jvmori.myweatherapp.data.current.response.CurrentWeatherResponse;
@@ -10,8 +10,9 @@ import com.example.jvmori.myweatherapp.ui.Resource;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
+import io.reactivex.Flowable;
 import io.reactivex.Maybe;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -27,37 +28,46 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
     }
 
     @Override
-    public LiveData<CurrentWeatherUI> getCurrentWeatherByCity(String city) {
-        return new NetworkBoundResource<CurrentWeatherUI, CurrentWeatherResponse>(){
+    public LiveData<Resource<CurrentWeatherUI>> getCurrentWeatherByCity(String city) {
+        String _city = city;
+        return new NetworkBoundResource<CurrentWeatherUI, CurrentWeatherResponse>() {
 
             @Override
-            protected void saveCallResult(CurrentWeatherUI item) {
-
+            protected void saveCallResult(CurrentWeatherResponse item) {
+                Completable.fromAction(() -> dao.insert(item)).observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe();
             }
 
             @Override
             protected boolean shouldFetch(CurrentWeatherUI data) {
-                return false;
+                return data == null || (System.currentTimeMillis() - data.getTimestamp() < 3600);
             }
 
             @Override
             protected LiveData<CurrentWeatherUI> loadFromDb() {
-                return null;
+                Flowable<CurrentWeatherUI> stream = dao.getCurrentWeatherByCity(_city)
+                        .map(data ->
+                                dataMapper(data)
+                        )
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io());
+
+                return LiveDataReactiveStreams.fromPublisher(stream);
             }
 
             @Override
             protected LiveData<Resource<CurrentWeatherResponse>> createCall() {
-                return null;
+                return LiveDataReactiveStreams.fromPublisher(
+                        api.getCurrentWeatherByCity(_city)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                );
             }
 
             @Override
             protected void onFetchFailed() {
 
-            }
-
-            @Override
-            protected LiveData<CurrentWeatherUI> asLiveData() {
-                return null;
             }
         }.asLiveData();
     }
@@ -65,5 +75,23 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
     @Override
     public Maybe<CurrentWeatherResponse> getCurrentWeatherByGeographic(String latitude, String longitude) {
         return null;
+    }
+
+    private CurrentWeatherUI dataMapper(CurrentWeatherResponse response) {
+        return new CurrentWeatherUI(
+                response.getDt(),
+                response.getName(),
+                response.getSys().getCountry(),
+                response.getWeather().get(0).getMain(),
+                response.getWeather().get(0).getDescription(),
+                response.getWeather().get(0).getIcon(),
+                response.getMain().getTemp().toString(),
+                response.getMain().getPressure().toString(),
+                response.getMain().getHumidity().toString(),
+                response.getMain().getTempMin().toString(),
+                response.getMain().getTempMin().toString(),
+                response.getWind().getDeg().toString(),
+                response.getWind().getSpeed().toString()
+                );
     }
 }

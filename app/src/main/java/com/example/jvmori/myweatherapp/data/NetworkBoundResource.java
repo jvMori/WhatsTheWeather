@@ -6,6 +6,7 @@ import androidx.lifecycle.MediatorLiveData;
 import com.example.jvmori.myweatherapp.ui.Resource;
 
 public abstract class NetworkBoundResource<ResultType, RequestType> {
+
     private MediatorLiveData<Resource<ResultType>> result;
 
     public NetworkBoundResource() {
@@ -58,7 +59,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
 
     protected abstract void onFetchFailed();
 
-    protected LiveData<Resource<ResultType>> asLiveData() {
+    public LiveData<Resource<ResultType>> asLiveData() {
         return result;
     }
 }
