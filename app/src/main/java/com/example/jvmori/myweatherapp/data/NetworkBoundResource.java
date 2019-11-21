@@ -7,7 +7,7 @@ import com.example.jvmori.myweatherapp.ui.Resource;
 
 public abstract class NetworkBoundResource<ResultType, RequestType> {
 
-    private MediatorLiveData<Resource<ResultType>> result;
+    private MediatorLiveData<Resource<ResultType>> result = new MediatorLiveData<>();
 
     public NetworkBoundResource() {
         result.setValue(Resource.loading(null));
