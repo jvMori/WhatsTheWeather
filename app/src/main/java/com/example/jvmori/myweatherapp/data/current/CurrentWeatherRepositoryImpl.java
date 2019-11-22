@@ -62,6 +62,10 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
                         api.getCurrentWeatherByCity(_city)
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribeOn(Schedulers.io())
+                        .doOnError(
+                                error ->
+                                        Log.i("WEATHER", error.getMessage())
+                        )
                 );
             }
 
