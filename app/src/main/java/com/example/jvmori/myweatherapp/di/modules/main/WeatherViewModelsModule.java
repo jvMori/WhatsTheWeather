@@ -3,6 +3,7 @@ package com.example.jvmori.myweatherapp.di.modules.main;
 import androidx.lifecycle.ViewModel;
 
 import com.example.jvmori.myweatherapp.di.ViewModelKey;
+import com.example.jvmori.myweatherapp.ui.current.CurrentWeatherViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.LocationViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.SearchViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
@@ -27,4 +28,9 @@ public abstract class WeatherViewModelsModule {
     @IntoMap
     @ViewModelKey(LocationViewModel.class)
     public abstract ViewModel bindLocationViewModel(LocationViewModel locationViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CurrentWeatherViewModel.class)
+    public abstract ViewModel bindCurrentWeatherViewModel(CurrentWeatherViewModel currentWeatherViewModel);
 }

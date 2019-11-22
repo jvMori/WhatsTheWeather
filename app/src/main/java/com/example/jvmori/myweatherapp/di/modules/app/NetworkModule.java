@@ -19,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NetworkModule {
 
     private static final String API_KEY = "de9ae73d4c60863925bc392529501ab7";
-    private static final String BASE_URL = "api.openweathermap.org/data/2.5/";
+    private static final String BASE_URL = " https://api.openweathermap.org/data/2.5/";
     private static final String UNITS = "metric";
 
     @Provides

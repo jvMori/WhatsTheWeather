@@ -2,8 +2,10 @@ package com.example.jvmori.myweatherapp.data;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.Observer;
 
 import com.example.jvmori.myweatherapp.ui.Resource;
+
 
 public abstract class NetworkBoundResource<ResultType, RequestType> {
 
@@ -11,14 +13,17 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
 
     public NetworkBoundResource() {
         result.setValue(Resource.loading(null));
-        LiveData<ResultType> dbSource = loadFromDb();
-        result.addSource(dbSource, data -> {
-            result.removeSource(dbSource);
-            if (shouldFetch(data)) {
-                fetchFromNetwork(dbSource);
-            } else {
-                result.addSource(dbSource, newData ->
-                        result.setValue(Resource.success(newData)));
+        //LiveData<ResultType> dbSource = ;
+        result.addSource(loadFromDb(), new Observer<ResultType>() {
+            @Override
+            public void onChanged(ResultType resultType) {
+                result.removeSource(loadFromDb());
+                if (shouldFetch(resultType)) {
+                    fetchFromNetwork(loadFromDb());
+                } else {
+                    result.addSource(loadFromDb(), newData ->
+                            result.setValue(Resource.success(newData)));
+                }
             }
         });
     }

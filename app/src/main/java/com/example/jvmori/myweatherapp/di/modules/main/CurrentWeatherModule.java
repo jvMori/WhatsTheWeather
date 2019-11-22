@@ -8,6 +8,7 @@ import com.example.jvmori.myweatherapp.data.current.CurrentWeatherNetworkDataSou
 import com.example.jvmori.myweatherapp.data.current.CurrentWeatherRepository;
 import com.example.jvmori.myweatherapp.data.current.CurrentWeatherRepositoryImpl;
 import com.example.jvmori.myweatherapp.data.db.WeatherDatabase;
+import com.example.jvmori.myweatherapp.data.network.Api;
 import com.example.jvmori.myweatherapp.di.ViewModelKey;
 import com.example.jvmori.myweatherapp.di.scope.MainActivityScope;
 import com.example.jvmori.myweatherapp.ui.current.CurrentWeatherViewModel;
@@ -18,25 +19,24 @@ import dagger.Provides;
 import dagger.multibindings.IntoMap;
 
 @Module
-public abstract class CurrentWeatherModule {
+public class CurrentWeatherModule {
 
-    @Binds
+    @Provides
     @MainActivityScope
-    public abstract CurrentWeatherNetworkDataSource currentWeatherNetworkDataSource (CurrentWeatherNetworkDataSourceImpl currentWeatherNetworkDataSource);
+    public CurrentWeatherNetworkDataSource currentWeatherNetworkDataSource(Api api) {
+        return new CurrentWeatherNetworkDataSourceImpl(api);
+    }
 
-    @Binds
+    @Provides
     @MainActivityScope
-    public abstract CurrentWeatherRepository currentWeatherRepository (CurrentWeatherRepositoryImpl currentWeatherRepositoryImpl);
+    public  CurrentWeatherRepository currentWeatherRepository (Api api, CurrentWeatherDao currentWeatherDao){
+        return new CurrentWeatherRepositoryImpl(api, currentWeatherDao);
+    }
 
     @Provides
     @MainActivityScope
     public CurrentWeatherDao currentWeatherDao(WeatherDatabase weatherDatabase){
         return weatherDatabase.currentWeatherDao();
     }
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(CurrentWeatherViewModel.class)
-    public abstract ViewModel bindCurrentWeatherViewModel(CurrentWeatherViewModel currentWeatherViewModel);
 
 }

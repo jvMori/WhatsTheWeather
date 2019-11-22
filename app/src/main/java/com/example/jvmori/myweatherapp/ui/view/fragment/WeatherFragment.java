@@ -3,6 +3,7 @@ package com.example.jvmori.myweatherapp.ui.view.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
+import com.example.jvmori.myweatherapp.ui.Resource;
+import com.example.jvmori.myweatherapp.ui.current.CurrentWeatherViewModel;
 import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
 import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
 import com.example.jvmori.myweatherapp.ui.view.customViews.ConditionInfo;
@@ -62,8 +65,16 @@ public class WeatherFragment extends DaggerFragment {
     @Inject
     ILoadImage iLoadImage;
 
+    CurrentWeatherViewModel currentWeatherViewModel;
+
     public WeatherFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        currentWeatherViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(CurrentWeatherViewModel.class);
     }
 
     @Override
@@ -77,19 +88,28 @@ public class WeatherFragment extends DaggerFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        weatherView.setVisibility(View.GONE);
-        navigateToSearchListener();
-        getWeatherParams();
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            fetchWeather(this.getContext());
+        currentWeatherViewModel.getCurrentWeather("Kraków").observe(this, weather -> {
+            if(weather.status == Resource.Status.SUCCESS){
+                if(weather.data != null){
+                    Log.i("WEATHER", weather.data.toString());
+                }
+            }else if(weather.status == Resource.Status.ERROR){
+                Log.i("WEATHER", weather.message);
+            }
         });
+//        weatherView.setVisibility(View.GONE);
+//        navigateToSearchListener();
+//        getWeatherParams();
+//        swipeRefreshLayout.setOnRefreshListener(() -> {
+//            fetchWeather(this.getContext());
+//        });
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        createWeatherViewModel();
-        fetchWeather(this.getContext());
+        //createWeatherViewModel();
+        //fetchWeather(this.getContext());
     }
 
     private void getWeatherParams() {
