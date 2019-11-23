@@ -2,11 +2,9 @@ package com.example.jvmori.myweatherapp.data.current;
 
 import com.example.jvmori.myweatherapp.data.current.response.CurrentWeatherResponse;
 import com.example.jvmori.myweatherapp.data.network.Api;
-import com.example.jvmori.myweatherapp.ui.Resource;
 
 import javax.inject.Inject;
 
-import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 
 public class CurrentWeatherNetworkDataSourceImpl implements CurrentWeatherNetworkDataSource {
@@ -19,7 +17,7 @@ public class CurrentWeatherNetworkDataSourceImpl implements CurrentWeatherNetwor
     }
 
     @Override
-    public Flowable<Resource<CurrentWeatherResponse>> getCurrentWeatherByCity(String city) {
+    public Maybe<CurrentWeatherResponse> getCurrentWeatherByCity(String city) {
         return api.getCurrentWeatherByCity(city);
     }
 

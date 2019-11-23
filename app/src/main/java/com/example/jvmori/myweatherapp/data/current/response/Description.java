@@ -4,7 +4,7 @@ package com.example.jvmori.myweatherapp.data.current.response;
 import com.google.gson.annotations.SerializedName;
 
 
-public class Weather {
+public class Description {
 
     @SerializedName("description")
     private String mDescription;
