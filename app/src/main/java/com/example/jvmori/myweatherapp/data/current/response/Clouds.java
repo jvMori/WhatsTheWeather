@@ -3,7 +3,6 @@ package com.example.jvmori.myweatherapp.data.current.response;
 
 import com.google.gson.annotations.SerializedName;
 
-
 public class Clouds {
 
     @SerializedName("all")

@@ -9,6 +9,6 @@ import retrofit2.http.Query;
 
 public interface CurrentWeatherNetworkDataSource
 {
-    Flowable<Resource<CurrentWeatherResponse>> getCurrentWeatherByCity(@Query("q") String city);
+    Maybe<CurrentWeatherResponse> getCurrentWeatherByCity(@Query("q") String city);
     Maybe<CurrentWeatherResponse> getCurrentWeatherByGeographic(@Query("lat") String latitude, @Query("lon") String longitude);
 }

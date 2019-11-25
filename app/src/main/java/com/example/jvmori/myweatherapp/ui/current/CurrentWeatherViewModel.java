@@ -10,12 +10,16 @@ import com.example.jvmori.myweatherapp.ui.Resource;
 
 import javax.inject.Inject;
 
+import io.reactivex.disposables.CompositeDisposable;
+
 public class CurrentWeatherViewModel extends ViewModel {
 
     private CurrentWeatherRepository repository;
+    private CompositeDisposable disposable = new CompositeDisposable();
 
-    public LiveData<Resource<CurrentWeatherUI>> getCurrentWeather(String cityName) {
-        return repository.getCurrentWeatherByCity(cityName);
+    private MutableLiveData<Resource<CurrentWeatherUI>> _weather = new MutableLiveData<>();
+    public LiveData<Resource<CurrentWeatherUI>> getCurrentWeather() {
+        return _weather;
     }
 
     @Inject
@@ -23,4 +27,22 @@ public class CurrentWeatherViewModel extends ViewModel {
         this.repository = repository;
     }
 
+    public void fetchCurrentWeather(String city){
+        _weather.setValue(Resource.loading(null));
+        disposable.add(
+                repository.getCurrentWeatherByCity(city)
+                        .subscribe(
+                                success ->
+                                        _weather.setValue(Resource.success(success)),
+                                error ->
+                                        _weather.setValue(Resource.error(error.getMessage(), null))
+                        )
+        );
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        disposable.clear();
+    }
 }

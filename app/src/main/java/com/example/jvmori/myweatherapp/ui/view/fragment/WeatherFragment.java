@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.data.current.CurrentWeatherUI;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.ui.Resource;
 import com.example.jvmori.myweatherapp.ui.current.CurrentWeatherViewModel;
@@ -30,6 +31,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
@@ -75,6 +77,7 @@ public class WeatherFragment extends DaggerFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         currentWeatherViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(CurrentWeatherViewModel.class);
+        currentWeatherViewModel.fetchCurrentWeather("Krakow");
     }
 
     @Override
@@ -88,15 +91,15 @@ public class WeatherFragment extends DaggerFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        currentWeatherViewModel.getCurrentWeather("Kraków").observe(this, weather -> {
-            if(weather.status == Resource.Status.SUCCESS){
-                if(weather.data != null){
-                    Log.i("WEATHER", weather.data.toString());
-                }
-            }else if(weather.status == Resource.Status.ERROR){
-                Log.i("WEATHER", weather.message);
-            }
-        });
+       currentWeatherViewModel.getCurrentWeather().observe(this, weather -> {
+           if(weather.status == Resource.Status.LOADING){
+
+           } else if(weather.status == Resource.Status.SUCCESS){
+               Log.i("WEATHER", weather.data.toString());
+           } else if (weather.status == Resource.Status.ERROR){
+               Log.i("WEATHER", weather.data.toString());
+           }
+       });
 //        weatherView.setVisibility(View.GONE);
 //        navigateToSearchListener();
 //        getWeatherParams();

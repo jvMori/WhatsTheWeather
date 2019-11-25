@@ -7,43 +7,55 @@ import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.TypeConverters;
 
-import java.util.List;
-
 import com.example.jvmori.myweatherapp.util.DescriptionTypeConverter;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 @Entity(tableName = "current_weather", primaryKeys = {"city_name"})
 public class CurrentWeatherResponse {
 
     @SerializedName("base")
     private String mBase;
+
     @SerializedName("clouds")
     @Embedded
     private Clouds mClouds;
+
     @SerializedName("cod")
     private Long mCod;
+
     @SerializedName("coord")
     @Embedded
     private Coord mCoord;
+
     @SerializedName("dt")
     private Long mDt;
+
     @SerializedName("id")
+    @ColumnInfo(name = "weather_id")
     private Long mId;
+
     @SerializedName("main")
     @Embedded
     private Main mMain;
+
     @SerializedName("name")
     @ColumnInfo(name = "city_name")
     @NonNull
-    private String mCityName = "";
+    private String mName ="";
+
     @SerializedName("sys")
     @Embedded
     private Sys mSys;
-    @SerializedName("visibility")
-    private Long mVisibility;
+
+    @SerializedName("timezone")
+    private Long mTimezone;
+
     @SerializedName("weather")
     @TypeConverters(DescriptionTypeConverter.class)
     private List<Description> mWeather;
+
     @SerializedName("wind")
     @Embedded
     private Wind mWind;
@@ -104,12 +116,12 @@ public class CurrentWeatherResponse {
         mMain = main;
     }
 
-    public String getCityName() {
-        return mCityName;
+    public String getName() {
+        return mName;
     }
 
-    public void setCityName(String name) {
-        mCityName = name;
+    public void setName(String name) {
+        mName = name;
     }
 
     public Sys getSys() {
@@ -120,12 +132,12 @@ public class CurrentWeatherResponse {
         mSys = sys;
     }
 
-    public Long getVisibility() {
-        return mVisibility;
+    public Long getTimezone() {
+        return mTimezone;
     }
 
-    public void setVisibility(Long visibility) {
-        mVisibility = visibility;
+    public void setTimezone(Long timezone) {
+        mTimezone = timezone;
     }
 
     public List<Description> getWeather() {

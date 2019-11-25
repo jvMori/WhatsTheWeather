@@ -1,16 +1,14 @@
 
 package com.example.jvmori.myweatherapp.data.current.response;
 
-import androidx.room.ColumnInfo;
-
 import com.google.gson.annotations.SerializedName;
+
 
 public class Sys {
 
     @SerializedName("country")
     private String mCountry;
     @SerializedName("id")
-    @ColumnInfo(name = "weather_id")
     private Long mId;
     @SerializedName("message")
     private Double mMessage;
@@ -19,7 +17,6 @@ public class Sys {
     @SerializedName("sunset")
     private Long mSunset;
     @SerializedName("type")
-    @ColumnInfo(name = "weather_type")
     private Long mType;
 
     public String getCountry() {

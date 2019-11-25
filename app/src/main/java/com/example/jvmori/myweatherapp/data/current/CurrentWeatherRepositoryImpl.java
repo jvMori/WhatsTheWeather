@@ -2,14 +2,12 @@ package com.example.jvmori.myweatherapp.data.current;
 
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.LiveDataReactiveStreams;
-import androidx.lifecycle.Transformations;
-
 import com.example.jvmori.myweatherapp.data.NetworkBoundResource;
 import com.example.jvmori.myweatherapp.data.current.response.CurrentWeatherResponse;
 import com.example.jvmori.myweatherapp.data.network.Api;
-import com.example.jvmori.myweatherapp.ui.Resource;
+
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 import javax.inject.Inject;
 
@@ -31,49 +29,44 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
     }
 
     @Override
-    public LiveData<Resource<CurrentWeatherUI>> getCurrentWeatherByCity(String city) {
-        String _city = city;
+    public Flowable<CurrentWeatherUI> getCurrentWeatherByCity(String city) {
         return new NetworkBoundResource<CurrentWeatherUI, CurrentWeatherResponse>() {
 
             @Override
-            protected void saveCallResult(CurrentWeatherResponse item) {
-                Completable.fromAction(() -> dao.insert(item)).observeOn(AndroidSchedulers.mainThread())
+            protected CurrentWeatherResponse saveCallResult(CurrentWeatherResponse item) {
+                Completable.fromAction(() ->
+                        dao.insert(item))
                         .subscribeOn(Schedulers.io())
                         .subscribe();
+                return item;
             }
 
             @Override
-            protected boolean shouldFetch(CurrentWeatherUI data) {
-                return data == null || (System.currentTimeMillis() - data.getTimestamp() < 3600);
+            protected CurrentWeatherUI mapData(CurrentWeatherResponse currentWeatherResponse) {
+                return dataMapper(currentWeatherResponse);
             }
 
             @Override
-            protected LiveData<CurrentWeatherUI> loadFromDb() {
-                return Transformations.map(
-                        dao.getCurrentWeatherByCity(_city),
-                        response ->
-                                dataMapper(response)
-                );
+            protected boolean isDataFresh(CurrentWeatherResponse data) {
+                String date = SimpleDateFormat.getInstance().format(new Date(data.getDt()));
+                //return  data != null && System.currentTimeMillis() - data.getDt() < 600000; //10 minutes
+                return true;
             }
 
             @Override
-            protected LiveData<Resource<CurrentWeatherResponse>> createCall() {
-                return LiveDataReactiveStreams.fromPublisher(
-                        api.getCurrentWeatherByCity(_city)
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribeOn(Schedulers.io())
-                        .doOnError(
-                                error ->
-                                        Log.i("WEATHER", error.getMessage())
-                        )
-                );
+            protected Maybe<CurrentWeatherResponse> loadFromDb() {
+                return dao.getCurrentWeatherByCity(city)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io());
             }
 
             @Override
-            protected void onFetchFailed() {
-
+            protected Maybe<CurrentWeatherResponse> fetchFromNetwork() {
+                return api.getCurrentWeatherByCity(city)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread());
             }
-        }.asLiveData();
+        }.getResult();
     }
 
     @Override
@@ -85,7 +78,7 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
         if (response != null) {
             return new CurrentWeatherUI(
                     response.getDt(),
-                    response.getCityName(),
+                    response.getName(),
                     response.getSys().getCountry(),
                     response.getWeather().get(0).getMain(),
                     response.getWeather().get(0).getDescription(),
