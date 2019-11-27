@@ -1,26 +1,26 @@
 package com.example.jvmori.myweatherapp.data.current;
 
-import android.util.Log;
-
 import com.example.jvmori.myweatherapp.data.NetworkBoundResource;
 import com.example.jvmori.myweatherapp.data.current.response.CurrentWeatherResponse;
 import com.example.jvmori.myweatherapp.data.network.Api;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-
 import javax.inject.Inject;
 
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
 
     private Api api;
     private CurrentWeatherDao dao;
+
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     @Inject
     public CurrentWeatherRepositoryImpl(Api api, CurrentWeatherDao dao) {
@@ -29,44 +29,42 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
     }
 
     @Override
+    public void cleanup() {
+        disposable.clear();
+    }
+
+    @Override
     public Flowable<CurrentWeatherUI> getCurrentWeatherByCity(String city) {
-        return new NetworkBoundResource<CurrentWeatherUI, CurrentWeatherResponse>() {
+        return Flowable.create(emitter -> new NetworkBoundResource<CurrentWeatherUI, CurrentWeatherResponse>(emitter, disposable) {
 
             @Override
-            protected CurrentWeatherResponse saveCallResult(CurrentWeatherResponse item) {
+            protected void saveCallResult(CurrentWeatherResponse item) {
                 Completable.fromAction(() ->
                         dao.insert(item))
                         .subscribeOn(Schedulers.io())
                         .subscribe();
-                return item;
             }
 
             @Override
-            protected CurrentWeatherUI mapData(CurrentWeatherResponse currentWeatherResponse) {
+            protected CurrentWeatherUI mapper(CurrentWeatherResponse currentWeatherResponse) {
                 return dataMapper(currentWeatherResponse);
             }
 
-            @Override
-            protected boolean isDataFresh(CurrentWeatherResponse data) {
-                String date = SimpleDateFormat.getInstance().format(new Date(data.getDt()));
-                //return  data != null && System.currentTimeMillis() - data.getDt() < 600000; //10 minutes
-                return true;
-            }
 
             @Override
-            protected Maybe<CurrentWeatherResponse> loadFromDb() {
+            protected Flowable<CurrentWeatherResponse> getLocal() {
                 return dao.getCurrentWeatherByCity(city)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io());
             }
 
             @Override
-            protected Maybe<CurrentWeatherResponse> fetchFromNetwork() {
+            protected Single<CurrentWeatherResponse> getRemote() {
                 return api.getCurrentWeatherByCity(city)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread());
             }
-        }.getResult();
+        }, BackpressureStrategy.BUFFER);
     }
 
     @Override

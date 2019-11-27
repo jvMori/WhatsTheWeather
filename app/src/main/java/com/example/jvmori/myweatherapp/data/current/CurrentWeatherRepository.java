@@ -8,4 +8,5 @@ import io.reactivex.Maybe;
 public interface CurrentWeatherRepository {
     Flowable<CurrentWeatherUI> getCurrentWeatherByCity(String city);
     Maybe<CurrentWeatherResponse> getCurrentWeatherByGeographic( String latitude, String longitude);
+    void cleanup();
 }

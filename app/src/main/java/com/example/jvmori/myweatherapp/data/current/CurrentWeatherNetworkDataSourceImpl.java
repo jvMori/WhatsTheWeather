@@ -6,6 +6,7 @@ import com.example.jvmori.myweatherapp.data.network.Api;
 import javax.inject.Inject;
 
 import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 public class CurrentWeatherNetworkDataSourceImpl implements CurrentWeatherNetworkDataSource {
 
@@ -17,7 +18,7 @@ public class CurrentWeatherNetworkDataSourceImpl implements CurrentWeatherNetwor
     }
 
     @Override
-    public Maybe<CurrentWeatherResponse> getCurrentWeatherByCity(String city) {
+    public Single<CurrentWeatherResponse> getCurrentWeatherByCity(String city) {
         return api.getCurrentWeatherByCity(city);
     }
 
