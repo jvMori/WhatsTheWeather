@@ -6,7 +6,6 @@ import java.util.List;
 
 public class ForecastResponse {
 
-
     @SerializedName("cod")
     private int cod;
     @SerializedName("message")

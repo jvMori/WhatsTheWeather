@@ -38,7 +38,7 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
         return Flowable.create(emitter -> new NetworkBoundResource<CurrentWeatherUI, CurrentWeatherResponse>(emitter, disposable) {
 
             @Override
-            protected void saveCallResult(CurrentWeatherResponse item) {
+            protected void saveCallResult(CurrentWeatherUI item) {
                 Completable.fromAction(() ->
                         dao.insert(item))
                         .subscribeOn(Schedulers.io())
@@ -52,7 +52,7 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
 
 
             @Override
-            protected Flowable<CurrentWeatherResponse> getLocal() {
+            protected Flowable<CurrentWeatherUI> getLocal() {
                 return dao.getCurrentWeatherByCity(city)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io());

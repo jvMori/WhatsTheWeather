@@ -9,23 +9,20 @@ import io.reactivex.schedulers.Schedulers;
 
 
 public abstract class NetworkBoundResource<ResultType, RequestType> {
-
-
-    protected NetworkBoundResource(FlowableEmitter<ResultType> emitter,  CompositeDisposable disposable ) {
+    protected NetworkBoundResource(FlowableEmitter<ResultType> emitter, CompositeDisposable disposable) {
         CompositeDisposable localDisposable = new CompositeDisposable();
         localDisposable.add(
-                getLocal()
-                        .map(this::mapper)
-                        .subscribe(emitter::onNext)
+                getLocal().subscribe(emitter::onNext)
         );
         disposable.add(
                 getRemote().subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
+                        .map(this::mapper)
                         .subscribe(data -> {
                             localDisposable.dispose();
                             saveCallResult(data);
                             disposable.add(
-                                    getLocal().map(this::mapper).subscribe(emitter::onNext)
+                                    getLocal().subscribe(emitter::onNext)
                             );
                         })
         );
@@ -33,9 +30,9 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
 
     protected abstract Single<RequestType> getRemote();
 
-    protected abstract Flowable<RequestType> getLocal();
+    protected abstract Flowable<ResultType> getLocal();
 
-    protected abstract void saveCallResult(RequestType data);
+    protected abstract void saveCallResult(ResultType data);
 
     protected abstract ResultType mapper(RequestType data);
 }
