@@ -1,7 +1,14 @@
 package com.example.jvmori.myweatherapp.data.current;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+
+@Entity(tableName = "current_weather", primaryKeys = {"city_name"})
 public class CurrentWeatherUI {
-    private String city;
+    @ColumnInfo(name = "city_name")
+    @NonNull
+    private String city = "";
     private String country;
     private String mainDescription;
     private String detailedDescription;
@@ -14,8 +21,6 @@ public class CurrentWeatherUI {
     private String windDir;
     private String windSpeed;
     private Long timestamp;
-
-    public CurrentWeatherUI( ){}
 
     public CurrentWeatherUI(Long timestamp, String city, String country, String mainDescription, String detailedDescription, String iconUrl, String mainTemp, String pressure, String humidity, String minTemp, String maxTemp, String windDir, String windSpeed) {
         this.timestamp = timestamp;

@@ -4,7 +4,6 @@ package com.example.jvmori.myweatherapp.data.current.response;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Embedded;
-import androidx.room.Entity;
 import androidx.room.TypeConverters;
 
 import com.example.jvmori.myweatherapp.util.DescriptionTypeConverter;
@@ -12,28 +11,24 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-@Entity(tableName = "current_weather", primaryKeys = {"city_name"})
 public class CurrentWeatherResponse {
 
     @SerializedName("base")
     private String mBase;
 
     @SerializedName("clouds")
-    @Embedded
     private Clouds mClouds;
 
     @SerializedName("cod")
     private Long mCod;
 
     @SerializedName("coord")
-    @Embedded
     private Coord mCoord;
 
     @SerializedName("dt")
     private Long mDt;
 
     @SerializedName("id")
-    @ColumnInfo(name = "weather_id")
     private Long mId;
 
     @SerializedName("main")
@@ -41,23 +36,18 @@ public class CurrentWeatherResponse {
     private Main mMain;
 
     @SerializedName("name")
-    @ColumnInfo(name = "city_name")
-    @NonNull
     private String mName ="";
 
     @SerializedName("sys")
-    @Embedded
     private Sys mSys;
 
     @SerializedName("timezone")
     private Long mTimezone;
 
     @SerializedName("weather")
-    @TypeConverters(DescriptionTypeConverter.class)
     private List<Description> mWeather;
 
     @SerializedName("wind")
-    @Embedded
     private Wind mWind;
 
     public String getBase() {
