@@ -4,7 +4,7 @@ import android.app.Application;
 
 import androidx.room.Room;
 
-import com.example.jvmori.myweatherapp.data.db.ForecastDao;
+import com.example.jvmori.myweatherapp.data.forecast.ForecastDao;
 import com.example.jvmori.myweatherapp.data.db.WeatherDatabase;
 import com.example.jvmori.myweatherapp.di.scope.ApplicationScope;
 

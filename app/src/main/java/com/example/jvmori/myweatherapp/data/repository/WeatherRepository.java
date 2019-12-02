@@ -1,6 +1,6 @@
 package com.example.jvmori.myweatherapp.data.repository;
 
-import com.example.jvmori.myweatherapp.data.db.ForecastDao;
+import com.example.jvmori.myweatherapp.data.forecast.ForecastDao;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.data.network.WeatherNetworkDataSource;
 import com.example.jvmori.myweatherapp.data.network.response.Search;
@@ -30,7 +30,7 @@ public class WeatherRepository {
     }
 
     public Maybe<ForecastEntry> getWeatherLocal(String location) {
-        return forecastDao.getWeather(location)
+        return forecastDao.getForecast(location)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
     }

@@ -2,10 +2,9 @@ package com.example.jvmori.myweatherapp.di.modules.main;
 
 import com.example.jvmori.myweatherapp.data.LocationProvider;
 import com.example.jvmori.myweatherapp.data.LocationProviderImpl;
-import com.example.jvmori.myweatherapp.data.db.ForecastDao;
+import com.example.jvmori.myweatherapp.data.forecast.ForecastDao;
 import com.example.jvmori.myweatherapp.data.network.WeatherNetworkDataSource;
 import com.example.jvmori.myweatherapp.data.repository.WeatherRepository;
-import com.example.jvmori.myweatherapp.di.scope.ApplicationScope;
 import com.example.jvmori.myweatherapp.di.scope.MainActivityScope;
 import com.example.jvmori.myweatherapp.ui.view.adapters.location.DeleteLocationItem;
 import com.example.jvmori.myweatherapp.ui.view.adapters.location.DeleteLocationItemOnSwipe;
