@@ -6,9 +6,9 @@ import androidx.room.RoomDatabase;
 import com.example.jvmori.myweatherapp.data.current.CurrentWeatherDao;
 import com.example.jvmori.myweatherapp.data.current.CurrentWeatherUI;
 import com.example.jvmori.myweatherapp.data.forecast.ForecastDao;
-import com.example.jvmori.myweatherapp.data.forecast.ForecastUI;
+import com.example.jvmori.myweatherapp.data.forecast.ForecastEntity;
 
-@Database(entities = {ForecastUI.class, CurrentWeatherUI.class}, version = 15, exportSchema = false)
+@Database(entities = {ForecastEntity.class, CurrentWeatherUI.class}, version = 15, exportSchema = false)
 public abstract class WeatherDatabase extends RoomDatabase {
     public abstract ForecastDao forecastDao();
     public abstract CurrentWeatherDao currentWeatherDao();

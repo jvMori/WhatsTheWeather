@@ -2,6 +2,7 @@ package com.example.jvmori.myweatherapp.data.network;
 
 import com.example.jvmori.myweatherapp.data.current.response.CurrentWeatherResponse;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
+import com.example.jvmori.myweatherapp.data.forecast.response.ForecastResponse;
 import com.example.jvmori.myweatherapp.data.network.response.Search;
 import com.example.jvmori.myweatherapp.ui.Resource;
 
@@ -16,8 +17,8 @@ import retrofit2.http.Query;
 
 public interface Api
 {
-    @GET("forecast.json")
-    Maybe<ForecastEntry> getForecast(@Query("q") String location, @Query("lang") String lang, @Query("days") String days);
+    @GET("forecast")
+    Flowable<ForecastResponse> getForecast(@Query("q") String location);
 
     @GET("search.json")
     Observable<List<Search>> searchCity (@Query("q") String cityName);

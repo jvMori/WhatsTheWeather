@@ -35,4 +35,5 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     protected abstract void saveCallResult(ResultType data);
 
     protected abstract ResultType mapper(RequestType data);
+
 }

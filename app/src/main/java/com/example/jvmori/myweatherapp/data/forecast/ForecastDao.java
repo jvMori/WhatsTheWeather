@@ -5,18 +5,20 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import io.reactivex.Maybe;
+import java.util.List;
+
+import io.reactivex.Flowable;
 
 @Dao
 public abstract class ForecastDao
 {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract void insert(ForecastUI forecastEntry);
+    public abstract void insert(List<ForecastEntity> forecastEntry);
 
     @Query("delete from forecast_table where city_name like :cityName")
     public abstract void deleteForecast(String cityName);
 
     @Query("select * from forecast_table where city_name like :cityName")
-    public abstract Maybe<ForecastUI> getForecast(String cityName);
+    public abstract Flowable<Forecasts> getForecast(String cityName);
 
 }

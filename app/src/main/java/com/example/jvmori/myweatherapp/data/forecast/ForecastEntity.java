@@ -6,7 +6,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "forecast_table")
-public class ForecastUI {
+public class ForecastEntity {
 
     @PrimaryKey
     @ColumnInfo(name = "city_name")
@@ -17,7 +17,7 @@ public class ForecastUI {
     private String maxTemp;
     private String minTemp;
 
-    public ForecastUI(String time, String iconUrl, String maxTemp, String minTemp) {
+    public ForecastEntity(String time, String iconUrl, String maxTemp, String minTemp) {
         this.time = time;
         this.iconUrl = iconUrl;
         this.maxTemp = maxTemp;
