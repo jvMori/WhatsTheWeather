@@ -12,15 +12,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jvmori.myweatherapp.R;
-import com.example.jvmori.myweatherapp.data.current.CurrentWeatherUI;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.ui.Resource;
 import com.example.jvmori.myweatherapp.ui.current.CurrentWeatherViewModel;
+import com.example.jvmori.myweatherapp.ui.forecast.ForecastViewModel;
 import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
 import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
 import com.example.jvmori.myweatherapp.ui.view.customViews.ConditionInfo;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
-import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
@@ -31,7 +30,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
@@ -54,20 +52,14 @@ public class WeatherFragment extends DaggerFragment {
     private ImageView ivIcon, searchIcon;
     private RecyclerView recyclerView;
     private ForecastAdapter forecastAdapter;
-    private WeatherViewModel viewModel;
-    private Group errorLayout;
-    private Toolbar toolbar;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private Group weatherView;
-    private ConstraintLayout loading;
-    private WeatherParameters weatherParameters = null;
 
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
     @Inject
     ILoadImage iLoadImage;
 
-    CurrentWeatherViewModel currentWeatherViewModel;
+    private CurrentWeatherViewModel currentWeatherViewModel;
+    private ForecastViewModel forecastViewModel;
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -77,7 +69,9 @@ public class WeatherFragment extends DaggerFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         currentWeatherViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(CurrentWeatherViewModel.class);
+        forecastViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(ForecastViewModel.class);
         currentWeatherViewModel.fetchCurrentWeather("Krakow");
+        forecastViewModel.fetchForecast("Krakow");
     }
 
     @Override
@@ -92,12 +86,21 @@ public class WeatherFragment extends DaggerFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
        currentWeatherViewModel.getCurrentWeather().observe(this, weather -> {
-           if(weather.status == Resource.Status.LOADING){
+           if (weather.status == Resource.Status.LOADING){
 
            } else if(weather.status == Resource.Status.SUCCESS){
                Log.i("WEATHER", weather.data.toString());
            } else if (weather.status == Resource.Status.ERROR){
-               Log.i("WEATHER", weather.data.toString());
+               Log.i("WEATHER", weather.message);
+           }
+       });
+       forecastViewModel.getForecast.observe(this, forecastsResource -> {
+           if (forecastsResource.status == Resource.Status.LOADING){
+
+           } else if(forecastsResource.status == Resource.Status.SUCCESS){
+               Log.i("WEATHER", forecastsResource.data.toString());
+           } else if (forecastsResource.status == Resource.Status.ERROR){
+               Log.i("WEATHER", forecastsResource.message);
            }
        });
 //        weatherView.setVisibility(View.GONE);
@@ -113,49 +116,6 @@ public class WeatherFragment extends DaggerFragment {
         super.onActivityCreated(savedInstanceState);
         //createWeatherViewModel();
         //fetchWeather(this.getContext());
-    }
-
-    private void getWeatherParams() {
-        if (getArguments() != null)
-            weatherParameters = WeatherFragmentArgs.fromBundle(getArguments()).getWeatherParam();
-    }
-
-    private void createWeatherViewModel() {
-        if (getActivity() != null) {
-            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-            viewModel = ViewModelProviders.of(getActivity(), viewModelProviderFactory).get(WeatherViewModel.class);
-        }
-    }
-
-    private void fetchWeather(Context context) {
-        if (weatherParameters != null)
-            viewModel.fetchWeather(weatherParameters);
-        observeWeather(context);
-    }
-
-    private void observeWeather(Context context) {
-        viewModel.getWeather().observe(getViewLifecycleOwner(), forecastEntry ->
-                {
-                    switch (forecastEntry.status){
-                        case LOADING:
-                            loading.setVisibility(View.VISIBLE);
-                            weatherView.setVisibility(View.GONE);
-                            break;
-                        case SUCCESS:
-                            displayWeather(forecastEntry.data);
-                            loading.setVisibility(View.GONE);
-                            weatherView.setVisibility(View.VISIBLE);
-                            swipeRefreshLayout.setRefreshing(false);
-                            break;
-                        case ERROR:
-                            loading.setVisibility(View.GONE);
-                            weatherView.setVisibility(View.GONE);
-                            errorLayout.setVisibility(View.VISIBLE);
-                            swipeRefreshLayout.setRefreshing(false);
-                            Toast.makeText(context, "Could not fetch weather!", Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
     }
 
     private void displayWeather(ForecastEntry forecastEntry) {
@@ -200,15 +160,10 @@ public class WeatherFragment extends DaggerFragment {
         city = view.findViewById(R.id.locationTextView);
         recyclerView = view.findViewById(R.id.RecyclerViewList);
         searchIcon = view.findViewById(R.id.navigateToSearch);
-        toolbar = view.findViewById(R.id.toolbar);
-        weatherView = view.findViewById(R.id.view);
-        loading = view.findViewById(R.id.loading);
         humidity = view.findViewById(R.id.Humidity);
         pressure = view.findViewById(R.id.Pressure);
         wind = view.findViewById(R.id.Wind);
         visibility = view.findViewById(R.id.Visibility);
-        swipeRefreshLayout = view.findViewById(R.id.swipe);
-        errorLayout = view.findViewById(R.id.errorLayout);
     }
 
     private void createRecyclerView(ForecastEntry forecastEntry) {

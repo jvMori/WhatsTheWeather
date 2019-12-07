@@ -16,7 +16,6 @@ import com.example.jvmori.myweatherapp.ui.viewModel.LocationViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
-import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProviders;
@@ -27,7 +26,6 @@ import dagger.android.support.DaggerAppCompatActivity;
 public class MainActivity extends DaggerAppCompatActivity implements LocationServiceDialog.IClickable {
 
     ImageView ivSearch;
-    public static WeatherViewModel viewModel;
     private LocationViewModel locationViewModel;
     private LocationServiceDialog locationServiceDialog;
     @Inject
@@ -48,7 +46,6 @@ public class MainActivity extends DaggerAppCompatActivity implements LocationSer
         setContentView(R.layout.activity_main);
 
         bindView();
-        viewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(WeatherViewModel.class);
         getWeatherForLocation();
         fetchDeviceLocation();
     }
@@ -100,7 +97,6 @@ public class MainActivity extends DaggerAppCompatActivity implements LocationSer
                     true,
                     Const.FORECAST_DAYS
             );
-            if(city!= null) viewModel.fetchWeather(weatherParameters);
         }
     }
     private void onError(){
@@ -130,7 +126,6 @@ public class MainActivity extends DaggerAppCompatActivity implements LocationSer
                 false,
                 Const.FORECAST_DAYS
         );
-        viewModel.fetchWeather(weatherParameters);
     }
 }
 

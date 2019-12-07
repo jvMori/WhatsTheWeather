@@ -42,14 +42,15 @@ public class ForecastRepositoryImpl implements ForecastRepository {
             @Override
             protected void saveCallResult(Forecasts data) {
                 Completable.fromAction(() ->
-                        localDataSource.insert(data.getForecastList())
+                        localDataSource.insert(data)
                 ).subscribeOn(Schedulers.io()).subscribe();
             }
 
             @Override
             protected Forecasts mapper(ForecastResponse data) {
                 return new Forecasts(
-                        ForecastMapper.mapForecasts(data.getForecast())
+                        ForecastMapper.mapForecasts(data.getForecast()),
+                        data.getCity().getCityName()
                 );
             }
         }, BackpressureStrategy.BUFFER);

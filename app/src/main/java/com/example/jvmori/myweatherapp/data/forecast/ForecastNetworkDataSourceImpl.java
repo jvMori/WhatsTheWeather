@@ -18,6 +18,6 @@ public class ForecastNetworkDataSourceImpl implements ForecastNetworkDataSource 
 
     @Override
     public Single<ForecastResponse> getForecast(String cityName) {
-        return null;
+        return api.getForecast(cityName);
     }
 }

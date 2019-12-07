@@ -16,12 +16,6 @@ public class DatabaseModule {
 
     @Provides
     @ApplicationScope
-    public ForecastDao forecastDao(WeatherDatabase weatherDatabase) {
-        return weatherDatabase.forecastDao();
-    }
-
-    @Provides
-    @ApplicationScope
     public WeatherDatabase weatherDatabase(Application context) {
         return Room.databaseBuilder(context.getApplicationContext(), WeatherDatabase.class, "weather_database")
                 .fallbackToDestructiveMigration()

@@ -5,13 +5,9 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "forecast_table")
 public class ForecastEntity {
 
-    @PrimaryKey
-    @ColumnInfo(name = "city_name")
-    @NonNull
-    private String cityName = "";
+    private String cityName;
     private String time;
     private String iconUrl;
     private String maxTemp;
@@ -56,7 +52,6 @@ public class ForecastEntity {
         this.minTemp = minTemp;
     }
 
-    @NonNull
     public String getCityName() {
         return cityName;
     }

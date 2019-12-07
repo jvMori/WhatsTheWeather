@@ -13,7 +13,7 @@ import io.reactivex.Flowable;
 public abstract class ForecastDao
 {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract void insert(List<ForecastEntity> forecastEntry);
+    public abstract void insert(Forecasts forecastEntry);
 
     @Query("delete from forecast_table where city_name like :cityName")
     public abstract void deleteForecast(String cityName);

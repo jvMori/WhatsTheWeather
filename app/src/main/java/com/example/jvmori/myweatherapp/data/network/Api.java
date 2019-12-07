@@ -18,7 +18,7 @@ import retrofit2.http.Query;
 public interface Api
 {
     @GET("forecast")
-    Flowable<ForecastResponse> getForecast(@Query("q") String location);
+    Single<ForecastResponse> getForecast(@Query("q") String location);
 
     @GET("search.json")
     Observable<List<Search>> searchCity (@Query("q") String cityName);

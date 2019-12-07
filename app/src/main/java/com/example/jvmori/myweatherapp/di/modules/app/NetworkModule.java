@@ -1,8 +1,6 @@
 package com.example.jvmori.myweatherapp.di.modules.app;
 
 import com.example.jvmori.myweatherapp.data.network.Api;
-import com.example.jvmori.myweatherapp.data.network.WeatherNetworkDataSource;
-import com.example.jvmori.myweatherapp.data.network.WeatherNetworkDataSourceImpl;
 import com.example.jvmori.myweatherapp.di.scope.ApplicationScope;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
@@ -22,11 +20,6 @@ public class NetworkModule {
     private static final String BASE_URL = "http://api.openweathermap.org/data/2.5/";
     private static final String UNITS = "metric";
 
-    @Provides
-    @ApplicationScope
-    public WeatherNetworkDataSource weatherNetworkDataSource(Api apixuApi) {
-        return new WeatherNetworkDataSourceImpl(apixuApi);
-    }
 
     @Provides
     @ApplicationScope
