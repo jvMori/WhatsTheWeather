@@ -1,7 +1,6 @@
 package com.example.jvmori.myweatherapp.ui.view.fragment;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,33 +8,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.jvmori.myweatherapp.R;
-import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
-import com.example.jvmori.myweatherapp.ui.Resource;
-import com.example.jvmori.myweatherapp.ui.current.CurrentWeatherViewModel;
-import com.example.jvmori.myweatherapp.ui.forecast.ForecastViewModel;
-import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
-import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
-import com.example.jvmori.myweatherapp.ui.view.customViews.ConditionInfo;
-import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
-import com.example.jvmori.myweatherapp.util.WeatherParameters;
-import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.Group;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
+import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
+import com.example.jvmori.myweatherapp.databinding.MainWeatherLayoutBinding;
+import com.example.jvmori.myweatherapp.ui.Resource;
+import com.example.jvmori.myweatherapp.ui.current.CurrentWeatherViewModel;
+import com.example.jvmori.myweatherapp.ui.forecast.ForecastViewModel;
+import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
+import com.example.jvmori.myweatherapp.ui.view.customViews.ConditionInfo;
+import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
+import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
 import javax.inject.Inject;
 
@@ -78,8 +72,10 @@ public class WeatherFragment extends DaggerFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_weather, container, false);
-        bindView(view);
+        MainWeatherLayoutBinding binding = DataBindingUtil.inflate(inflater, R.layout.main_weather_layout, container, false);
+        binding.setLifecycleOwner(this);
+        binding.setCurrentWeatherStatus(currentWeatherViewModel.getCurrentWeather());
+        view = binding.getRoot();
         return view;
     }
 
@@ -87,7 +83,7 @@ public class WeatherFragment extends DaggerFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
        currentWeatherViewModel.getCurrentWeather().observe(this, weather -> {
            if (weather.status == Resource.Status.LOADING){
-
+               Log.i("WEATHER", "loading");
            } else if(weather.status == Resource.Status.SUCCESS){
                Log.i("WEATHER", weather.data.toString());
            } else if (weather.status == Resource.Status.ERROR){
