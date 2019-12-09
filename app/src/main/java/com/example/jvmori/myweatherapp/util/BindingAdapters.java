@@ -46,7 +46,7 @@ public class BindingAdapters {
         int visibility = View.GONE;
         switch (status){
             case SUCCESS:
-                visibility = View.GONE;
+                visibility = View.VISIBLE;
                 break;
             case ERROR:
                 visibility = View.VISIBLE;
