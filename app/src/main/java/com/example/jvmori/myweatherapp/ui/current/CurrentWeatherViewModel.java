@@ -40,6 +40,8 @@ public class CurrentWeatherViewModel extends ViewModel {
         );
     }
 
+
+
     @Override
     protected void onCleared() {
         super.onCleared();

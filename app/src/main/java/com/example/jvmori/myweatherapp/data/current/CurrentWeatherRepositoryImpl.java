@@ -64,6 +64,11 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread());
             }
+
+            @Override
+            protected void handleError(Throwable error) {
+                emitter.onError(error);
+            }
         }, BackpressureStrategy.BUFFER);
     }
 

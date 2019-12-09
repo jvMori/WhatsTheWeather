@@ -53,6 +53,11 @@ public class ForecastRepositoryImpl implements ForecastRepository {
                         data.getCity().getCityName()
                 );
             }
+
+            @Override
+            protected void handleError(Throwable error) {
+                emitter.onError(error);
+            }
         }, BackpressureStrategy.BUFFER);
     }
 }

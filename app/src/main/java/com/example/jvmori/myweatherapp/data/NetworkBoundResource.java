@@ -1,5 +1,7 @@
 package com.example.jvmori.myweatherapp.data;
 
+import android.util.Log;
+
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.Single;
@@ -24,7 +26,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
                             disposable.add(
                                     getLocal().subscribe(emitter::onNext)
                             );
-                        })
+                        }, this::handleError)
         );
     }
 
@@ -35,5 +37,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     protected abstract void saveCallResult(ResultType data);
 
     protected abstract ResultType mapper(RequestType data);
+
+    protected abstract void handleError(Throwable error);
 
 }
