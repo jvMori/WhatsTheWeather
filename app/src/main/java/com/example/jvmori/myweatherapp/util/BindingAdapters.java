@@ -8,52 +8,53 @@ import com.example.jvmori.myweatherapp.ui.Resource;
 
 public class BindingAdapters {
 
-    @BindingAdapter("app:showView")
-    public static void showSuccessView (View view, Resource.Status status) {
+    @BindingAdapter("app:showSuccessView")
+    public static void showSuccessView(View view, Resource.Status status) {
         int visibility = View.GONE;
-        switch (status){
-            case SUCCESS:
-                visibility = View.VISIBLE;
-                break;
-            case ERROR:
-                visibility = View.GONE;
-                break;
-            case LOADING:
-                visibility = View.GONE;
-                break;
+        if (status != null) {
+            switch (status) {
+                case SUCCESS:
+                    visibility = View.VISIBLE;
+                    break;
+                case ERROR:
+                case LOADING:
+                    visibility = View.GONE;
+                    break;
+            }
         }
         view.setVisibility(visibility);
     }
+
     @BindingAdapter("app:showLoadingView")
-    public static void showLoadingView (View view, Resource.Status status) {
+    public static void showLoadingView(View view, Resource.Status status) {
         int visibility = View.GONE;
-        switch (status){
-            case SUCCESS:
-                visibility = View.GONE;
-                break;
-            case ERROR:
-                visibility = View.GONE;
-                break;
-            case LOADING:
-                visibility = View.VISIBLE;
-                break;
+        if (status != null) {
+            switch (status) {
+                case SUCCESS:
+                case ERROR:
+                    visibility = View.GONE;
+                    break;
+                case LOADING:
+                    visibility = View.VISIBLE;
+                    break;
+            }
         }
         view.setVisibility(visibility);
     }
 
     @BindingAdapter("app:showErrorView")
-    public static void showErrorView (View view, Resource.Status status) {
+    public static void showErrorView(View view, Resource.Status status) {
         int visibility = View.GONE;
-        switch (status){
-            case SUCCESS:
-                visibility = View.VISIBLE;
-                break;
-            case ERROR:
-                visibility = View.VISIBLE;
-                break;
-            case LOADING:
-                visibility = View.GONE;
-                break;
+        if (status != null) {
+            switch (status) {
+                case SUCCESS:
+                case ERROR:
+                    visibility = View.VISIBLE;
+                    break;
+                case LOADING:
+                    visibility = View.GONE;
+                    break;
+            }
         }
         view.setVisibility(visibility);
     }

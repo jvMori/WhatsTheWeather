@@ -54,6 +54,7 @@ public class WeatherFragment extends DaggerFragment {
 
     private CurrentWeatherViewModel currentWeatherViewModel;
     private ForecastViewModel forecastViewModel;
+    private  MainWeatherLayoutBinding binding;
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -72,33 +73,29 @@ public class WeatherFragment extends DaggerFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        MainWeatherLayoutBinding binding = DataBindingUtil.inflate(inflater, R.layout.main_weather_layout, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.main_weather_layout, container, false);
         binding.setLifecycleOwner(this);
-        binding.setCurrentWeatherStatus(currentWeatherViewModel.getCurrentWeather());
         view = binding.getRoot();
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-       currentWeatherViewModel.getCurrentWeather().observe(this, weather -> {
-           if (weather.status == Resource.Status.LOADING){
-               Log.i("WEATHER", "loading");
-           } else if(weather.status == Resource.Status.SUCCESS){
-               Log.i("WEATHER", weather.data.toString());
-           } else if (weather.status == Resource.Status.ERROR){
-               Log.i("WEATHER", weather.message);
-           }
-       });
-       forecastViewModel.getForecast.observe(this, forecastsResource -> {
-           if (forecastsResource.status == Resource.Status.LOADING){
+        currentWeatherViewModel.getCurrentWeather().observe(this, weather -> {
+            binding.setCurrentWeatherStatus(weather.status);
+            if (weather.status == Resource.Status.SUCCESS) {
+                binding.setCurrentWeatherData(weather.data);
+            }
+        });
+        forecastViewModel.getForecast.observe(this, forecastsResource -> {
+            if (forecastsResource.status == Resource.Status.LOADING) {
 
-           } else if(forecastsResource.status == Resource.Status.SUCCESS){
-               Log.i("WEATHER", forecastsResource.data.toString());
-           } else if (forecastsResource.status == Resource.Status.ERROR){
-               Log.i("WEATHER", forecastsResource.message);
-           }
-       });
+            } else if (forecastsResource.status == Resource.Status.SUCCESS) {
+                Log.i("WEATHER", forecastsResource.data.toString());
+            } else if (forecastsResource.status == Resource.Status.ERROR) {
+                Log.i("WEATHER", forecastsResource.message);
+            }
+        });
 //        weatherView.setVisibility(View.GONE);
 //        navigateToSearchListener();
 //        getWeatherParams();
