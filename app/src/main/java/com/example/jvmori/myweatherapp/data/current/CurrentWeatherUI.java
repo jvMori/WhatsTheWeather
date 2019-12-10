@@ -1,8 +1,16 @@
 package com.example.jvmori.myweatherapp.data.current;
 
+import android.icu.text.SimpleDateFormat;
+import android.icu.util.Calendar;
+import android.text.format.DateFormat;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+
+import java.util.Date;
+import java.util.Locale;
 
 @Entity(tableName = "current_weather", primaryKeys = {"city_name"})
 public class CurrentWeatherUI {
@@ -35,8 +43,21 @@ public class CurrentWeatherUI {
     }
 
     public String getDate(){
-        //TODO: convert timestamp to date
-        return "Friday 11 June 2020";
+        try {
+            return getDateCurrentTimeZone(timestamp);
+        }
+        catch (Exception e){
+            Log.i("Weather", e.getMessage());
+        }
+        return "";
+    }
+
+    public  String getDateCurrentTimeZone(long timestamp) {
+        Calendar cal = Calendar.getInstance(Locale.getDefault());
+        cal.setTimeInMillis(timestamp);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE,  d MMM yyyy HH:mm:ss");
+        Date currentTimeZone = cal.getTime();
+        return simpleDateFormat.format(currentTimeZone);
     }
     public String getCity() {
         return city;

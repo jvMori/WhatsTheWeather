@@ -80,7 +80,7 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
     private CurrentWeatherUI dataMapper(CurrentWeatherResponse response) {
         if (response != null) {
             return new CurrentWeatherUI(
-                    response.getDt(),
+                    System.currentTimeMillis(),
                     response.getName(),
                     response.getSys().getCountry(),
                     response.getWeather().get(0).getMain(),
