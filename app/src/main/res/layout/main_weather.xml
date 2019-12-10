@@ -22,7 +22,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="60dp"
             android:fontFamily="@font/maven_pro"
-            android:text="Sydney"
+            android:text='@{currentWeather.city, default="Sydney"}'
             android:textAppearance="@style/TextHeadline"
             android:textSize="34sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -38,7 +38,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:fontFamily="@font/maven_pro"
-            android:text="Thursday 15 April 2019"
+            android:text='@{currentWeather.getDate() , default="Thursday 15 April 2019"}'
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="18°"
+            android:text='@{currentWeather.mainTemp + "°", default="18°"}'
             android:textSize="80sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -74,7 +74,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
             android:gravity="center"
-            android:text="9km/h"
+            android:text='@{currentWeather.windSpeed + "km/h", default="9km/h"}'
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/humidityVal"
             app:layout_constraintHorizontal_bias="0.5"
@@ -98,7 +98,7 @@
             android:layout_width="136dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="70%"
+            android:text='@{currentWeather.humidity + "%", default="70%"}'
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/maxTmpVal"
             app:layout_constraintHorizontal_bias="0.5"
@@ -123,7 +123,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:gravity="center"
-            android:text="28°"
+            android:text='@{currentWeather.mainTemp + "°", default ="28°"}'
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

@@ -38,6 +38,10 @@ public class CurrentWeatherUI {
         this.windSpeed = windSpeed;
     }
 
+    public String getDate(){
+        //TODO: convert timestamp to date
+        return "Friday 11 June 2020";
+    }
     public String getCity() {
         return city;
     }
