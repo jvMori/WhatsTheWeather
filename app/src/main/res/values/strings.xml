@@ -9,4 +9,5 @@
     <string name="cancel">CANCEL</string>
     <string name="wind">Wind</string>
     <string name="humidity">Humidity</string>
+    <string name="Cloudiness">Cloudiness</string>
 </resources>

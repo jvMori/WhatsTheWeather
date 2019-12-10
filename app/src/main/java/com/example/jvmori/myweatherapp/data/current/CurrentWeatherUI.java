@@ -16,13 +16,11 @@ public class CurrentWeatherUI {
     private String mainTemp;
     private String pressure;
     private String humidity;
-    private String minTemp;
-    private String maxTemp;
-    private String windDir;
+    private String cloudness;
     private String windSpeed;
     private Long timestamp;
 
-    public CurrentWeatherUI(Long timestamp, String city, String country, String mainDescription, String detailedDescription, String iconUrl, String mainTemp, String pressure, String humidity, String minTemp, String maxTemp, String windDir, String windSpeed) {
+    public CurrentWeatherUI(Long timestamp, String city, String country, String mainDescription, String detailedDescription, String iconUrl, String mainTemp, String pressure, String humidity,  String cloudness, String windSpeed) {
         this.timestamp = timestamp;
         this.city = city;
         this.country = country;
@@ -32,9 +30,7 @@ public class CurrentWeatherUI {
         this.mainTemp = mainTemp;
         this.pressure = pressure;
         this.humidity = humidity;
-        this.minTemp = minTemp;
-        this.maxTemp = maxTemp;
-        this.windDir = windDir;
+        this.cloudness = cloudness;
         this.windSpeed = windSpeed;
     }
 
@@ -106,30 +102,6 @@ public class CurrentWeatherUI {
         this.humidity = humidity;
     }
 
-    public String getMinTemp() {
-        return minTemp;
-    }
-
-    public void setMinTemp(String minTemp) {
-        this.minTemp = minTemp;
-    }
-
-    public String getMaxTemp() {
-        return maxTemp;
-    }
-
-    public void setMaxTemp(String maxTemp) {
-        this.maxTemp = maxTemp;
-    }
-
-    public String getWindDir() {
-        return windDir;
-    }
-
-    public void setWindDir(String windDir) {
-        this.windDir = windDir;
-    }
-
     public Long getTimestamp() {
         return timestamp;
     }
@@ -144,5 +116,13 @@ public class CurrentWeatherUI {
 
     public void setWindSpeed(String windSpeed) {
         this.windSpeed = windSpeed;
+    }
+
+    public String getCloudness() {
+        return cloudness;
+    }
+
+    public void setCloudness(String cloudness) {
+        this.cloudness = cloudness;
     }
 }

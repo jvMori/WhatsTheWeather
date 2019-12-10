@@ -89,9 +89,7 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
                     response.getMain().getTemp().toString(),
                     response.getMain().getPressure().toString(),
                     response.getMain().getHumidity().toString(),
-                    response.getMain().getTempMin().toString(),
-                    response.getMain().getTempMin().toString(),
-                    response.getWind().getDeg().toString(),
+                    response.getClouds().getAll().toString(),
                     response.getWind().getSpeed().toString()
             );
         }
