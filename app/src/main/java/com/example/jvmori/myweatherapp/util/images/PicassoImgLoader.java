@@ -18,6 +18,8 @@ public class PicassoImgLoader implements ILoadImage {
     @Override
     public void loadImage(String url, ImageView icon) {
         picasso.load(url)
+                .fit()
+                .centerCrop()
                 .error(R.drawable.ic_11)
                 .into(icon);
     }

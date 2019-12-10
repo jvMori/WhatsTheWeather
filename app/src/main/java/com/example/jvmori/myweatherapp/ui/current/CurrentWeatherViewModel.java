@@ -1,5 +1,8 @@
 package com.example.jvmori.myweatherapp.ui.current;
 
+import android.widget.ImageView;
+
+import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -7,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.jvmori.myweatherapp.data.current.CurrentWeatherRepository;
 import com.example.jvmori.myweatherapp.data.current.CurrentWeatherUI;
 import com.example.jvmori.myweatherapp.ui.Resource;
+import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
 import javax.inject.Inject;
 
@@ -15,6 +19,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public class CurrentWeatherViewModel extends ViewModel {
 
     private CurrentWeatherRepository repository;
+    private static ILoadImage imageLoader;
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private MutableLiveData<Resource<CurrentWeatherUI>> _weather = new MutableLiveData<>();
@@ -23,8 +28,9 @@ public class CurrentWeatherViewModel extends ViewModel {
     }
 
     @Inject
-    public CurrentWeatherViewModel(CurrentWeatherRepository repository){
+    public CurrentWeatherViewModel(CurrentWeatherRepository repository, ILoadImage imageLoader){
         this.repository = repository;
+        CurrentWeatherViewModel.imageLoader = imageLoader;
     }
 
     public void fetchCurrentWeather(String city){
@@ -40,7 +46,10 @@ public class CurrentWeatherViewModel extends ViewModel {
         );
     }
 
-
+    @BindingAdapter("iconImage")
+    public static void loadImage(ImageView view, String imageUrl) {
+        imageLoader.loadImage(imageUrl, view);
+    }
 
     @Override
     protected void onCleared() {

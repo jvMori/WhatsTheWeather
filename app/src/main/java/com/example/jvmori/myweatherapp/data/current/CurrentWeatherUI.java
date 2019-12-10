@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
+import com.example.jvmori.myweatherapp.util.Const;
+
 import java.util.Date;
 import java.util.Locale;
 
@@ -92,7 +94,11 @@ public class CurrentWeatherUI {
     }
 
     public String getIconUrl() {
-        return iconUrl;
+        return  iconUrl;
+    }
+
+    public String getFullIconUrl(){
+        return Const.baseIconUrl + iconUrl + "@2x.png";
     }
 
     public void setIconUrl(String iconUrl) {
