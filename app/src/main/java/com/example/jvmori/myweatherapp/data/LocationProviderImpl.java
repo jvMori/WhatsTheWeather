@@ -18,14 +18,31 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.jvmori.myweatherapp.ui.Resource;
 
-public class LocationProviderImpl implements LocationProvider {
+import javax.inject.Inject;
+
+public class LocationProviderImpl implements LocationProvider, LocationListener {
 
     private LocationManager locationManager;
-    private LocationListener locationListener;
     private MutableLiveData<Resource<Location>> _deviceLocation = new MutableLiveData<>();
     private MutableLiveData<ProviderStatus> _providerStatus = new MutableLiveData<>();
 
     private Activity activity;
+    private int minUpdatesTime;
+    private int minDistance;
+
+    @Inject
+    public LocationProviderImpl(
+            Activity activity,
+            LocationManager locationManager,
+            int minUpdatesTime,
+            int minDistance) {
+        this.activity = activity;
+        this.locationManager = locationManager;
+        this.minUpdatesTime = minUpdatesTime;
+        this.minDistance = minDistance;
+
+        requestPermissions();
+    }
 
     @Override
     public LiveData<Resource<Location>> deviceLocation() {
@@ -38,53 +55,50 @@ public class LocationProviderImpl implements LocationProvider {
     }
 
     @Override
-    public void startListening() {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-            assert locationManager != null;
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3600, 5000, locationListener);
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-            _deviceLocation.setValue(Resource.success(location));
+    public void requestLocationUpdates() {
+        if (checkPermission()) {
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minUpdatesTime, minDistance, this);
+                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if (location != null)
+                    _deviceLocation.setValue(Resource.success(location));
+                else
+                    _deviceLocation.setValue(Resource.error("Location not detected", null));
+            } else {
+                _providerStatus.setValue(ProviderStatus.disabled);
+            }
         }
     }
 
-    @Override
-    public void CheckLocation() {
-        _deviceLocation.setValue(Resource.loading(null));
-        locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                _deviceLocation.setValue(Resource.success(location));
-            }
+    private boolean checkPermission() {
+        return ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
 
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-                _providerStatus.setValue(ProviderStatus.enabled);
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-                _providerStatus.setValue(ProviderStatus.disabled);
-                _deviceLocation.setValue(Resource.error(s +" not enabled", null));
-                Log.i("Description", "disable");
-            }
-        };
-
+    public void requestPermissions() {
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
-        startListening();
     }
 
     @Override
-    public void setActivity(Activity activity) {
-        this.activity = activity;
+    public void onLocationChanged(Location location) {
+        _deviceLocation.setValue(Resource.success(location));
     }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+        _providerStatus.setValue(ProviderStatus.enabled);
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+        _providerStatus.setValue(ProviderStatus.disabled);
+        _deviceLocation.setValue(Resource.error(s + " not enabled", null));
+        Log.i("Description", "disable");
+    }
+
 }

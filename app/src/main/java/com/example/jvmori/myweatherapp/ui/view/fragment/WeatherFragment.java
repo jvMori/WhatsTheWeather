@@ -1,6 +1,7 @@
 package com.example.jvmori.myweatherapp.ui.view.fragment;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jvmori.myweatherapp.MainActivity;
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
@@ -28,6 +30,7 @@ import com.example.jvmori.myweatherapp.ui.current.CurrentWeatherViewModel;
 import com.example.jvmori.myweatherapp.ui.forecast.ForecastViewModel;
 import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
 import com.example.jvmori.myweatherapp.ui.view.customViews.ConditionInfo;
+import com.example.jvmori.myweatherapp.ui.viewModel.LocationViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
@@ -52,6 +55,7 @@ public class WeatherFragment extends DaggerFragment {
     @Inject
     ILoadImage iLoadImage;
 
+    private LocationViewModel locationViewModel;
     private CurrentWeatherViewModel currentWeatherViewModel;
     private ForecastViewModel forecastViewModel;
     private  MainWeatherLayoutBinding binding;
@@ -65,8 +69,21 @@ public class WeatherFragment extends DaggerFragment {
         super.onCreate(savedInstanceState);
         currentWeatherViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(CurrentWeatherViewModel.class);
         forecastViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(ForecastViewModel.class);
-        currentWeatherViewModel.fetchCurrentWeather("Krakow");
-        forecastViewModel.fetchForecast("Krakow");
+       // currentWeatherViewModel.fetchCurrentWeather("Krakow");
+       // forecastViewModel.fetchForecast("Krakow");
+
+        locationViewModel.getDeviceLocation().observe(this, location -> {
+            if (location.data != null) {
+                currentWeatherViewModel.fetchCurrentWeather(locationViewModel.getCity(location.data, getContext()));
+            }
+        });
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (getActivity() != null)
+            locationViewModel = ViewModelProviders.of(getActivity(), viewModelProviderFactory).get(LocationViewModel.class);
     }
 
     @Override
@@ -78,6 +95,7 @@ public class WeatherFragment extends DaggerFragment {
         view = binding.getRoot();
         return view;
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

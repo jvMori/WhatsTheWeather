@@ -30,51 +30,39 @@ public class MainActivity extends DaggerAppCompatActivity implements LocationSer
     private LocationServiceDialog locationServiceDialog;
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
-    @Inject
-    LocationProvider locationProvider;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            locationProvider.startListening();
+            locationViewModel.requestLocationUpdates();
         }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        locationViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(LocationViewModel.class);
         setContentView(R.layout.activity_main);
 
         bindView();
-        getWeatherForLocation();
-        fetchDeviceLocation();
+        locationViewModel.requestLocationUpdates();
+        observeProviderStatus();
     }
 
-    private void getWeatherForLocation() {
-        locationViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(LocationViewModel.class);
-        locationViewModel.setLocationProviderActivity(this);
-        locationViewModel.CheckLocation();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //fetchDeviceLocation();
+    }
+
+    private void observeProviderStatus() {
         locationViewModel.getProviderStatus().observe(this, providerStatus -> {
             switch (providerStatus){
                 case disabled:
                     handleDisabledLocationProvider();
                     break;
                 case enabled:
-                    break;
-            }
-        });
-    }
-
-    private void fetchDeviceLocation() {
-        locationViewModel.getDeviceLocation().observe(this, location -> {
-            switch(location.status){
-                case LOADING:
-                    break;
-                case SUCCESS:
-                    onSuccess(location);
-                    break;
-                case ERROR:
-                    onError();
+                    locationViewModel.requestLocationUpdates();
                     break;
             }
         });
@@ -85,6 +73,19 @@ public class MainActivity extends DaggerAppCompatActivity implements LocationSer
         locationServiceDialog = new LocationServiceDialog();
         locationServiceDialog.setiClickable(this);
         locationServiceDialog.show(getSupportFragmentManager(), "location");
+    }
+
+    private void fetchDeviceLocation() {
+        locationViewModel.getDeviceLocation().observe(this, location -> {
+            switch(location.status){
+                case SUCCESS:
+                    onSuccess(location);
+                    break;
+                case ERROR:
+                    onError();
+                    break;
+            }
+        });
     }
 
     private void onSuccess(Resource<Location> location) {
