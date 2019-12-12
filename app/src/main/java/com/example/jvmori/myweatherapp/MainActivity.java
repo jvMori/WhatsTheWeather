@@ -49,12 +49,6 @@ public class MainActivity extends DaggerAppCompatActivity implements LocationSer
         observeProviderStatus();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //fetchDeviceLocation();
-    }
-
     private void observeProviderStatus() {
         locationViewModel.getProviderStatus().observe(this, providerStatus -> {
             switch (providerStatus){
@@ -75,36 +69,6 @@ public class MainActivity extends DaggerAppCompatActivity implements LocationSer
         locationServiceDialog.show(getSupportFragmentManager(), "location");
     }
 
-    private void fetchDeviceLocation() {
-        locationViewModel.getDeviceLocation().observe(this, location -> {
-            switch(location.status){
-                case SUCCESS:
-                    onSuccess(location);
-                    break;
-                case ERROR:
-                    onError();
-                    break;
-            }
-        });
-    }
-
-    private void onSuccess(Resource<Location> location) {
-        if (location.data != null){
-            String city = locationViewModel.getCity(location.data, this);
-            String loc = location.data.getLatitude() + "," + location.data.getLongitude();
-            WeatherParameters weatherParameters = new WeatherParameters(
-                    loc,
-                    city,
-                    true,
-                    Const.FORECAST_DAYS
-            );
-        }
-    }
-    private void onError(){
-        fetchDefaultWeather();
-    }
-
-
     private void bindView() {
         ivSearch = findViewById(R.id.ivSearch);
     }
@@ -117,16 +81,8 @@ public class MainActivity extends DaggerAppCompatActivity implements LocationSer
 
     @Override
     public void onCancel() {
-        fetchDefaultWeather();
+        //fetch default location weather
     }
 
-    private void fetchDefaultWeather() {
-        WeatherParameters weatherParameters = new WeatherParameters(
-                "Gdynia",
-                "Gdynia",
-                false,
-                Const.FORECAST_DAYS
-        );
-    }
 }
 
