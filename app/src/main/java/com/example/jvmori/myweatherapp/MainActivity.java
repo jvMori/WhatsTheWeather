@@ -1,6 +1,7 @@
 package com.example.jvmori.myweatherapp;
 
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -10,16 +11,24 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.jvmori.myweatherapp.data.LocationProvider;
+import com.example.jvmori.myweatherapp.ui.LifecycleBoundLocationManager;
 import com.example.jvmori.myweatherapp.ui.Resource;
 import com.example.jvmori.myweatherapp.ui.view.fragment.LocationServiceDialog;
 import com.example.jvmori.myweatherapp.ui.viewModel.LocationViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
+
 import javax.inject.Inject;
+
 import dagger.android.support.DaggerAppCompatActivity;
 
 
@@ -30,11 +39,16 @@ public class MainActivity extends DaggerAppCompatActivity implements LocationSer
     private LocationServiceDialog locationServiceDialog;
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
+    @Inject
+    LocationRequest locationRequest;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            locationViewModel.requestLocationUpdates();
+            //locationViewModel.requestLocationUpdates();
+            bindLocationManager();
+        } else {
+            handleDisabledLocationProvider();
         }
     }
 
@@ -45,13 +59,37 @@ public class MainActivity extends DaggerAppCompatActivity implements LocationSer
         setContentView(R.layout.activity_main);
 
         bindView();
-        locationViewModel.requestLocationUpdates();
-        observeProviderStatus();
+        if (hasLocationPermission()) {
+            bindLocationManager();
+            locationViewModel.requestLocationUpdates();
+        } else
+            requestPermissions();
+        //locationViewModel.requestLocationUpdates();
+        //observeProviderStatus();
+    }
+
+    private void bindLocationManager() {
+        new LifecycleBoundLocationManager(
+                new FusedLocationProviderClient(this),
+                this,
+                new LocationCallback(),
+                locationRequest);
+    }
+
+    private boolean hasLocationPermission() {
+        return ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermissions() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
     }
 
     private void observeProviderStatus() {
         locationViewModel.getProviderStatus().observe(this, providerStatus -> {
-            switch (providerStatus){
+            switch (providerStatus) {
                 case disabled:
                     handleDisabledLocationProvider();
                     break;
