@@ -73,7 +73,8 @@ public class WeatherFragment extends DaggerFragment {
         if (getActivity() != null && getActivity() instanceof MainActivity) {
             locationViewModel = ViewModelProviders.of(getActivity(), viewModelProviderFactory).get(LocationViewModel.class);
             ((MainActivity) getActivity()).lifecycleBoundLocationManager.deviceLocation().observe(this, location -> {
-                currentWeatherViewModel.fetchCurrentWeather(locationViewModel.getCity(location.data, getContext()));
+                if (location != null && location.status == Resource.Status.SUCCESS && location.data != null)
+                    currentWeatherViewModel.fetchCurrentWeather(locationViewModel.getCity(location.data, getContext()));
             });
         }
     }
