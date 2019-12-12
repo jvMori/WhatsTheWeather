@@ -23,6 +23,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
@@ -32,47 +33,49 @@ import javax.inject.Inject;
 import dagger.android.support.DaggerAppCompatActivity;
 
 
-public class MainActivity extends DaggerAppCompatActivity implements LocationServiceDialog.IClickable {
+public class MainActivity extends DaggerAppCompatActivity {
 
     ImageView ivSearch;
-    private LocationViewModel locationViewModel;
-    private LocationServiceDialog locationServiceDialog;
-    @Inject
-    ViewModelProviderFactory viewModelProviderFactory;
     @Inject
     LocationRequest locationRequest;
+    @Inject
+    FusedLocationProviderClient fusedLocationProviderClient;
+
+    public LifecycleBoundLocationManager lifecycleBoundLocationManager;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            //locationViewModel.requestLocationUpdates();
             bindLocationManager();
-        } else {
-            handleDisabledLocationProvider();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LifecycleBoundLocationManager.REQUEST_CHECK_SETTINGS && data != null){
+           Bundle bundle = data.getExtras();
         }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        locationViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(LocationViewModel.class);
         setContentView(R.layout.activity_main);
 
         bindView();
         if (hasLocationPermission()) {
             bindLocationManager();
-            locationViewModel.requestLocationUpdates();
+            lifecycleBoundLocationManager.getLastKnownLocation();
         } else
             requestPermissions();
-        //locationViewModel.requestLocationUpdates();
-        //observeProviderStatus();
     }
 
     private void bindLocationManager() {
-        new LifecycleBoundLocationManager(
-                new FusedLocationProviderClient(this),
+        lifecycleBoundLocationManager = new LifecycleBoundLocationManager(
                 this,
-                new LocationCallback(),
+                fusedLocationProviderClient,
+                this,
                 locationRequest);
     }
 
@@ -87,39 +90,9 @@ public class MainActivity extends DaggerAppCompatActivity implements LocationSer
         }
     }
 
-    private void observeProviderStatus() {
-        locationViewModel.getProviderStatus().observe(this, providerStatus -> {
-            switch (providerStatus) {
-                case disabled:
-                    handleDisabledLocationProvider();
-                    break;
-                case enabled:
-                    locationViewModel.requestLocationUpdates();
-                    break;
-            }
-        });
-    }
-
-    private void handleDisabledLocationProvider() {
-        Log.i("Description", "disable");
-        locationServiceDialog = new LocationServiceDialog();
-        locationServiceDialog.setiClickable(this);
-        locationServiceDialog.show(getSupportFragmentManager(), "location");
-    }
 
     private void bindView() {
         ivSearch = findViewById(R.id.ivSearch);
-    }
-
-    @Override
-    public void onPositiveBtn() {
-        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivity(intent);
-    }
-
-    @Override
-    public void onCancel() {
-        //fetch default location weather
     }
 
 }

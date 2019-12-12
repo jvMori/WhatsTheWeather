@@ -34,6 +34,7 @@ public class CurrentWeatherViewModel extends ViewModel {
     }
 
     public void fetchCurrentWeather(String city){
+        //TODO: check if location has changed
         _weather.setValue(Resource.loading(null));
         disposable.add(
                 repository.getCurrentWeatherByCity(city)

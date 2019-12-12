@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jvmori.myweatherapp.MainActivity;
 import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.data.current.response.Main;
 import com.example.jvmori.myweatherapp.data.db.entity.current.CurrentWeather;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.databinding.MainWeatherLayoutBinding;
@@ -43,13 +44,6 @@ import dagger.android.support.DaggerFragment;
  */
 public class WeatherFragment extends DaggerFragment {
 
-    private View view;
-    private TextView mainTemp, feelsLike, desc, city;
-    private ConditionInfo humidity, pressure, wind, visibility;
-    private ImageView ivIcon, searchIcon;
-    private RecyclerView recyclerView;
-    private ForecastAdapter forecastAdapter;
-
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
     @Inject
@@ -58,7 +52,7 @@ public class WeatherFragment extends DaggerFragment {
     private LocationViewModel locationViewModel;
     private CurrentWeatherViewModel currentWeatherViewModel;
     private ForecastViewModel forecastViewModel;
-    private  MainWeatherLayoutBinding binding;
+    private MainWeatherLayoutBinding binding;
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -69,21 +63,19 @@ public class WeatherFragment extends DaggerFragment {
         super.onCreate(savedInstanceState);
         currentWeatherViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(CurrentWeatherViewModel.class);
         forecastViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(ForecastViewModel.class);
-       // currentWeatherViewModel.fetchCurrentWeather("Krakow");
-       // forecastViewModel.fetchForecast("Krakow");
-
-        locationViewModel.getDeviceLocation().observe(this, location -> {
-            if (location.data != null) {
-                currentWeatherViewModel.fetchCurrentWeather(locationViewModel.getCity(location.data, getContext()));
-            }
-        });
+        // currentWeatherViewModel.fetchCurrentWeather("Krakow");
+        // forecastViewModel.fetchForecast("Krakow");
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (getActivity() != null)
+        if (getActivity() != null && getActivity() instanceof MainActivity) {
             locationViewModel = ViewModelProviders.of(getActivity(), viewModelProviderFactory).get(LocationViewModel.class);
+            ((MainActivity) getActivity()).lifecycleBoundLocationManager.deviceLocation().observe(this, location -> {
+                currentWeatherViewModel.fetchCurrentWeather(locationViewModel.getCity(location.data, getContext()));
+            });
+        }
     }
 
     @Override
@@ -92,10 +84,9 @@ public class WeatherFragment extends DaggerFragment {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.main_weather_layout, container, false);
         binding.setLifecycleOwner(this);
-        view = binding.getRoot();
+        View view = binding.getRoot();
         return view;
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -108,86 +99,16 @@ public class WeatherFragment extends DaggerFragment {
         forecastViewModel.getForecast.observe(this, forecastsResource -> {
             if (forecastsResource.status == Resource.Status.LOADING) {
 
-            } else if (forecastsResource.status == Resource.Status.SUCCESS) {
-                Log.i("WEATHER", forecastsResource.data.toString());
-            } else if (forecastsResource.status == Resource.Status.ERROR) {
-                Log.i("WEATHER", forecastsResource.message);
             }
         });
-//        weatherView.setVisibility(View.GONE);
 //        navigateToSearchListener();
-//        getWeatherParams();
 //        swipeRefreshLayout.setOnRefreshListener(() -> {
-//            fetchWeather(this.getContext());
+//
 //        });
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        //createWeatherViewModel();
-        //fetchWeather(this.getContext());
-    }
-
-    private void displayWeather(ForecastEntry forecastEntry) {
-        if (forecastEntry != null) {
-            createCurrentWeatherUi(forecastEntry);
-        }
-    }
-
-    private void createCurrentWeatherUi(ForecastEntry forecastEntry) {
-        CurrentWeather currentWeather = forecastEntry.getCurrentWeather();
-        String cityAndCountry = String.format("%s, %s",
-                forecastEntry.getLocation().getName(),
-                forecastEntry.getLocation().getCountry());
-        String description = currentWeather.mCondition.getText();
-        String feelslike = "Feels like: " + currentWeather.mFeelslikeC.intValue() + "°C";
-        String humidityTxt = currentWeather.mHumidity.toString() + " %";
-        String temp = currentWeather.mTempC.intValue() + "°C";
-        String prec = currentWeather.mPrecipMm + " mm/km";
-        String windTxt = currentWeather.mWindKph + " kph";
-        String pressureTxt = currentWeather.mPressureMb.intValue() + " hPa";
-
-
-        city.setText(cityAndCountry);
-        desc.setText(description);
-        mainTemp.setText(temp);
-        feelsLike.setText(feelslike);
-        humidity.setValue(humidityTxt);
-        visibility.setValue(prec);
-        wind.setValue(windTxt);
-        pressure.setValue(pressureTxt);
-        String url = "http:" + currentWeather.mCondition.getIcon();
-        iLoadImage.loadImage(url, ivIcon);
-        createRecyclerView(forecastEntry);
-    }
-
-    private void bindView(View view) {
-        mainTemp = view.findViewById(R.id.tvMainCurrTemp);
-        feelsLike = view.findViewById(R.id.feelsTemp);
-        pressure = view.findViewById(R.id.Pressure);
-        ivIcon = view.findViewById(R.id.ivMainIcon);
-        desc = view.findViewById(R.id.tvDescriptionMain);
-        city = view.findViewById(R.id.locationTextView);
-        recyclerView = view.findViewById(R.id.RecyclerViewList);
-        searchIcon = view.findViewById(R.id.navigateToSearch);
-        humidity = view.findViewById(R.id.Humidity);
-        pressure = view.findViewById(R.id.Pressure);
-        wind = view.findViewById(R.id.Wind);
-        visibility = view.findViewById(R.id.Visibility);
-    }
-
-    private void createRecyclerView(ForecastEntry forecastEntry) {
-        forecastAdapter = new ForecastAdapter(forecastEntry.getForecast().mFutureWeather, getContext());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(forecastAdapter);
-    }
-
     private void navigateToSearchListener() {
-        searchIcon.setOnClickListener(v -> {
-            NavDirections directions = WeatherFragmentDirections.actionWeatherFragmentToSearchFragment();
-            NavHostFragment.findNavController(this).navigate(directions);
-        });
+        NavDirections directions = WeatherFragmentDirections.actionWeatherFragmentToSearchFragment();
+        NavHostFragment.findNavController(this).navigate(directions);
     }
 }

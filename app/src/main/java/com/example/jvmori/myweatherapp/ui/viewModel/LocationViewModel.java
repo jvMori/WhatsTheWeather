@@ -24,23 +24,11 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class LocationViewModel  extends ViewModel {
 
-    private LocationProvider locationProvider;
     private CompositeDisposable disposable = new CompositeDisposable();
 
     @Inject
-    public LocationViewModel(LocationProvider locationProvider) {
-        this.locationProvider = locationProvider;
+    public LocationViewModel() {
     }
-
-    public void requestLocationUpdates(){
-        locationProvider.requestLocationUpdates();
-    }
-
-    public LiveData<Resource<Location>> getDeviceLocation(){
-        return locationProvider.deviceLocation();
-    }
-
-    public LiveData<ProviderStatus> getProviderStatus(){ return locationProvider.providerStatus();}
 
     public  String getCity(Location location, Context context){
         double latitude = location.getLatitude();

@@ -10,5 +10,5 @@ public interface LocationProvider {
     LiveData<Resource<Location>> deviceLocation();
     LiveData<ProviderStatus> providerStatus();
 
-    void requestLocationUpdates();
+    void getLastKnownLocation();
 }
