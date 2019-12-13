@@ -23,8 +23,8 @@ public class CurrentWeatherModule {
 
     @Provides
     @MainActivityScope
-    public  CurrentWeatherRepository currentWeatherRepository (Api api, CurrentWeatherDao currentWeatherDao){
-        return new CurrentWeatherRepositoryImpl(api, currentWeatherDao);
+    public  CurrentWeatherRepository currentWeatherRepository (CurrentWeatherNetworkDataSource networkDataSource, CurrentWeatherDao currentWeatherDao){
+        return new CurrentWeatherRepositoryImpl(networkDataSource, currentWeatherDao);
     }
 
     @Provides

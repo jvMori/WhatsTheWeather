@@ -1,15 +1,15 @@
 package com.example.jvmori.myweatherapp.data.current;
 
+import android.location.Location;
+
 import com.example.jvmori.myweatherapp.data.NetworkBoundResource;
 import com.example.jvmori.myweatherapp.data.current.response.CurrentWeatherResponse;
-import com.example.jvmori.myweatherapp.data.network.Api;
 
 import javax.inject.Inject;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
-import io.reactivex.Maybe;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -17,14 +17,14 @@ import io.reactivex.schedulers.Schedulers;
 
 public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
 
-    private Api api;
+    private CurrentWeatherNetworkDataSource networkDataSource;
     private CurrentWeatherDao dao;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
     @Inject
-    public CurrentWeatherRepositoryImpl(Api api, CurrentWeatherDao dao) {
-        this.api = api;
+    public CurrentWeatherRepositoryImpl(CurrentWeatherNetworkDataSource networkDataSource, CurrentWeatherDao dao) {
+        this.networkDataSource = networkDataSource;
         this.dao = dao;
     }
 
@@ -39,10 +39,7 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
 
             @Override
             protected void saveCallResult(CurrentWeatherUI item) {
-                Completable.fromAction(() ->
-                        dao.insert(item))
-                        .subscribeOn(Schedulers.io())
-                        .subscribe();
+                saveInDb(item);
             }
 
             @Override
@@ -60,9 +57,7 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
 
             @Override
             protected Single<CurrentWeatherResponse> getRemote() {
-                return api.getCurrentWeatherByCity(city)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread());
+                return networkDataSource.getCurrentWeatherByCity(city);
             }
 
             @Override
@@ -72,9 +67,45 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
         }, BackpressureStrategy.BUFFER);
     }
 
+    private void saveInDb(CurrentWeatherUI item) {
+        Completable.fromAction(() ->
+                dao.insert(item))
+                .subscribeOn(Schedulers.io())
+                .subscribe();
+    }
+
     @Override
-    public Maybe<CurrentWeatherResponse> getCurrentWeatherByGeographic(String latitude, String longitude) {
-        return null;
+    public Flowable<CurrentWeatherUI> getCurrentWeatherByGeographic(Location location) {
+        return Flowable.create(emitter -> new NetworkBoundResource<CurrentWeatherUI, CurrentWeatherResponse>(emitter, disposable){
+
+                    @Override
+                    protected Single<CurrentWeatherResponse> getRemote() {
+                        return networkDataSource.getCurrentWeatherByGeographic(location).firstOrError();
+                    }
+
+                    @Override
+                    protected Flowable<CurrentWeatherUI> getLocal() {
+                        return dao.getCurrentWeatherByGeographic(location.getLongitude(), location.getLatitude())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribeOn(Schedulers.io());
+                    }
+
+                    @Override
+                    protected void saveCallResult(CurrentWeatherUI data) {
+                        saveInDb(data);
+                    }
+
+                    @Override
+                    protected CurrentWeatherUI mapper(CurrentWeatherResponse data) {
+                        return dataMapper(data);
+                    }
+
+                    @Override
+                    protected void handleError(Throwable error) {
+                        emitter.onError(error);
+                    }
+                },
+                BackpressureStrategy.BUFFER);
     }
 
     private CurrentWeatherUI dataMapper(CurrentWeatherResponse response) {
@@ -82,6 +113,8 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
             return new CurrentWeatherUI(
                     System.currentTimeMillis(),
                     response.getName(),
+                    response.getCoord().getLon(),
+                    response.getCoord().getLat(),
                     response.getSys().getCountry(),
                     response.getWeather().get(0).getMain(),
                     response.getWeather().get(0).getDescription(),

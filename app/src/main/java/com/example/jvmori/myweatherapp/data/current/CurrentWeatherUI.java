@@ -2,7 +2,6 @@ package com.example.jvmori.myweatherapp.data.current;
 
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
-import android.text.format.DateFormat;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -19,6 +18,8 @@ public class CurrentWeatherUI {
     @ColumnInfo(name = "city_name")
     @NonNull
     private String city = "";
+    private Double lon;
+    private Double lat;
     private String country;
     private String mainDescription;
     private String detailedDescription;
@@ -30,9 +31,11 @@ public class CurrentWeatherUI {
     private String windSpeed;
     private Long timestamp;
 
-    public CurrentWeatherUI(Long timestamp, String city, String country, String mainDescription, String detailedDescription, String iconUrl, String mainTemp, String pressure, String humidity,  String cloudness, String windSpeed) {
+    public CurrentWeatherUI(Long timestamp, String city, Double lon, Double lat, String country, String mainDescription, String detailedDescription, String iconUrl, String mainTemp, String pressure, String humidity, String cloudness, String windSpeed) {
         this.timestamp = timestamp;
         this.city = city;
+        this.lon = lon;
+        this.lat = lat;
         this.country = country;
         this.mainDescription = mainDescription;
         this.detailedDescription = detailedDescription;
@@ -151,5 +154,21 @@ public class CurrentWeatherUI {
 
     public void setCloudness(String cloudness) {
         this.cloudness = cloudness;
+    }
+
+    public Double getLon() {
+        return lon;
+    }
+
+    public void setLon(Double lon) {
+        this.lon = lon;
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
     }
 }

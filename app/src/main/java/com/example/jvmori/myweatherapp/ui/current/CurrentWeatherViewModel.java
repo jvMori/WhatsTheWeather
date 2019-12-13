@@ -1,5 +1,6 @@
 package com.example.jvmori.myweatherapp.ui.current;
 
+import android.location.Location;
 import android.widget.ImageView;
 
 import androidx.databinding.BindingAdapter;
@@ -14,7 +15,9 @@ import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observer;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class CurrentWeatherViewModel extends ViewModel {
 
@@ -23,29 +26,52 @@ public class CurrentWeatherViewModel extends ViewModel {
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private MutableLiveData<Resource<CurrentWeatherUI>> _weather = new MutableLiveData<>();
+
     public LiveData<Resource<CurrentWeatherUI>> getCurrentWeather() {
         return _weather;
     }
 
     @Inject
-    public CurrentWeatherViewModel(CurrentWeatherRepository repository, ILoadImage imageLoader){
+    public CurrentWeatherViewModel(CurrentWeatherRepository repository, ILoadImage imageLoader) {
         this.repository = repository;
         CurrentWeatherViewModel.imageLoader = imageLoader;
     }
 
-    public void fetchCurrentWeather(String city){
+    public void fetchCurrentWeather(String city) {
         //TODO: check if location has changed
-        _weather.setValue(Resource.loading(null));
-        disposable.add(
-                repository.getCurrentWeatherByCity(city)
-                        .subscribe(
-                                success ->
-                                        _weather.setValue(Resource.success(success)),
-                                error ->
-                                        _weather.setValue(Resource.error(error.getMessage(), null))
-                        )
-        );
+        repository.getCurrentWeatherByCity(city)
+                .toObservable()
+                .subscribe(currentWeatherUIObserver);
     }
+
+    public void fetchCurrentWeatherByGeographic(Location location) {
+        repository.getCurrentWeatherByGeographic(location)
+                .toObservable()
+                .subscribe(currentWeatherUIObserver);
+    }
+
+    private Observer<CurrentWeatherUI> currentWeatherUIObserver = new Observer<CurrentWeatherUI>() {
+        @Override
+        public void onSubscribe(Disposable d) {
+            disposable.add(d);
+            _weather.setValue(Resource.loading(null));
+        }
+
+        @Override
+        public void onNext(CurrentWeatherUI currentWeatherUI) {
+            _weather.setValue(Resource.success(currentWeatherUI));
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            _weather.setValue(Resource.error(e.getMessage(), null));
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    };
 
     @BindingAdapter("iconImage")
     public static void loadImage(ImageView view, String imageUrl) {

@@ -27,6 +27,6 @@ public interface Api
     Single<CurrentWeatherResponse> getCurrentWeatherByCity(@Query("q") String city);
 
     @GET("weather")
-    Maybe<CurrentWeatherResponse> getCurrentWeatherByGeographic(@Query("lat") String latitude, @Query("lon") String longitude);
+    Flowable<CurrentWeatherResponse> getCurrentWeatherByGeographic(@Query("lat") String latitude, @Query("lon") String longitude);
 
 }

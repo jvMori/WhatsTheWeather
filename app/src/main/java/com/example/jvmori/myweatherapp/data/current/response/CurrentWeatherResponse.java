@@ -1,12 +1,8 @@
 
 package com.example.jvmori.myweatherapp.data.current.response;
 
-import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
 import androidx.room.Embedded;
-import androidx.room.TypeConverters;
 
-import com.example.jvmori.myweatherapp.util.DescriptionTypeConverter;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
