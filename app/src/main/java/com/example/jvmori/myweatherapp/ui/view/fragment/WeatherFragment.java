@@ -63,7 +63,7 @@ public class WeatherFragment extends DaggerFragment {
         super.onCreate(savedInstanceState);
         currentWeatherViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(CurrentWeatherViewModel.class);
         forecastViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(ForecastViewModel.class);
-        // currentWeatherViewModel.fetchCurrentWeather("Krakow");
+         //currentWeatherViewModel.fetchCurrentWeather("Krakow");
         // forecastViewModel.fetchForecast("Krakow");
     }
 
@@ -92,7 +92,7 @@ public class WeatherFragment extends DaggerFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         currentWeatherViewModel.getCurrentWeather().observe(this, weather -> {
-            binding.setCurrentWeatherStatus(weather.status);
+           // binding.setCurrentWeatherStatus(weather.status);
             if (weather.status == Resource.Status.SUCCESS) {
                 binding.setCurrentWeatherData(weather.data);
             }

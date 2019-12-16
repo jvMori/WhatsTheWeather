@@ -11,5 +11,5 @@ import io.reactivex.Single;
 public interface CurrentWeatherNetworkDataSource
 {
     Single<CurrentWeatherResponse> getCurrentWeatherByCity(String city);
-    Flowable<CurrentWeatherResponse> getCurrentWeatherByGeographic(Location location);
+    Single<CurrentWeatherResponse> getCurrentWeatherByGeographic(Location location);
 }

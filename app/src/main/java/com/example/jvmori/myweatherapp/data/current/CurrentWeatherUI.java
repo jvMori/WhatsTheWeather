@@ -18,8 +18,8 @@ public class CurrentWeatherUI {
     @ColumnInfo(name = "city_name")
     @NonNull
     private String city = "";
-    private Double lon;
-    private Double lat;
+    private String lon;
+    private String lat;
     private String country;
     private String mainDescription;
     private String detailedDescription;
@@ -31,7 +31,7 @@ public class CurrentWeatherUI {
     private String windSpeed;
     private Long timestamp;
 
-    public CurrentWeatherUI(Long timestamp, String city, Double lon, Double lat, String country, String mainDescription, String detailedDescription, String iconUrl, String mainTemp, String pressure, String humidity, String cloudness, String windSpeed) {
+    public CurrentWeatherUI(Long timestamp, String city, String lon, String lat, String country, String mainDescription, String detailedDescription, String iconUrl, String mainTemp, String pressure, String humidity, String cloudness, String windSpeed) {
         this.timestamp = timestamp;
         this.city = city;
         this.lon = lon;
@@ -156,19 +156,19 @@ public class CurrentWeatherUI {
         this.cloudness = cloudness;
     }
 
-    public Double getLon() {
+    public String getLon() {
         return lon;
     }
 
-    public void setLon(Double lon) {
+    public void setLon(String lon) {
         this.lon = lon;
     }
 
-    public Double getLat() {
+    public String getLat() {
         return lat;
     }
 
-    public void setLat(Double lat) {
+    public void setLat(String lat) {
         this.lat = lat;
     }
 }

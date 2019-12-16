@@ -1,7 +1,5 @@
 package com.example.jvmori.myweatherapp.data;
 
-import android.util.Log;
-
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.Single;

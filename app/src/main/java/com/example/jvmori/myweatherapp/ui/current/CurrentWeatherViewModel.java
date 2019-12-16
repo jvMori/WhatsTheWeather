@@ -1,6 +1,7 @@
 package com.example.jvmori.myweatherapp.ui.current;
 
 import android.location.Location;
+import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.databinding.BindingAdapter;
@@ -69,7 +70,7 @@ public class CurrentWeatherViewModel extends ViewModel {
 
         @Override
         public void onComplete() {
-
+            Log.i("Log", "Completed");
         }
     };
 

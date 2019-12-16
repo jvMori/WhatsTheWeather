@@ -30,7 +30,7 @@ public class CurrentWeatherNetworkDataSourceImpl implements CurrentWeatherNetwor
     }
 
     @Override
-    public Flowable<CurrentWeatherResponse> getCurrentWeatherByGeographic(Location location) {
+    public Single<CurrentWeatherResponse> getCurrentWeatherByGeographic(Location location) {
         return api.getCurrentWeatherByGeographic(
                     Double.toString(location.getLatitude()),
                     Double.toString(location.getLongitude()))

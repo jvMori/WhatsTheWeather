@@ -5,7 +5,10 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import java.util.function.DoubleUnaryOperator;
+
 import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 
 @Dao
 public interface CurrentWeatherDao {
@@ -14,7 +17,7 @@ public interface CurrentWeatherDao {
     Flowable<CurrentWeatherUI> getCurrentWeatherByCity(String city);
 
     @Query("select * from current_weather where lon like :lon AND lat like :lat")
-    Flowable<CurrentWeatherUI> getCurrentWeatherByGeographic(Double lon, Double lat);
+    Maybe<CurrentWeatherUI> getCurrentWeatherByGeographic(String lon, String lat);
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     void insert(CurrentWeatherUI currentWeatherResponse);
