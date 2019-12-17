@@ -16,7 +16,7 @@ public interface CurrentWeatherDao {
     @Query("select * from current_weather where city_name like :city")
     Flowable<CurrentWeatherUI> getCurrentWeatherByCity(String city);
 
-    @Query("select * from current_weather where lon like :lon AND lat like :lat")
+    @Query("select * from current_weather where longitude like :lon AND latitude like :lat")
     Maybe<CurrentWeatherUI> getCurrentWeatherByGeographic(String lon, String lat);
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)

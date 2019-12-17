@@ -78,16 +78,53 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
 
     @Override
     public Flowable<CurrentWeatherUI> getCurrentWeatherByGeographic(Location location) {
-        return networkDataSource.getCurrentWeatherByGeographic(location).toFlowable().map(this::dataMapper);
+        return Flowable.create(emitter -> {
+            new NetworkBoundResource<CurrentWeatherUI, CurrentWeatherResponse>(emitter, disposable) {
+
+                @Override
+                protected Single<CurrentWeatherResponse> getRemote() {
+                    return networkDataSource.getCurrentWeatherByGeographic(location);
+                }
+
+                @Override
+                protected Flowable<CurrentWeatherUI> getLocal() {
+                    String lon = Double.toString(RoundUtil.round(location.getLongitude(), 2));
+                    String lat = Double.toString(RoundUtil.round(location.getLatitude(), 2));
+                    return dao.getCurrentWeatherByGeographic(lon, lat)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribeOn(Schedulers.io())
+                            .doOnComplete(() ->
+                                Log.i("WEATHER", "completed! no such data in db"))
+                            .toFlowable();
+                }
+
+                @Override
+                protected void saveCallResult(CurrentWeatherUI data) {
+                        saveInDb(data);
+                }
+
+                @Override
+                protected CurrentWeatherUI mapper(CurrentWeatherResponse data) {
+                    return dataMapper(data);
+                }
+
+                @Override
+                protected void handleError(Throwable error) {
+                    emitter.onError(error);
+                }
+            };
+        }, BackpressureStrategy.LATEST);
     }
 
     private CurrentWeatherUI dataMapper(CurrentWeatherResponse response) {
         if (response != null) {
+            String lon = Double.toString(RoundUtil.round(response.getCoord().getLon(), 2));
+            String lat = Double.toString(RoundUtil.round(response.getCoord().getLat(), 2));
             return new CurrentWeatherUI(
                     System.currentTimeMillis(),
                     response.getName(),
-                    Double.toString(RoundUtil.round(response.getCoord().getLon(), 2)),
-                    Double.toString(RoundUtil.round(response.getCoord().getLat(), 2)),
+                    lon,
+                    lat,
                     response.getSys().getCountry(),
                     response.getWeather().get(0).getMain(),
                     response.getWeather().get(0).getDescription(),

@@ -13,13 +13,15 @@ import com.example.jvmori.myweatherapp.util.Const;
 import java.util.Date;
 import java.util.Locale;
 
-@Entity(tableName = "current_weather", primaryKeys = {"city_name"})
+@Entity(tableName = "current_weather", primaryKeys = {"city_name", "longitude", "latitude"})
 public class CurrentWeatherUI {
     @ColumnInfo(name = "city_name")
     @NonNull
     private String city = "";
-    private String lon;
-    private String lat;
+    @NonNull
+    private String longitude;
+    @NonNull
+    private String latitude;
     private String country;
     private String mainDescription;
     private String detailedDescription;
@@ -31,11 +33,11 @@ public class CurrentWeatherUI {
     private String windSpeed;
     private Long timestamp;
 
-    public CurrentWeatherUI(Long timestamp, String city, String lon, String lat, String country, String mainDescription, String detailedDescription, String iconUrl, String mainTemp, String pressure, String humidity, String cloudness, String windSpeed) {
+    public CurrentWeatherUI(Long timestamp, String city, String longitude, String latitude, String country, String mainDescription, String detailedDescription, String iconUrl, String mainTemp, String pressure, String humidity, String cloudness, String windSpeed) {
         this.timestamp = timestamp;
         this.city = city;
-        this.lon = lon;
-        this.lat = lat;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.country = country;
         this.mainDescription = mainDescription;
         this.detailedDescription = detailedDescription;
@@ -156,19 +158,19 @@ public class CurrentWeatherUI {
         this.cloudness = cloudness;
     }
 
-    public String getLon() {
-        return lon;
+    public String getLongitude() {
+        return longitude;
     }
 
-    public void setLon(String lon) {
-        this.lon = lon;
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 
-    public String getLat() {
-        return lat;
+    public String getLatitude() {
+        return latitude;
     }
 
-    public void setLat(String lat) {
-        this.lat = lat;
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 }
