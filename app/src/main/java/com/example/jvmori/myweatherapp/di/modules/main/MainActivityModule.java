@@ -24,29 +24,30 @@ public class MainActivityModule {
 
     @Provides
     @MainActivityScope
-    public LocationAdapter locationAdapter(){
+    public LocationAdapter locationAdapter() {
         return new LocationAdapter();
     }
 
     @Provides
     @MainActivityScope
-    public LocationManager provideLocationManager(MainActivity mainActivity){
+    public LocationManager provideLocationManager(MainActivity mainActivity) {
         return (LocationManager) mainActivity.getSystemService(Context.LOCATION_SERVICE);
     }
 
     @Provides
     @MainActivityScope
-    FusedLocationProviderClient fusedLocationProviderClient(MainActivity mainActivity){
+    FusedLocationProviderClient fusedLocationProviderClient(MainActivity mainActivity) {
         return LocationServices.getFusedLocationProviderClient(mainActivity);
     }
 
     @Provides
     @MainActivityScope
-    public LocationRequest provideLocationRequest(){
+    public LocationRequest provideLocationRequest() {
         return new LocationRequest()
-                   .setInterval(50000)
-                    .setFastestInterval(50000)
-                   .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                .setInterval(1000 * 60 * 15)
+                .setFastestInterval(1000 * 60 * 15)
+                .setSmallestDisplacement(5000) //5km
+                .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
     }
 
 }
