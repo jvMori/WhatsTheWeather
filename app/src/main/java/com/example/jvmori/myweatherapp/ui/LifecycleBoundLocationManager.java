@@ -6,7 +6,10 @@ import android.app.Activity;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
@@ -17,14 +20,21 @@ import androidx.lifecycle.OnLifecycleEvent;
 
 import com.example.jvmori.myweatherapp.data.LocationProvider;
 import com.example.jvmori.myweatherapp.data.ProviderStatus;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 
 
-public class LifecycleBoundLocationManager implements LifecycleObserver, LocationProvider {
+public class LifecycleBoundLocationManager implements
+        LifecycleObserver,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationProvider {
     public static final int REQUEST_CHECK_SETTINGS = 10;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationCallback locationCallback;
@@ -33,6 +43,7 @@ public class LifecycleBoundLocationManager implements LifecycleObserver, Locatio
 
     private MutableLiveData<Resource<Location>> _deviceLocation = new MutableLiveData<>();
     private MutableLiveData<ProviderStatus> _providerStatus = new MutableLiveData<>();
+    GoogleApiClient mGoogleApiClient;
 
     @Override
     public LiveData<Resource<Location>> deviceLocation() {
@@ -63,6 +74,12 @@ public class LifecycleBoundLocationManager implements LifecycleObserver, Locatio
                 }
             }
         };
+
+         mGoogleApiClient = new GoogleApiClient.Builder(activity)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
     }
 
     @Override
@@ -91,14 +108,40 @@ public class LifecycleBoundLocationManager implements LifecycleObserver, Locatio
                 ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    void onStart(){
+        mGoogleApiClient.connect();
+    }
+
     @SuppressLint("MissingPermission")
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     void startLocationUpdates() {
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
+        if (mGoogleApiClient.isConnected())
+            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     void removeLocationUpdates() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    void onStop(){
+        mGoogleApiClient.disconnect();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }

@@ -44,10 +44,10 @@ public class MainActivityModule {
     @MainActivityScope
     public LocationRequest provideLocationRequest() {
         return new LocationRequest()
-                .setInterval(1000 * 60 * 15)
-                .setFastestInterval(1000 * 60 * 15)
-                .setSmallestDisplacement(5000) //5km
-                .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                .setInterval(1000 * 15)
+                .setFastestInterval(1000 * 15)
+                .setSmallestDisplacement(500) //5km
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
 }
