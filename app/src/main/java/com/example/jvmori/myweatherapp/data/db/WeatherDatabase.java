@@ -10,7 +10,7 @@ import com.example.jvmori.myweatherapp.data.forecast.ForecastDao;
 import com.example.jvmori.myweatherapp.data.forecast.Forecasts;
 import com.example.jvmori.myweatherapp.util.ListTypeConverter;
 
-@Database(entities = {Forecasts.class, CurrentWeatherUI.class}, version = 25, exportSchema = false)
+@Database(entities = {Forecasts.class, CurrentWeatherUI.class}, version = 26, exportSchema = false)
 @TypeConverters(value = ListTypeConverter.class)
 public abstract class WeatherDatabase extends RoomDatabase {
     public abstract ForecastDao forecastDao();

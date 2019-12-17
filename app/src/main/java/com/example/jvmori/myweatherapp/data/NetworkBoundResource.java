@@ -2,6 +2,7 @@ package com.example.jvmori.myweatherapp.data;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -12,8 +13,23 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     protected NetworkBoundResource(FlowableEmitter<ResultType> emitter, CompositeDisposable disposable) {
         CompositeDisposable localDisposable = new CompositeDisposable();
         localDisposable.add(
-                getLocal().subscribe(emitter::onNext)
+                getLocal()
+                        .doOnComplete(() -> //when there is no such data in db
+                        {
+                            fetchFromNetwork(emitter, disposable, localDisposable);
+                        })
+                        .map (localData -> {
+                            if (needRefresh(localData)){
+                                fetchFromNetwork(emitter, disposable, localDisposable);
+                            }
+                            return localData;
+                        })
+                        .subscribe(emitter::onNext)
         );
+
+    }
+
+    private void fetchFromNetwork(FlowableEmitter<ResultType> emitter, CompositeDisposable disposable, CompositeDisposable localDisposable) {
         disposable.add(
                 getRemote().subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -28,9 +44,11 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
         );
     }
 
+    protected abstract boolean needRefresh(ResultType data);
+
     protected abstract Single<RequestType> getRemote();
 
-    protected abstract Flowable<ResultType> getLocal();
+    protected abstract Maybe<ResultType> getLocal();
 
     protected abstract void saveCallResult(ResultType data);
 

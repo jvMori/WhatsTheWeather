@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.jvmori.myweatherapp.data.NetworkBoundResource;
 import com.example.jvmori.myweatherapp.data.current.response.CurrentWeatherResponse;
+import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.RoundUtil;
 
 import javax.inject.Inject;
@@ -12,6 +13,7 @@ import javax.inject.Inject;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -51,10 +53,15 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
 
 
             @Override
-            protected Flowable<CurrentWeatherUI> getLocal() {
+            protected Maybe<CurrentWeatherUI> getLocal() {
                 return dao.getCurrentWeatherByCity(city)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io());
+            }
+
+            @Override
+            protected boolean needRefresh(CurrentWeatherUI data) {
+                return System.currentTimeMillis() - data.getTimestamp() > Const.STALE_MS;
             }
 
             @Override
@@ -82,20 +89,24 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
             new NetworkBoundResource<CurrentWeatherUI, CurrentWeatherResponse>(emitter, disposable) {
 
                 @Override
+                protected boolean needRefresh(CurrentWeatherUI data) {
+                    return System.currentTimeMillis() - data.getTimestamp() > Const.STALE_MS;
+                }
+
+                @Override
                 protected Single<CurrentWeatherResponse> getRemote() {
                     return networkDataSource.getCurrentWeatherByGeographic(location);
                 }
 
                 @Override
-                protected Flowable<CurrentWeatherUI> getLocal() {
+                protected Maybe<CurrentWeatherUI> getLocal() {
                     String lon = Double.toString(RoundUtil.round(location.getLongitude(), 2));
                     String lat = Double.toString(RoundUtil.round(location.getLatitude(), 2));
                     return dao.getCurrentWeatherByGeographic(lon, lat)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribeOn(Schedulers.io())
                             .doOnComplete(() ->
-                                Log.i("WEATHER", "completed! no such data in db"))
-                            .toFlowable();
+                                Log.i("WEATHER", "completed! no such data in db"));
                 }
 
                 @Override

@@ -14,7 +14,7 @@ import io.reactivex.Maybe;
 public interface CurrentWeatherDao {
 
     @Query("select * from current_weather where city_name like :city")
-    Flowable<CurrentWeatherUI> getCurrentWeatherByCity(String city);
+    Maybe<CurrentWeatherUI> getCurrentWeatherByCity(String city);
 
     @Query("select * from current_weather where longitude like :lon AND latitude like :lat")
     Maybe<CurrentWeatherUI> getCurrentWeatherByGeographic(String lon, String lat);

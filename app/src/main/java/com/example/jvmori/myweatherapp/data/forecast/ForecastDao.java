@@ -5,9 +5,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import java.util.List;
-
-import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 
 @Dao
 public abstract class ForecastDao
@@ -19,6 +17,6 @@ public abstract class ForecastDao
     public abstract void deleteForecast(String cityName);
 
     @Query("select * from forecast_table where city_name like :cityName")
-    public abstract Flowable<Forecasts> getForecast(String cityName);
+    public abstract Maybe<Forecasts> getForecast(String cityName);
 
 }

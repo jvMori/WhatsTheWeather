@@ -15,11 +15,14 @@ public class Forecasts {
     @NonNull
     private String cityName;
 
+    private Long timestamp;
+
     private List<ForecastEntity> forecastList;
 
-    public Forecasts(List<ForecastEntity> forecastList, String cityName) {
+    public Forecasts(List<ForecastEntity> forecastList, String cityName, Long timestamp) {
         this.forecastList = forecastList;
         this.cityName = cityName;
+        this.timestamp = timestamp;
     }
 
     public List<ForecastEntity> getForecastList() {
@@ -37,5 +40,13 @@ public class Forecasts {
 
     public void setCityName(@NonNull String cityName) {
         this.cityName = cityName;
+    }
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
     }
 }
