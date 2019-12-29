@@ -20,6 +20,9 @@ public interface Api
     @GET("forecast")
     Single<ForecastResponse> getForecast(@Query("q") String location);
 
+    @GET("forecast")
+    Single<ForecastResponse> getForecastByGeographic(@Query("lat") String latitude, @Query("lon") String longitude);
+
     @GET("search.json")
     Observable<List<Search>> searchCity (@Query("q") String cityName);
 

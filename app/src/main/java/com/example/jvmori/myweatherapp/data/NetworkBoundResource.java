@@ -1,6 +1,5 @@
 package com.example.jvmori.myweatherapp.data;
 
-import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
@@ -40,6 +39,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
                             disposable.add(
                                     getLocal()
                                             .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
                                             .subscribe(emitter::onNext)
                             );
                         }, this::handleError)

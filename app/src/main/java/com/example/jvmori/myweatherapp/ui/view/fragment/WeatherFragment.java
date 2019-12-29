@@ -59,7 +59,6 @@ public class WeatherFragment extends DaggerFragment {
         super.onCreate(savedInstanceState);
         currentWeatherViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(CurrentWeatherViewModel.class);
         forecastViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(ForecastViewModel.class);
-        forecastViewModel.fetchForecast("Trzemesnia");
     }
 
     @Override
@@ -75,7 +74,7 @@ public class WeatherFragment extends DaggerFragment {
         ((MainActivity) Objects.requireNonNull(getActivity())).lifecycleBoundLocationManager.deviceLocation().observe(this, location -> {
             if (location != null && location.status == Resource.Status.SUCCESS && location.data != null) {
                 currentWeatherViewModel.fetchCurrentWeatherByGeographic(location.data);
-               // forecastViewModel.fetchForecast();
+                forecastViewModel.fetchForecastByGeo(location.data);
             }
         });
     }
@@ -107,7 +106,7 @@ public class WeatherFragment extends DaggerFragment {
         forecastViewModel.getForecast.observe(this, forecastsResource -> {
             if (forecastsResource.status == Resource.Status.SUCCESS){
                 assert forecastsResource.data != null;
-                createForecastView(forecastsResource.data.getForecastList());
+                createForecastView(forecastsResource.data);
             }}
         );
     }

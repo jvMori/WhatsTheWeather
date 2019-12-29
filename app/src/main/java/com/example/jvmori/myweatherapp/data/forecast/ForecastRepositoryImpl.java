@@ -1,9 +1,12 @@
 package com.example.jvmori.myweatherapp.data.forecast;
 
+import android.location.Location;
+
 import com.example.jvmori.myweatherapp.data.NetworkBoundResource;
 import com.example.jvmori.myweatherapp.data.forecast.response.ForecastResponse;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.ForecastMapper;
+import com.example.jvmori.myweatherapp.util.RoundUtil;
 
 import javax.inject.Inject;
 
@@ -33,7 +36,7 @@ public class ForecastRepositoryImpl implements ForecastRepository {
 
             @Override
             protected boolean needRefresh(Forecasts data) {
-                return System.currentTimeMillis() - data.getTimestamp() > Const.STALE_MS;
+                return shouldRefresh(data);
             }
 
             @Override
@@ -48,18 +51,76 @@ public class ForecastRepositoryImpl implements ForecastRepository {
 
             @Override
             protected void saveCallResult(Forecasts data) {
-                Completable.fromAction(() ->
-                        localDataSource.insert(data)
-                ).subscribeOn(Schedulers.io()).subscribe();
+                saveData(data);
             }
 
             @Override
             protected Forecasts mapper(ForecastResponse data) {
-                return new Forecasts(
-                        ForecastMapper.mapForecasts(data.getForecast()),
-                        data.getCity().getCityName(),
-                        System.currentTimeMillis()
-                );
+                return mapData(data, null);
+            }
+
+            @Override
+            protected void handleError(Throwable error) {
+                emitter.onError(error);
+            }
+        }, BackpressureStrategy.BUFFER);
+    }
+
+    private Forecasts mapData(ForecastResponse data, Location location) {
+        String longitude = "";
+        String latitude = "";
+        if (location != null) {
+            longitude = Double.toString(RoundUtil.round(location.getLongitude(), 2));
+            latitude = Double.toString(RoundUtil.round(location.getLatitude(), 2));
+        }
+        return new Forecasts(
+                ForecastMapper.mapForecasts(data.getForecast()),
+                data.getCity().getCityName(),
+                longitude,
+                latitude,
+                System.currentTimeMillis()
+        );
+    }
+
+    private void saveData(Forecasts data) {
+        Completable.fromAction(() ->
+                localDataSource.insert(data)
+        ).subscribeOn(Schedulers.io()).subscribe();
+    }
+
+    private boolean shouldRefresh(Forecasts data) {
+        return System.currentTimeMillis() - data.getTimestamp() > Const.STALE_MS;
+    }
+
+    @Override
+    public Flowable<Forecasts> getForecastByGeo(Location location) {
+        return Flowable.create(emitter -> new NetworkBoundResource<Forecasts, ForecastResponse>(emitter, disposable){
+
+            @Override
+            protected boolean needRefresh(Forecasts data) {
+                return shouldRefresh(data);
+            }
+
+            @Override
+            protected Single<ForecastResponse> getRemote() {
+                return networkDataSource.getForecastByGeo(location);
+            }
+
+            @Override
+            protected Maybe<Forecasts> getLocal() {
+                String lon = Double.toString(RoundUtil.round(location.getLongitude(), 2));
+                String lat = Double.toString(RoundUtil.round(location.getLatitude(), 2));
+                return localDataSource.getForecastByGeo(lat, lon);
+            }
+
+            @Override
+            protected void saveCallResult(Forecasts data) {
+                saveData(data);
+            }
+
+            @Override
+            protected Forecasts mapper(ForecastResponse data) {
+                return mapData(data, location);
             }
 
             @Override

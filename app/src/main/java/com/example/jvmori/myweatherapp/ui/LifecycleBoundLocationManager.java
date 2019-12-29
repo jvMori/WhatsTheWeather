@@ -69,13 +69,17 @@ public class LifecycleBoundLocationManager implements
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                for (Location location : locationResult.getLocations()){
+                for (Location location : locationResult.getLocations()) {
                     _deviceLocation.setValue(Resource.success(location));
                 }
             }
         };
 
-         mGoogleApiClient = new GoogleApiClient.Builder(activity)
+        createGoogleClient(activity);
+    }
+
+    private void createGoogleClient(Activity activity) {
+        mGoogleApiClient = new GoogleApiClient.Builder(activity)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -109,8 +113,11 @@ public class LifecycleBoundLocationManager implements
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    void onStart(){
-        mGoogleApiClient.connect();
+    void onStart() {
+        if (mGoogleApiClient != null)
+            mGoogleApiClient.connect();
+        else
+            createGoogleClient(activity);
     }
 
     @SuppressLint("MissingPermission")
@@ -126,7 +133,7 @@ public class LifecycleBoundLocationManager implements
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    void onStop(){
+    void onStop() {
         mGoogleApiClient.disconnect();
     }
 
