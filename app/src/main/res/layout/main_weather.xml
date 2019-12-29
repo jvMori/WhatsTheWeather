@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="24dp"
             android:fontFamily="@font/maven_pro"
             android:text='@{currentWeather.city, default="Sydney"}'
             android:textAppearance="@style/TextHeadline"
@@ -59,7 +59,6 @@
             style="@style/TextHeadline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:text='@{currentWeather.mainTemp + "°", default="18°"}'
             android:textSize="70sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -80,15 +79,16 @@
         <TextView
             android:id="@+id/windVal"
             style="@style/TextDefault"
-            android:layout_width="135dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="56dp"
             android:gravity="center"
             android:text='@{currentWeather.windSpeed + "km/h", default="9km/h"}'
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/humidityVal"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mainTemp" />
 
@@ -106,7 +106,7 @@
         <TextView
             android:id="@+id/humidityVal"
             style="@style/TextDefault"
-            android:layout_width="136dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text='@{currentWeather.humidity + "%", default="70%"}'
@@ -130,9 +130,9 @@
         <TextView
             android:id="@+id/cloudVal"
             style="@style/TextDefault"
-            android:layout_width="136dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="40dp"
             android:gravity="center"
             android:text='@{currentWeather.cloudness + "%", default ="80%"}'
             android:textStyle="bold"
