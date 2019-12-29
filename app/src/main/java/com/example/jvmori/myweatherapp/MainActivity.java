@@ -53,14 +53,6 @@ public class MainActivity extends DaggerAppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == LifecycleBoundLocationManager.REQUEST_CHECK_SETTINGS && data != null){
-           Bundle bundle = data.getExtras();
-        }
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);

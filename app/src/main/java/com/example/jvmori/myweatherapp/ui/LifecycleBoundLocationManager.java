@@ -130,6 +130,7 @@ public class LifecycleBoundLocationManager implements
         mGoogleApiClient.disconnect();
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
