@@ -5,27 +5,36 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 public class ForecastEntity {
 
     private String cityName;
-    private String time;
+    private Long timestamp;
     private String iconUrl;
     private String maxTemp;
     private String minTemp;
 
-    public ForecastEntity(String time, String iconUrl, String maxTemp, String minTemp) {
-        this.time = time;
+    public ForecastEntity(Long timestamp, String iconUrl, String maxTemp, String minTemp) {
+        this.timestamp = timestamp;
         this.iconUrl = iconUrl;
         this.maxTemp = maxTemp;
         this.minTemp = minTemp;
     }
 
-    public String getTime() {
-        return time;
+    public String getDayOfWeek(){
+        return new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date(timestamp));
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public Long getTime() {
+        return timestamp;
+    }
+
+    public void setTime(Long time) {
+        this.timestamp = time;
     }
 
     public String getIconUrl() {

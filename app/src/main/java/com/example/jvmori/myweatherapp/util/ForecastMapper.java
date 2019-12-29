@@ -10,7 +10,7 @@ public class ForecastMapper {
 
     private static ForecastEntity forecastEntity (Forecast response){
         return new ForecastEntity(
-                response.getTimeText(),
+                response.getTimestamp(),
                 response.getDescriptionList().get(0).getIcon(),
                 response.getMain().getTempMax().toString(),
                 response.getMain().getTempMin().toString()

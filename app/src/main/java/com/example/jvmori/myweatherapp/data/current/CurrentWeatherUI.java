@@ -59,7 +59,7 @@ public class CurrentWeatherUI {
         return "";
     }
 
-    public  String getDateCurrentTimeZone(long timestamp) {
+    public String getDateCurrentTimeZone(long timestamp) {
         Calendar cal = Calendar.getInstance(Locale.getDefault());
         cal.setTimeInMillis(timestamp);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE,  d MMM yyyy HH:mm:ss");
