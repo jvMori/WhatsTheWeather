@@ -8,10 +8,12 @@ import androidx.room.Embedded;
 import androidx.room.TypeConverters;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
+import java.util.Date;
 import java.util.Locale;
 
 public class FutureWeather {
@@ -41,9 +43,15 @@ public class FutureWeather {
     }
 
     public String getDayOfWeek(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E, MMM d");
-        LocalDate localDate = LocalDate.parse(mDate);
-        return  formatter.format(localDate);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM d", Locale.US);
+        Date date = new Date();
+        try {
+             date = format.parse(mDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return formatter.format(date);
     }
 
 }

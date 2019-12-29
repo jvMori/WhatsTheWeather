@@ -2,14 +2,11 @@ package com.example.jvmori.myweatherapp.di.component;
 
 import android.app.Application;
 import com.example.jvmori.myweatherapp.application.BaseApplication;
-import com.example.jvmori.myweatherapp.di.modules.ActivityBuildersModule;
-import com.example.jvmori.myweatherapp.di.modules.ViewModelFactoryModule;
-import com.example.jvmori.myweatherapp.di.modules.app.DataSourceModule;
+import com.example.jvmori.myweatherapp.di.modules.app.ActivityBuildersModule;
+import com.example.jvmori.myweatherapp.di.modules.main.ViewModelFactoryModule;
+import com.example.jvmori.myweatherapp.di.modules.app.DatabaseModule;
 import com.example.jvmori.myweatherapp.di.modules.app.ImageLoaderModule;
-import com.example.jvmori.myweatherapp.di.modules.main.LocationModule;
-import com.example.jvmori.myweatherapp.di.modules.main.MainFragmentBuildersModule;
-import com.example.jvmori.myweatherapp.di.modules.main.WeatherFragmentModule;
-import com.example.jvmori.myweatherapp.di.modules.main.WeatherViewModelsModule;
+import com.example.jvmori.myweatherapp.di.modules.app.NetworkModule;
 import com.example.jvmori.myweatherapp.di.scope.ApplicationScope;
 import dagger.BindsInstance;
 import dagger.Component;
@@ -21,10 +18,10 @@ import dagger.android.support.AndroidSupportInjectionModule;
         modules = {
                 AndroidSupportInjectionModule.class,
                 ActivityBuildersModule.class,
-                DataSourceModule.class,
+                NetworkModule.class,
+                DatabaseModule.class,
                 ImageLoaderModule.class,
-                ViewModelFactoryModule.class,
-                LocationModule.class
+                ViewModelFactoryModule.class
         }
 )
 public interface AppComponent extends AndroidInjector<BaseApplication> {

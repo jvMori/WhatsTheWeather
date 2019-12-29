@@ -28,7 +28,6 @@ import com.example.jvmori.myweatherapp.ui.view.adapters.location.LocationAdapter
 import com.example.jvmori.myweatherapp.ui.view.adapters.SearchResultsAdapter;
 import com.example.jvmori.myweatherapp.ui.viewModel.SearchViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
-import com.example.jvmori.myweatherapp.ui.viewModel.WeatherViewModel;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.WeatherParameters;
 import com.google.android.material.snackbar.Snackbar;
@@ -50,15 +49,14 @@ public class SearchFragment extends DaggerFragment implements
     private RecyclerView cities, locations;
     private ProgressBar progressBar;
     private SearchView searchView;
-    private SearchViewModel searchViewModel;
-    private WeatherViewModel weatherViewModel;
+   // private SearchViewModel searchViewModel;
     private ConstraintLayout constraintLayout;
     @Inject
     LocationAdapter locationAdapter;
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
-    @Inject
-    DeleteLocationItem deleteLocationItem;
+//    @Inject
+//    DeleteLocationItem deleteLocationItem;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -68,7 +66,7 @@ public class SearchFragment extends DaggerFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        searchViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(SearchViewModel.class);
+        //searchViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(SearchViewModel.class);
         return inflater.inflate(R.layout.fragment_search, container, false);
     }
 
@@ -76,11 +74,11 @@ public class SearchFragment extends DaggerFragment implements
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (getActivity() != null) {
-            weatherViewModel = ViewModelProviders.of(getActivity(), viewModelProviderFactory).get(WeatherViewModel.class);
-            weatherViewModel.allForecastsFromDb();
-            weatherViewModel.allWeatherFromDb().observe(this, result ->
-                    createLocationsAdapter(result)
-            );
+            //weatherViewModel = ViewModelProviders.of(getActivity(), viewModelProviderFactory).get(WeatherViewModel.class);
+           // weatherViewModel.allForecastsFromDb();
+//            weatherViewModel.allWeatherFromDb().observe(this, result ->
+//                    createLocationsAdapter(result)
+//            );
         }
     }
 
@@ -115,32 +113,32 @@ public class SearchFragment extends DaggerFragment implements
             }
             @Override
             public boolean onQueryTextChange(String text) {
-                searchViewModel.subjectOnNext(text);
+               // searchViewModel.subjectOnNext(text);
                 return true;
             }
         });
-        searchViewModel.listenForSearchChanges();
+        //searchViewModel.listenForSearchChanges();
 
-        searchViewModel.cities().observe(this, result -> {
-            switch (result.status) {
-                case LOADING:
-                    progressBar.setVisibility(View.VISIBLE);
-                    cities.setVisibility(View.GONE);
-                    break;
-
-                case SUCCESS:
-                    showSuggestions(result.data);
-                    progressBar.setVisibility(View.GONE);
-                    cities.setVisibility(View.VISIBLE);
-                    break;
-
-                case ERROR:
-                    progressBar.setVisibility(View.GONE);
-                    break;
-                default:
-                    break;
-            }
-        });
+//        searchViewModel.cities().observe(this, result -> {
+//            switch (result.status) {
+//                case LOADING:
+//                    progressBar.setVisibility(View.VISIBLE);
+//                    cities.setVisibility(View.GONE);
+//                    break;
+//
+//                case SUCCESS:
+//                    showSuggestions(result.data);
+//                    progressBar.setVisibility(View.GONE);
+//                    cities.setVisibility(View.VISIBLE);
+//                    break;
+//
+//                case ERROR:
+//                    progressBar.setVisibility(View.GONE);
+//                    break;
+//                default:
+//                    break;
+//            }
+//        });
     }
 
     private void bindView(@NonNull View view) {
@@ -169,8 +167,8 @@ public class SearchFragment extends DaggerFragment implements
         locationAdapter.setiOnClickListener(this);
         locations.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
         locations.setAdapter(locationAdapter);
-        deleteLocationItem.delete(locations);
-        deleteLocationItem.setiOnDeletedAction(this);
+       // deleteLocationItem.delete(locations);
+       // deleteLocationItem.setiOnDeletedAction(this);
     }
 
     @Override

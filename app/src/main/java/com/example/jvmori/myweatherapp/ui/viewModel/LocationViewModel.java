@@ -1,18 +1,18 @@
 package com.example.jvmori.myweatherapp.ui.viewModel;
 
-import android.app.Activity;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.provider.ContactsContract;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
+
 import com.example.jvmori.myweatherapp.data.LocationProvider;
 import com.example.jvmori.myweatherapp.data.ProviderStatus;
 import com.example.jvmori.myweatherapp.ui.Resource;
-
+import com.example.jvmori.myweatherapp.ui.view.fragment.LocationServiceDialog;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,27 +20,15 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import io.reactivex.disposables.CompositeDisposable;
+
 public class LocationViewModel  extends ViewModel {
 
-    private LocationProvider locationProvider;
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     @Inject
-    public LocationViewModel(LocationProvider locationProvider) {
-        this.locationProvider = locationProvider;
+    public LocationViewModel() {
     }
-
-    public void CheckLocation(){
-        locationProvider.CheckLocation();
-    }
-
-    public LiveData<Resource<Location>> getDeviceLocation(){
-        return locationProvider.deviceLocation();
-    }
-
-    public  LiveData<ProviderStatus> getProviderStatus(){
-        return locationProvider.providerStatus();
-    }
-
 
     public  String getCity(Location location, Context context){
         double latitude = location.getLatitude();
@@ -56,8 +44,11 @@ public class LocationViewModel  extends ViewModel {
         }
         return null;
     }
-    public void setLocationProviderActivity(Activity activity){
-        locationProvider.setActivity(activity);
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        disposable.clear();
     }
 }
 

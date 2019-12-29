@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <import type="com.example.jvmori.myweatherapp.data.current.CurrentWeatherUI" />
+        <variable
+            name="currentWeather"
+            type="CurrentWeatherUI" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/city"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/maven_pro"
+            android:text='@{currentWeather.city, default="Sydney"}'
+            android:textAppearance="@style/TextHeadline"
+            android:textSize="34sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/date"
+            style="@style/TextDefault"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/maven_pro"
+            android:text='@{currentWeather.getDate() , default="Thursday 15 April 2019"}'
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/city" />
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="8dp"
+            app:iconImage="@{currentWeather.getFullIconUrl()}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/date" />
+
+        <TextView
+            android:id="@+id/mainTemp"
+            style="@style/TextHeadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="138dp"
+            android:text='@{currentWeather.getMainTempTxt() + "°", default="18°"}'
+            android:textSize="70sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/date" />
+
+        <TextView
+            android:id="@+id/textView7"
+            style="@style/TextDefault"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@{currentWeather.detailedDescription, default="light intensity drizzle"}'
+            android:textColor="@color/textPrimary"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mainTemp" />
+
+        <TextView
+            android:id="@+id/windVal"
+            style="@style/TextDefault"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="56dp"
+            android:gravity="center"
+            android:text='@{currentWeather.windSpeed + "km/h", default="9km/h"}'
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/humidityVal"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mainTemp" />
+
+        <TextView
+            android:id="@+id/wind"
+            style="@style/TextGrayed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/wind"
+            app:layout_constraintEnd_toEndOf="@+id/windVal"
+            app:layout_constraintStart_toStartOf="@+id/windVal"
+            app:layout_constraintTop_toBottomOf="@+id/windVal" />
+
+        <TextView
+            android:id="@+id/humidityVal"
+            style="@style/TextDefault"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text='@{currentWeather.humidity + "%", default="70%"}'
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cloudVal"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/windVal"
+            app:layout_constraintTop_toTopOf="@+id/windVal" />
+
+        <TextView
+            android:id="@+id/humidity"
+            style="@style/TextGrayed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/humidity"
+            app:layout_constraintEnd_toEndOf="@+id/humidityVal"
+            app:layout_constraintStart_toStartOf="@+id/humidityVal"
+            app:layout_constraintTop_toBottomOf="@+id/humidityVal" />
+
+        <TextView
+            android:id="@+id/cloudVal"
+            style="@style/TextDefault"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="40dp"
+            android:gravity="center"
+            android:text='@{currentWeather.cloudness + "%", default ="80%"}'
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/humidityVal"
+            app:layout_constraintTop_toTopOf="@+id/humidityVal" />
+
+        <TextView
+            android:id="@+id/cloudiness"
+            style="@style/TextGrayed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/Cloudiness"
+            app:layout_constraintEnd_toEndOf="@+id/cloudVal"
+            app:layout_constraintStart_toStartOf="@+id/cloudVal"
+            app:layout_constraintTop_toBottomOf="@+id/cloudVal" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/forecastRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="40dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/humidity" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

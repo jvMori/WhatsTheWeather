@@ -9,6 +9,26 @@
         <item name="android:actionBarWidgetTheme">@style/MyActionBarWidgetTheme</item>
     </style>
 
+    <style name="DarkTheme" parent="AppTheme">
+        <item name="android:textAppearance">@style/TextDefault</item>
+    </style>
+
+    <style name="TextDefault" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">@font/maven_pro</item>
+    </style>
+
+    <style name="TextGrayed" parent="TextDefault">
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextHeadline" parent="TextDefault">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="NavigationTabTextAppeareance" parent="TextAppearance.Design.Tab">
         <item name="android:textColor">#FFF</item>
         <item name="android:textSize">12sp</item>

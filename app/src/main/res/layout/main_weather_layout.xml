@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.example.jvmori.myweatherapp.ui.Resource.Status" />
+        <import type="androidx.lifecycle.LiveData" />
+        <import type="com.example.jvmori.myweatherapp.data.current.CurrentWeatherUI" />
+
+        <variable
+            name="currentWeatherStatus"
+            type="Status" />
+        <variable
+            name="currentWeatherData"
+            type="CurrentWeatherUI" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/loading"
+            layout="@layout/loading"
+            app:showLoadingView="@{currentWeatherStatus}" />
+
+        <include
+            android:id="@+id/success_view"
+            layout="@layout/main_weather"
+            android:visibility="visible"
+            bind:currentWeather="@{currentWeatherData}" />
+
+        <include
+            layout="@layout/error_layout"
+            app:showErrorView="@{currentWeatherStatus}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

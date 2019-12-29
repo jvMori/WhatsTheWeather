@@ -7,4 +7,7 @@
     <string name="dialog_location">The location service is disabled. Access \"Settings\" to check.</string>
     <string name="settings">SETTINGS</string>
     <string name="cancel">CANCEL</string>
+    <string name="wind">Wind</string>
+    <string name="humidity">Humidity</string>
+    <string name="Cloudiness">Clouds</string>
 </resources>

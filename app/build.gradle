@@ -5,9 +5,9 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.jvmori.myweatherapp"
-        minSdkVersion 26
+        minSdkVersion 24
         targetSdkVersion 28
-        versionCode 7
+        versionCode 8
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -16,6 +16,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    dataBinding {
+        enabled = true
     }
     compileOptions {
         sourceCompatibility = '1.8'
@@ -42,6 +45,7 @@ dependencies {
     //ViewModel & LiveData
     implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:2.0.0"
+    implementation "androidx.lifecycle:lifecycle-reactivestreams:2.0.0"
     //Room
     implementation "androidx.room:room-runtime:2.1.0-rc01"
     implementation "androidx.room:room-rxjava2:2.1.0-rc01"
@@ -73,6 +77,9 @@ dependencies {
     implementation "androidx.core:core-ktx:+"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // WeatherLocation
+    implementation "com.google.android.gms:play-services-location:17.0.0"
 }
 repositories {
     mavenCentral()
