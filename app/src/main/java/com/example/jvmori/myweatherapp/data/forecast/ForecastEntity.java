@@ -5,6 +5,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.example.jvmori.myweatherapp.util.Const;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,6 +29,10 @@ public class ForecastEntity {
 
     public String getDayOfWeek(){
         return new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date(timestamp));
+    }
+
+    public String getFullIconUrl(){
+        return Const.baseIconUrl + iconUrl + "@2x.png";
     }
 
     public Long getTime() {

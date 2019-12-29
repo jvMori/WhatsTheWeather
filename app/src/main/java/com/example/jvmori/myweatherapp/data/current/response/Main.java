@@ -10,7 +10,7 @@ public class Main {
     @SerializedName("pressure")
     private Long mPressure;
     @SerializedName("temp")
-    private Double mTemp;
+    private double mTemp;
     @SerializedName("temp_max")
     private Double mTempMax;
     @SerializedName("temp_min")
@@ -32,16 +32,16 @@ public class Main {
         mPressure = pressure;
     }
 
-    public Double getTemp() {
+    public double getTemp() {
         return mTemp;
     }
 
-    public void setTemp(Double temp) {
+    public void setTemp(double temp) {
         mTemp = temp;
     }
 
-    public Double getTempMax() {
-        return mTempMax;
+    public int getTempMax() {
+        return (int) Math.floor(mTempMax);
     }
 
     public void setTempMax(Double tempMax) {

@@ -1,62 +1,50 @@
 package com.example.jvmori.myweatherapp.ui.view.adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jvmori.myweatherapp.R;
-import com.example.jvmori.myweatherapp.data.db.entity.forecast.FutureWeather;
-import com.squareup.picasso.Picasso;
+import com.example.jvmori.myweatherapp.data.forecast.ForecastEntity;
+import com.example.jvmori.myweatherapp.databinding.ForecastItemVerticalBinding;
 
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHolder>
 {
-    private List<FutureWeather> forecast;
-    private  Context context;
+    private List<ForecastEntity> forecast;
 
-    public ForecastAdapter(List<FutureWeather> forecast, Context context) {
+    public ForecastAdapter(List<ForecastEntity> forecast) {
         this.forecast = forecast;
-        this.context = context;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
-        ImageView ivIcon;
-        TextView day, minMaxTemp;
+        private  ForecastItemVerticalBinding binding;
 
-        ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ivIcon = itemView.findViewById(R.id.ivIconForecast);
-            day = itemView.findViewById(R.id.tvDayForecast);
-            minMaxTemp = itemView.findViewById(R.id.tvTempMaxMin);
+        ViewHolder(@NonNull ForecastItemVerticalBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+
+        void bind(ForecastEntity forecastEntity){
+            binding.setForecast(forecastEntity);
+            binding.executePendingBindings();
         }
     }
 
     @NonNull
     @Override
     public ForecastAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.forecast_item, viewGroup, false);
-        return new ViewHolder(view);
+        ForecastItemVerticalBinding binding = DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()), R.layout.forecast_item_vertical, viewGroup, false);
+        return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ForecastAdapter.ViewHolder viewHolder, int i) {
-        String dayDate = forecast.get(i).getDayOfWeek();
-        int minTemp = forecast.get(i).getDay().getMintempC().intValue();
-        int highTemp = forecast.get(i).getDay().getMaxtempC().intValue();
-        String minMax = String.format("%s° / %s°", highTemp, minTemp);
-
-        viewHolder.day.setText(dayDate);
-        viewHolder.minMaxTemp.setText(minMax);
-        String url = "http:" + forecast.get(i).getDay().getCondition().getIcon();
-        Picasso.get().load(url).into(viewHolder.ivIcon);
-
+        viewHolder.bind(forecast.get(i));
     }
 
     @Override

@@ -12,7 +12,7 @@ public class ForecastMapper {
         return new ForecastEntity(
                 response.getTimestamp(),
                 response.getDescriptionList().get(0).getIcon(),
-                response.getMain().getTempMax().toString(),
+                Integer.toString(response.getMain().getTempMax()),
                 response.getMain().getTempMin().toString()
         );
     }

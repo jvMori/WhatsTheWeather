@@ -7,24 +7,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jvmori.myweatherapp.MainActivity;
 import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.data.forecast.ForecastEntity;
 import com.example.jvmori.myweatherapp.databinding.MainWeatherLayoutBinding;
 import com.example.jvmori.myweatherapp.ui.Resource;
 import com.example.jvmori.myweatherapp.ui.current.CurrentWeatherViewModel;
 import com.example.jvmori.myweatherapp.ui.forecast.ForecastViewModel;
+import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
 import com.example.jvmori.myweatherapp.ui.viewModel.LocationViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -55,6 +59,7 @@ public class WeatherFragment extends DaggerFragment {
         super.onCreate(savedInstanceState);
         currentWeatherViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(CurrentWeatherViewModel.class);
         forecastViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(ForecastViewModel.class);
+        forecastViewModel.fetchForecast("Trzemesnia");
     }
 
     @Override
@@ -68,8 +73,10 @@ public class WeatherFragment extends DaggerFragment {
 
     private void observeLocationChanges() {
         ((MainActivity) Objects.requireNonNull(getActivity())).lifecycleBoundLocationManager.deviceLocation().observe(this, location -> {
-            if (location != null && location.status == Resource.Status.SUCCESS && location.data != null)
+            if (location != null && location.status == Resource.Status.SUCCESS && location.data != null) {
                 currentWeatherViewModel.fetchCurrentWeatherByGeographic(location.data);
+               // forecastViewModel.fetchForecast();
+            }
         });
     }
 
@@ -82,25 +89,34 @@ public class WeatherFragment extends DaggerFragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        observeAndUpdateCurrentWeatherView();
-        observeAndUpdateForecastView();
+    public void onStart() {
+        super.onStart();
+        observeCurrentWeatherAndUpdateView();
+        observeForecastAndUpdateView();
     }
 
-    private void observeAndUpdateForecastView() {
-        forecastViewModel.getForecast.observe(this, forecastsResource -> {
-            if (forecastsResource.status == Resource.Status.LOADING) {
-
-            }
-        });
-    }
-
-    private void observeAndUpdateCurrentWeatherView() {
+    private void observeCurrentWeatherAndUpdateView() {
         currentWeatherViewModel.getCurrentWeather().observe(this, weather -> {
             if (weather.status == Resource.Status.SUCCESS) {
                 binding.setCurrentWeatherData(weather.data);
             }
         });
+    }
+
+    private void observeForecastAndUpdateView() {
+        forecastViewModel.getForecast.observe(this, forecastsResource -> {
+            if (forecastsResource.status == Resource.Status.SUCCESS){
+                assert forecastsResource.data != null;
+                createForecastView(forecastsResource.data.getForecastList());
+            }}
+        );
+    }
+
+    private void createForecastView(List<ForecastEntity> forecastEntityList) {
+        ForecastAdapter adapter = new ForecastAdapter(forecastEntityList);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext(), RecyclerView.HORIZONTAL, false);
+        binding.successView.forecastRecyclerView.setAdapter(adapter);
+        binding.successView.forecastRecyclerView.setLayoutManager(linearLayoutManager);
     }
 
     private void navigateToSearchListener() {

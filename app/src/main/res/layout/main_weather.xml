@@ -48,7 +48,7 @@
             android:id="@+id/icon"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="8dp"
             app:iconImage="@{currentWeather.getFullIconUrl()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,11 +59,12 @@
             style="@style/TextHeadline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text='@{currentWeather.mainTemp + "°", default="18°"}'
+            android:layout_marginTop="138dp"
+            android:text='@{currentWeather.getMainTempTxt() + "°", default="18°"}'
             android:textSize="70sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/icon" />
+            app:layout_constraintTop_toBottomOf="@+id/date" />
 
         <TextView
             android:id="@+id/textView7"
@@ -71,6 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text='@{currentWeather.detailedDescription, default="light intensity drizzle"}'
+            android:textColor="@color/textPrimary"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -153,8 +155,10 @@
             app:layout_constraintTop_toBottomOf="@+id/cloudVal" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/forecastRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="40dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"

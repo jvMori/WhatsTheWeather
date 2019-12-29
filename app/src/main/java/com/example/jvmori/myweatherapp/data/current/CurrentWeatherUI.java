@@ -26,14 +26,14 @@ public class CurrentWeatherUI {
     private String mainDescription;
     private String detailedDescription;
     private String iconUrl;
-    private String mainTemp;
+    private double mainTemp;
     private String pressure;
     private String humidity;
     private String cloudness;
     private String windSpeed;
     private Long timestamp;
 
-    public CurrentWeatherUI(Long timestamp, String city, String longitude, String latitude, String country, String mainDescription, String detailedDescription, String iconUrl, String mainTemp, String pressure, String humidity, String cloudness, String windSpeed) {
+    public CurrentWeatherUI(Long timestamp, String city, String longitude, String latitude, String country, String mainDescription, String detailedDescription, String iconUrl, double mainTemp, String pressure, String humidity, String cloudness, String windSpeed) {
         this.timestamp = timestamp;
         this.city = city;
         this.longitude = longitude;
@@ -110,11 +110,15 @@ public class CurrentWeatherUI {
         this.iconUrl = iconUrl;
     }
 
-    public String getMainTemp() {
+    public String getMainTempTxt() {
+        return Integer.toString((int) Math.floor(mainTemp));
+    }
+
+    public double getMainTemp() {
         return mainTemp;
     }
 
-    public void setMainTemp(String mainTemp) {
+    public void setMainTemp(double mainTemp) {
         this.mainTemp = mainTemp;
     }
 
