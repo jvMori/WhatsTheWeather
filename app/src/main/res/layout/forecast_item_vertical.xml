@@ -43,7 +43,7 @@
             android:id="@+id/temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text='@{forecast.maxTemp + "°C", default="1°C"}'
+            android:text='@{forecast.mainTemp + "°C", default="1°C"}'
             android:textColor="@color/textPrimary"
             app:layout_constraintEnd_toEndOf="@+id/icon"
             app:layout_constraintStart_toStartOf="@+id/icon"

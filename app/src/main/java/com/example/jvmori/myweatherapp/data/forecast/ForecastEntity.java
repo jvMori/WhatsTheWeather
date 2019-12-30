@@ -1,32 +1,32 @@
 package com.example.jvmori.myweatherapp.data.forecast;
 
-import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-
 import com.example.jvmori.myweatherapp.util.Const;
-import com.example.jvmori.myweatherapp.util.DateConverter;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.util.List;
 
 public class ForecastEntity {
-
-    private String cityName;
     private String dayOfWeek;
+    private String mainDescription;
+    private String detailedDescription;
     private String iconUrl;
-    private String maxTemp;
-    private String minTemp;
+    private String mainTemp;
+    private String pressure;
+    private String humidity;
+    private String cloudness;
+    private String windSpeed;
+    private List<ForecastHourly> forecastHourlyList;
 
-    public ForecastEntity(String dayOfWeek, String iconUrl, String maxTemp, String minTemp) {
+    public ForecastEntity(String dayOfWeek, String mainDescription, String detailedDescription, String iconUrl, String mainTemp, String pressure, String humidity, String cloudness, String windSpeed, List<ForecastHourly> forecastHourlyList) {
         this.dayOfWeek = dayOfWeek;
+        this.mainDescription = mainDescription;
+        this.detailedDescription = detailedDescription;
         this.iconUrl = iconUrl;
-        this.maxTemp = maxTemp;
-        this.minTemp = minTemp;
+        this.mainTemp = mainTemp;
+        this.pressure = pressure;
+        this.humidity = humidity;
+        this.cloudness = cloudness;
+        this.windSpeed = windSpeed;
+        this.forecastHourlyList = forecastHourlyList;
     }
 
     public String getFullIconUrl() {
@@ -41,6 +41,22 @@ public class ForecastEntity {
         this.dayOfWeek = dayOfWeek;
     }
 
+    public String getMainDescription() {
+        return mainDescription;
+    }
+
+    public void setMainDescription(String mainDescription) {
+        this.mainDescription = mainDescription;
+    }
+
+    public String getDetailedDescription() {
+        return detailedDescription;
+    }
+
+    public void setDetailedDescription(String detailedDescription) {
+        this.detailedDescription = detailedDescription;
+    }
+
     public String getIconUrl() {
         return iconUrl;
     }
@@ -49,27 +65,51 @@ public class ForecastEntity {
         this.iconUrl = iconUrl;
     }
 
-    public String getMaxTemp() {
-        return maxTemp;
+    public String getMainTemp() {
+        return mainTemp;
     }
 
-    public void setMaxTemp(String maxTemp) {
-        this.maxTemp = maxTemp;
+    public void setMainTemp(String mainTemp) {
+        this.mainTemp = mainTemp;
     }
 
-    public String getMinTemp() {
-        return minTemp;
+    public String getPressure() {
+        return pressure;
     }
 
-    public void setMinTemp(String minTemp) {
-        this.minTemp = minTemp;
+    public void setPressure(String pressure) {
+        this.pressure = pressure;
     }
 
-    public String getCityName() {
-        return cityName;
+    public String getHumidity() {
+        return humidity;
     }
 
-    public void setCityName(@NonNull String cityName) {
-        this.cityName = cityName;
+    public void setHumidity(String humidity) {
+        this.humidity = humidity;
+    }
+
+    public String getCloudness() {
+        return cloudness;
+    }
+
+    public void setCloudness(String cloudness) {
+        this.cloudness = cloudness;
+    }
+
+    public String getWindSpeed() {
+        return windSpeed;
+    }
+
+    public void setWindSpeed(String windSpeed) {
+        this.windSpeed = windSpeed;
+    }
+
+    public List<ForecastHourly> getForecastHourlyList() {
+        return forecastHourlyList;
+    }
+
+    public void setForecastHourlyList(List<ForecastHourly> forecastHourlyList) {
+        this.forecastHourlyList = forecastHourlyList;
     }
 }
