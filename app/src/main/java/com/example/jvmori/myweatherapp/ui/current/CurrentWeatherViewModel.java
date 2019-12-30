@@ -25,9 +25,11 @@ import javax.inject.Inject;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
+import io.reactivex.schedulers.Schedulers;
 
 public class CurrentWeatherViewModel extends ViewModel {
 
@@ -64,10 +66,13 @@ public class CurrentWeatherViewModel extends ViewModel {
                 forecastRepository.getForecastByGeo(location),
                 (current, forecast) -> createWeather(current, forecast.getForecastList()))
                 .toObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
                 .subscribe(currentWeatherUIObserver);
     }
 
     private WeatherUI createWeather(CurrentWeatherUI currentWeatherUI, List<ForecastEntity> forecastEntityList) {
+        forecastEntityList.remove(0);
         return new WeatherUI(currentWeatherUI, forecastEntityList);
     }
 

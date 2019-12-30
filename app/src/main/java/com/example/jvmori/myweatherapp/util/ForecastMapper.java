@@ -13,33 +13,48 @@ public class ForecastMapper {
     private static ForecastEntity forecastEntity(Forecast response) {
         return new ForecastEntity(
                 DateConverter.getDayOfWeek(response.getTimeText()),
-                response.getDescriptionList().get(0).getMain(),
-                response.getDescriptionList().get(0).getDescription(),
-                response.getDescriptionList().get(0).getIcon(),
-                Integer.toString((int)Math.floor(response.getMain().getTemp())),
-                response.getMain().getPressure().toString(),
-                response.getMain().getHumidity().toString(),
-                response.getClouds().toString(),
-                response.getWind().getSpeed().toString(),
                 new ArrayList<>()
         );
     }
 
-    public static ArrayList mapForecasts(List<Forecast> forecastsResponse) {
+    public static List<ForecastEntity> mapForecasts(List<Forecast> forecastsResponse) {
         HashMap<String, ForecastEntity> forecastHashMap = new HashMap<>();
+        List<String> days = new ArrayList<>();
         for (int i = 0; i < forecastsResponse.size(); i++) {
-            String key = DateConverter.getDayOfWeek(forecastsResponse.get(i).getTimeText());
-            ForecastEntity value = forecastEntity(forecastsResponse.get(i));
-            if (forecastHashMap.containsKey(key)) {
-                forecastHashMap.get(key).getForecastHourlyList().add(new ForecastHourly(
-                        forecastsResponse.get(i).getDescriptionList().get(0).getIcon(),
-                        Double.toString(forecastsResponse.get(i).getMain().getTemp()),
-                        forecastsResponse.get(i).getTimeText()
-                ));
-            } else {
-                forecastHashMap.put(key, value);
-            }
+            groupForecastsByDays(forecastsResponse, forecastHashMap, days, i);
         }
-        return new ArrayList<>(forecastHashMap.values());
+        return preserveDaysOrder(forecastHashMap, days);
+    }
+
+    private static void groupForecastsByDays(List<Forecast> forecastsResponse, HashMap<String, ForecastEntity> forecastHashMap, List<String> days, int i) {
+        String key = DateConverter.getDayOfWeek(forecastsResponse.get(i).getTimeText());
+        if (forecastHashMap.containsKey(key)) {
+           forecastHashMap.get(key).getForecastHourlyList().add(forecastHourly(forecastsResponse.get(i)));
+        } else {
+            days.add(key);
+            forecastHashMap.put(key, forecastEntity(forecastsResponse.get(i)));
+        }
+    }
+
+    private static List<ForecastEntity> preserveDaysOrder(HashMap<String, ForecastEntity> forecastHashMap, List<String> days) {
+        List<ForecastEntity> result = new ArrayList<>();
+        for (int i = 0; i < days.size(); i++) {
+            result.add(forecastHashMap.get(days.get(i)));
+        }
+        return result;
+    }
+
+    private static ForecastHourly forecastHourly(Forecast forecast){
+        return new ForecastHourly(
+                forecast.getDescriptionList().get(0).getMain(),
+                forecast.getDescriptionList().get(0).getDescription(),
+                forecast.getDescriptionList().get(0).getIcon(),
+                Integer.toString((int) Math.floor(forecast.getMain().getTemp())),
+                forecast.getMain().getPressure().toString(),
+                forecast.getMain().getHumidity().toString(),
+                forecast.getClouds().toString(),
+                forecast.getWind().getSpeed().toString(),
+                forecast.getTimeText()
+        );
     }
 }

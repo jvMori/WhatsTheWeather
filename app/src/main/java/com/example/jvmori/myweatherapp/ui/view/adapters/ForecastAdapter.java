@@ -13,24 +13,26 @@ import com.example.jvmori.myweatherapp.databinding.ForecastItemVerticalBinding;
 
 import java.util.List;
 
-public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHolder>
-{
+public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHolder> {
     private List<ForecastEntity> forecast;
 
     public ForecastAdapter(List<ForecastEntity> forecast) {
         this.forecast = forecast;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
-        private  ForecastItemVerticalBinding binding;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        private ForecastItemVerticalBinding binding;
 
         ViewHolder(@NonNull ForecastItemVerticalBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
-        void bind(ForecastEntity forecastEntity){
-            binding.setForecast(forecastEntity);
+        void bind(ForecastEntity forecastEntity) {
+            int index = forecastEntity.getForecastHourlyList().size() > 3 ? 3 : 0;
+            binding.setEntity(forecastEntity);
+            if (forecastEntity.getForecastHourlyList().size() > index)
+                binding.setForecast(forecastEntity.getForecastHourlyList().get(index));
             binding.executePendingBindings();
         }
     }

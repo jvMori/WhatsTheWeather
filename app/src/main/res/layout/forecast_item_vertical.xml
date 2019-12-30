@@ -4,9 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.example.jvmori.myweatherapp.data.forecast.ForecastHourly" />
         <import type="com.example.jvmori.myweatherapp.data.forecast.ForecastEntity" />
         <variable
             name="forecast"
+            type="ForecastHourly" />
+        <variable
+            name="entity"
             type="ForecastEntity" />
 
     </data>
@@ -23,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:text='@{forecast.getDayOfWeek(), default="Monday"}'
+            android:text='@{entity.getDayOfWeek(), default="Monday"}'
             android:textColor="@color/textPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
