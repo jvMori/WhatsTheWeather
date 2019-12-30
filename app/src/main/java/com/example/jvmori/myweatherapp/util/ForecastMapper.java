@@ -10,7 +10,7 @@ public class ForecastMapper {
 
     private static ForecastEntity forecastEntity (Forecast response){
         return new ForecastEntity(
-                response.getTimestamp(),
+                DateConverter.getDayOfWeek(response.getTimeText()),
                 response.getDescriptionList().get(0).getIcon(),
                 Integer.toString(response.getMain().getTempMax()),
                 response.getMain().getTempMin().toString()

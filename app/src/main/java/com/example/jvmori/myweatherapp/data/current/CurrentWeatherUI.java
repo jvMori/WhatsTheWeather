@@ -1,7 +1,5 @@
 package com.example.jvmori.myweatherapp.data.current;
 
-import android.icu.text.SimpleDateFormat;
-import android.icu.util.Calendar;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -10,8 +8,7 @@ import androidx.room.Entity;
 
 import com.example.jvmori.myweatherapp.util.Const;
 
-import java.util.Date;
-import java.util.Locale;
+import static com.example.jvmori.myweatherapp.util.DateConverter.getDateCurrentTimeZone;
 
 @Entity(tableName = "current_weather", primaryKeys = {"city_name", "longitude", "latitude"})
 public class CurrentWeatherUI {
@@ -59,13 +56,6 @@ public class CurrentWeatherUI {
         return "";
     }
 
-    public String getDateCurrentTimeZone(long timestamp) {
-        Calendar cal = Calendar.getInstance(Locale.getDefault());
-        cal.setTimeInMillis(timestamp);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE,  d MMM yyyy HH:mm:ss");
-        Date currentTimeZone = cal.getTime();
-        return simpleDateFormat.format(currentTimeZone);
-    }
     public String getCity() {
         return city;
     }

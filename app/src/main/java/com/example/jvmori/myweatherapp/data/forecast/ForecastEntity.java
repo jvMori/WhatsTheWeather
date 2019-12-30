@@ -6,7 +6,9 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.example.jvmori.myweatherapp.util.Const;
+import com.example.jvmori.myweatherapp.util.DateConverter;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,32 +17,28 @@ import java.util.Locale;
 public class ForecastEntity {
 
     private String cityName;
-    private Long timestamp;
+    private String dayOfWeek;
     private String iconUrl;
     private String maxTemp;
     private String minTemp;
 
-    public ForecastEntity(Long timestamp, String iconUrl, String maxTemp, String minTemp) {
-        this.timestamp = timestamp;
+    public ForecastEntity(String dayOfWeek, String iconUrl, String maxTemp, String minTemp) {
+        this.dayOfWeek = dayOfWeek;
         this.iconUrl = iconUrl;
         this.maxTemp = maxTemp;
         this.minTemp = minTemp;
     }
 
-    public String getDayOfWeek(){
-        return new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date(timestamp));
-    }
-
-    public String getFullIconUrl(){
+    public String getFullIconUrl() {
         return Const.baseIconUrl + iconUrl + "@2x.png";
     }
 
-    public Long getTime() {
-        return timestamp;
+    public String getDayOfWeek() {
+        return dayOfWeek;
     }
 
-    public void setTime(Long time) {
-        this.timestamp = time;
+    public void setDayOfWeek(String dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 
     public String getIconUrl() {
