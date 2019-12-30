@@ -22,7 +22,6 @@ import com.example.jvmori.myweatherapp.data.forecast.ForecastEntity;
 import com.example.jvmori.myweatherapp.databinding.MainWeatherLayoutBinding;
 import com.example.jvmori.myweatherapp.ui.Resource;
 import com.example.jvmori.myweatherapp.ui.current.CurrentWeatherViewModel;
-import com.example.jvmori.myweatherapp.ui.forecast.ForecastViewModel;
 import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
 import com.example.jvmori.myweatherapp.ui.viewModel.LocationViewModel;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
@@ -47,7 +46,6 @@ public class WeatherFragment extends DaggerFragment {
 
     private LocationViewModel locationViewModel;
     private CurrentWeatherViewModel currentWeatherViewModel;
-    private ForecastViewModel forecastViewModel;
     private MainWeatherLayoutBinding binding;
 
     public WeatherFragment() {
@@ -58,7 +56,6 @@ public class WeatherFragment extends DaggerFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         currentWeatherViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(CurrentWeatherViewModel.class);
-        forecastViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(ForecastViewModel.class);
     }
 
     @Override
@@ -73,8 +70,7 @@ public class WeatherFragment extends DaggerFragment {
     private void observeLocationChanges() {
         ((MainActivity) Objects.requireNonNull(getActivity())).lifecycleBoundLocationManager.deviceLocation().observe(this, location -> {
             if (location != null && location.status == Resource.Status.SUCCESS && location.data != null) {
-                currentWeatherViewModel.fetchCurrentWeatherByGeographic(location.data);
-                forecastViewModel.fetchForecastByGeo(location.data);
+                currentWeatherViewModel.fetchWeatherByGeographic(location.data);
             }
         });
     }
@@ -90,25 +86,17 @@ public class WeatherFragment extends DaggerFragment {
     @Override
     public void onStart() {
         super.onStart();
-        observeCurrentWeatherAndUpdateView();
-        observeForecastAndUpdateView();
+        observeWeatherAndUpdateView();
     }
 
-    private void observeCurrentWeatherAndUpdateView() {
+    private void observeWeatherAndUpdateView() {
         currentWeatherViewModel.getCurrentWeather().observe(this, weather -> {
             if (weather.status == Resource.Status.SUCCESS) {
                 binding.setCurrentWeatherData(weather.data);
+                assert weather.data != null;
+                createForecastView(weather.data.getForecastEntityList());
             }
         });
-    }
-
-    private void observeForecastAndUpdateView() {
-        forecastViewModel.getForecast.observe(this, forecastsResource -> {
-            if (forecastsResource.status == Resource.Status.SUCCESS){
-                assert forecastsResource.data != null;
-                createForecastView(forecastsResource.data);
-            }}
-        );
     }
 
     private void createForecastView(List<ForecastEntity> forecastEntityList) {

@@ -23,7 +23,11 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
                             }
                             return localData;
                         })
-                        .subscribe(emitter::onNext)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(
+                                emitter::onNext
+                        )
         );
 
     }
