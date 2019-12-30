@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jvmori.myweatherapp.MainActivity;
 import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.data.WeatherUI;
 import com.example.jvmori.myweatherapp.data.forecast.ForecastEntity;
 import com.example.jvmori.myweatherapp.databinding.MainWeatherLayoutBinding;
 import com.example.jvmori.myweatherapp.ui.Resource;
@@ -91,12 +92,32 @@ public class WeatherFragment extends DaggerFragment {
 
     private void observeWeatherAndUpdateView() {
         currentWeatherViewModel.getCurrentWeather().observe(this, weather -> {
-            if (weather.status == Resource.Status.SUCCESS) {
-                binding.setCurrentWeatherData(weather.data);
-                assert weather.data != null;
-                createForecastView(weather.data.getForecastEntityList());
+            if (weather.status == Resource.Status.LOADING){
+                loadingView();
+            }
+            else if (weather.status == Resource.Status.SUCCESS) {
+                successView(weather);
+            }
+            else if (weather.status == Resource.Status.ERROR){
+                errorView();
             }
         });
+    }
+
+    private void errorView() {
+        binding.loading.setVisibility(View.GONE);
+        binding.errorLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void loadingView() {
+        binding.loading.setVisibility(View.VISIBLE);
+    }
+
+    private void successView(Resource<WeatherUI> weather) {
+        binding.loading.setVisibility(View.GONE);
+        binding.setCurrentWeatherData(weather.data);
+        assert weather.data != null;
+        createForecastView(weather.data.getForecastEntityList());
     }
 
     private void createForecastView(List<ForecastEntity> forecastEntityList) {
