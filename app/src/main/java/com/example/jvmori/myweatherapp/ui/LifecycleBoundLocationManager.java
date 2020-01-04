@@ -23,6 +23,7 @@ import com.example.jvmori.myweatherapp.data.ProviderStatus;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -90,20 +91,29 @@ public class LifecycleBoundLocationManager implements
     public void getLastKnownLocation() {
         if (checkPermission()) {
             fusedLocationProviderClient.getLastLocation()
-                    .addOnSuccessListener(location ->
-                            _deviceLocation.setValue(Resource.success(location)))
+                    .addOnSuccessListener(location -> {
+                        if (location == null) {
+                            _deviceLocation.setValue(Resource.error("No location provider", null));
+                            showSettingsDialog(new ResolvableApiException(Status.RESULT_DEAD_CLIENT));
+                        } else {
+                            _deviceLocation.setValue(Resource.success(location));
+                        }
+                    })
                     .addOnFailureListener(error -> {
                         _deviceLocation.setValue(Resource.error(error.getMessage(), null));
                         if (error instanceof ResolvableApiException) {
-                            try {
-                                ResolvableApiException exception = (ResolvableApiException) error;
-                                exception.startResolutionForResult(activity, REQUEST_CHECK_SETTINGS);
-                                _providerStatus.setValue(ProviderStatus.disabled);
-                            } catch (IntentSender.SendIntentException sendEx) {
-                                //ignoring
-                            }
+                            showSettingsDialog((ResolvableApiException) error);
                         }
                     });
+        }
+    }
+
+    private void showSettingsDialog(ResolvableApiException error) {
+        try {
+            error.startResolutionForResult(activity, REQUEST_CHECK_SETTINGS);
+            _providerStatus.setValue(ProviderStatus.disabled);
+        } catch (IntentSender.SendIntentException sendEx) {
+            //ignoring
         }
     }
 

@@ -1,7 +1,7 @@
 package com.example.jvmori.myweatherapp.util;
 
+import com.example.jvmori.myweatherapp.data.forecast.ForecastDetails;
 import com.example.jvmori.myweatherapp.data.forecast.ForecastEntity;
-import com.example.jvmori.myweatherapp.data.forecast.ForecastHourly;
 import com.example.jvmori.myweatherapp.data.forecast.response.Forecast;
 
 import java.util.ArrayList;
@@ -13,6 +13,9 @@ public class ForecastMapper {
     private static ForecastEntity forecastEntity(Forecast response) {
         return new ForecastEntity(
                 DateConverter.getDayOfWeek(response.getTimeText()),
+                null,
+                null,
+                null,
                 new ArrayList<>()
         );
     }
@@ -23,16 +26,40 @@ public class ForecastMapper {
         for (int i = 0; i < forecastsResponse.size(); i++) {
             groupForecastsByDays(forecastsResponse, forecastHashMap, days, i);
         }
-        return preserveDaysOrder(forecastHashMap, days);
+        List<ForecastEntity> results = preserveDaysOrder(forecastHashMap, days);
+        setForecastMainInfo(results);
+        return results;
     }
 
     private static void groupForecastsByDays(List<Forecast> forecastsResponse, HashMap<String, ForecastEntity> forecastHashMap, List<String> days, int i) {
         String key = DateConverter.getDayOfWeek(forecastsResponse.get(i).getTimeText());
         if (forecastHashMap.containsKey(key)) {
-           forecastHashMap.get(key).getForecastHourlyList().add(forecastHourly(forecastsResponse.get(i)));
+            forecastHashMap.get(key).getForecastHourlyList().add(forecastHourly(forecastsResponse.get(i)));
         } else {
             days.add(key);
             forecastHashMap.put(key, forecastEntity(forecastsResponse.get(i)));
+        }
+    }
+
+    private static void setForecastMainInfo(List<ForecastEntity> forecasts) {
+        for (int i = 0; i < forecasts.size(); i++) {
+            List<ForecastDetails> details = forecasts.get(i).getForecastHourlyList();
+            double minTemp = Float.POSITIVE_INFINITY;
+            double maxTemp = Float.NEGATIVE_INFINITY;
+            int maxIndex = -1;
+            for (int j = 0; j < details.size(); j++) {
+                if (details.get(j).getMainTemp() > maxTemp) {
+                    maxTemp = details.get(j).getMainTemp();
+                    maxIndex = j;
+                }
+                if (details.get(j).getMainTemp() < minTemp) {
+                    minTemp = details.get(j).getMainTemp();
+                }
+            }
+
+            forecasts.get(i).setMaxTemp(Integer.toString((int) Math.floor(maxTemp)));
+            forecasts.get(i).setMinTemp(Integer.toString((int) Math.floor(minTemp)));
+            forecasts.get(i).setIconUrl(details.get(maxIndex).getIconUrl());
         }
     }
 
@@ -44,12 +71,12 @@ public class ForecastMapper {
         return result;
     }
 
-    private static ForecastHourly forecastHourly(Forecast forecast){
-        return new ForecastHourly(
+    private static ForecastDetails forecastHourly(Forecast forecast) {
+        return new ForecastDetails(
                 forecast.getDescriptionList().get(0).getMain(),
                 forecast.getDescriptionList().get(0).getDescription(),
                 forecast.getDescriptionList().get(0).getIcon(),
-                Integer.toString((int) Math.floor(forecast.getMain().getTemp())),
+                forecast.getMain().getTemp(),
                 forecast.getMain().getPressure().toString(),
                 forecast.getMain().getHumidity().toString(),
                 forecast.getClouds().toString(),

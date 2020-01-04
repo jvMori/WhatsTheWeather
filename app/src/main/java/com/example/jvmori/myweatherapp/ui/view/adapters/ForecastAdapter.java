@@ -29,10 +29,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
         }
 
         void bind(ForecastEntity forecastEntity) {
-            int index = forecastEntity.getForecastHourlyList().size() > 3 ? 3 : 0;
-            binding.setEntity(forecastEntity);
-            if (forecastEntity.getForecastHourlyList().size() > index)
-                binding.setForecast(forecastEntity.getForecastHourlyList().get(index));
+            binding.setForecast(forecastEntity);
             binding.executePendingBindings();
         }
     }

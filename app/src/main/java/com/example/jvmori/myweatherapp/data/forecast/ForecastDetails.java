@@ -2,18 +2,18 @@ package com.example.jvmori.myweatherapp.data.forecast;
 
 import com.example.jvmori.myweatherapp.util.Const;
 
-public class ForecastHourly {
+public class ForecastDetails {
     private String mainDescription;
     private String detailedDescription;
     private String iconUrl;
-    private String mainTemp;
+    private double mainTemp;
     private String pressure;
     private String humidity;
     private String cloudness;
     private String windSpeed;
     private String hour;
 
-    public ForecastHourly(String mainDescription, String detailedDescription, String iconUrl, String mainTemp, String pressure, String humidity, String cloudness, String windSpeed, String hour) {
+    public ForecastDetails(String mainDescription, String detailedDescription, String iconUrl, double mainTemp, String pressure, String humidity, String cloudness, String windSpeed, String hour) {
         this.mainDescription = mainDescription;
         this.detailedDescription = detailedDescription;
         this.iconUrl = iconUrl;
@@ -53,11 +53,11 @@ public class ForecastHourly {
         this.iconUrl = iconUrl;
     }
 
-    public String getMainTemp() {
+    public double getMainTemp() {
         return mainTemp;
     }
 
-    public void setMainTemp(String mainTemp) {
+    public void setMainTemp(double mainTemp) {
         this.mainTemp = mainTemp;
     }
 
