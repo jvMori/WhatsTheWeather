@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.example.jvmori.myweatherapp.ui.view.fragment.BaseWeatherFragment;
 import com.example.jvmori.myweatherapp.ui.view.fragment.CustomWeatherFragment;
 import com.example.jvmori.myweatherapp.ui.view.fragment.GeoWeatherFragment;
 
@@ -24,9 +25,11 @@ public class SlidePagerAdapter extends FragmentStateAdapter
         if (position == 0){
             return new GeoWeatherFragment();
         }
-        CustomWeatherFragment customWeatherFragment = new CustomWeatherFragment();
-        //customWeatherFragment.currentWeatherViewModel.setCity("Gdynia");
-        return customWeatherFragment;
+        else{
+            CustomWeatherFragment customWeatherFragment = new CustomWeatherFragment();
+            customWeatherFragment.city = "Gdynia";
+            return customWeatherFragment;
+        }
     }
 
     @Override

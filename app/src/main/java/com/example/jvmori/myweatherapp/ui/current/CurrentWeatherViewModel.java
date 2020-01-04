@@ -40,24 +40,11 @@ public class CurrentWeatherViewModel extends ViewModel {
     private ForecastRepository forecastRepository;
     private static ILoadImage imageLoader;
     private CompositeDisposable disposable = new CompositeDisposable();
-    final PublishSubject<String> city = PublishSubject.create();
 
     private MutableLiveData<Resource<WeatherUI>> _weather = new MutableLiveData<>();
 
     public LiveData<Resource<WeatherUI>> getCurrentWeather() {
         return _weather;
-    }
-
-    public void setCity(String city){
-        this.city.onNext(city);
-    }
-
-    public void observeCityAndFetchWeather(){
-        city.switchMap(city ->
-                getWeatherUIObservable(
-                        repository.getCurrentWeatherByCity(city),
-                        forecastRepository.getForecast(city)))
-                .subscribe(currentWeatherUIObserver);
     }
 
     private Observable<WeatherUI> getWeatherUIObservable(Flowable<CurrentWeatherUI> currentWeatherByCity, Flowable<Forecasts> forecast2) {
