@@ -64,7 +64,6 @@ public class WeatherFragment extends DaggerFragment implements LocationServiceDi
     public void onAttach(Context context) {
         super.onAttach(context);
         if (getActivity() != null && getActivity() instanceof MainActivity) {
-            locationViewModel = ViewModelProviders.of(getActivity(), viewModelProviderFactory).get(LocationViewModel.class);
             observeLocationChanges();
             observeLocationProviderStatus(((MainActivity) getActivity()).lifecycleBoundLocationManager);
         }
