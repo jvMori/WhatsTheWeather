@@ -32,6 +32,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 public class CurrentWeatherViewModel extends ViewModel {
 
@@ -39,12 +40,36 @@ public class CurrentWeatherViewModel extends ViewModel {
     private ForecastRepository forecastRepository;
     private static ILoadImage imageLoader;
     private CompositeDisposable disposable = new CompositeDisposable();
+    final PublishSubject<String> city = PublishSubject.create();
 
     private MutableLiveData<Resource<WeatherUI>> _weather = new MutableLiveData<>();
 
     public LiveData<Resource<WeatherUI>> getCurrentWeather() {
         return _weather;
     }
+
+    public void setCity(String city){
+        this.city.onNext(city);
+    }
+
+    public void observeCityAndFetchWeather(){
+        city.switchMap(city ->
+                getWeatherUIObservable(
+                        repository.getCurrentWeatherByCity(city),
+                        forecastRepository.getForecast(city)))
+                .subscribe(currentWeatherUIObserver);
+    }
+
+    private Observable<WeatherUI> getWeatherUIObservable(Flowable<CurrentWeatherUI> currentWeatherByCity, Flowable<Forecasts> forecast2) {
+        return Flowable.zip(
+                currentWeatherByCity,
+                forecast2,
+                (current, forecast) -> createWeather(current, forecast.getForecastList()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .toObservable();
+    }
+
 
     @Inject
     public CurrentWeatherViewModel(CurrentWeatherRepository repository,
@@ -56,23 +81,14 @@ public class CurrentWeatherViewModel extends ViewModel {
     }
 
     public void fetchCurrentWeather(String city) {
-        Flowable.zip(
-                repository.getCurrentWeatherByCity(city),
-                forecastRepository.getForecast(city),
-                (current, forecast) -> createWeather(current, forecast.getForecastList()))
-                .toObservable()
+        getWeatherUIObservable(repository.getCurrentWeatherByCity(city), forecastRepository.getForecast(city))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(currentWeatherUIObserver);
-
     }
 
     public void fetchWeatherByGeographic(Location location) {
-        Flowable.zip(
-                repository.getCurrentWeatherByGeographic(location),
-                forecastRepository.getForecastByGeo(location),
-                (current, forecast) -> createWeather(current, forecast.getForecastList()))
-                .toObservable()
+        getWeatherUIObservable(repository.getCurrentWeatherByGeographic(location), forecastRepository.getForecastByGeo(location))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(currentWeatherUIObserver);

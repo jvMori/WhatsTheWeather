@@ -1,34 +1,36 @@
 package com.example.jvmori.myweatherapp.ui.view.adapters;
 
-import android.content.Context;
-
-import com.example.jvmori.myweatherapp.ui.view.fragment.WeatherFragment;
-
-import java.util.List;
-
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.lifecycle.Lifecycle;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-public class SlidePagerAdapter extends FragmentStatePagerAdapter
+import com.example.jvmori.myweatherapp.ui.view.fragment.CustomWeatherFragment;
+import com.example.jvmori.myweatherapp.ui.view.fragment.GeoWeatherFragment;
+
+public class SlidePagerAdapter extends FragmentStateAdapter
 {
-    private Context ctx;
-    private List<WeatherFragment> fragments;
+    private int size;
 
-    public SlidePagerAdapter(Context ctx, FragmentManager fm, List<WeatherFragment> fragments) {
-        super(fm);
-        this.ctx = ctx;
-        this.fragments = fragments;
+    public SlidePagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, int size) {
+        super(fragmentManager, lifecycle);
+        this.size = size;
+    }
+
+    @NonNull
+    @Override
+    public Fragment getItem(int position) {
+        if (position == 0){
+            return new GeoWeatherFragment();
+        }
+        CustomWeatherFragment customWeatherFragment = new CustomWeatherFragment();
+        //customWeatherFragment.currentWeatherViewModel.setCity("Gdynia");
+        return customWeatherFragment;
     }
 
     @Override
-    public Fragment getItem(int i) {
-        return fragments.get(i);
+    public int getItemCount() {
+        return size;
     }
-
-    @Override
-    public int getCount() {
-        return fragments.size();
-    }
-
 }

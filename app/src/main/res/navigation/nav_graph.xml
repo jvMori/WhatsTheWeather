@@ -3,29 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/weatherFragment">
-
+    app:startDestination="@id/homeFragment">
     <fragment
-        android:id="@+id/weatherFragment"
-        android:name="com.example.jvmori.myweatherapp.ui.view.fragment.WeatherFragment"
-        android:label="fragment_weather"
-        tools:layout="@layout/fragment_weather" >
-        <action
-            android:id="@+id/action_weatherFragment_to_searchFragment"
-            app:destination="@id/searchFragment" />
-        <argument
-            android:name="weatherParam"
-            app:argType="com.example.jvmori.myweatherapp.util.WeatherParameters"
-            app:nullable="true"
-            android:defaultValue="@null" />
-    </fragment>
-    <fragment
-        android:id="@+id/searchFragment"
-        android:name="com.example.jvmori.myweatherapp.ui.view.fragment.SearchFragment"
-        android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
-        <action
-            android:id="@+id/action_searchFragment_to_weatherFragment"
-            app:destination="@id/weatherFragment" />
-    </fragment>
+        android:id="@+id/homeFragment"
+        android:name="com.example.jvmori.myweatherapp.ui.view.fragment.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
 </navigation>

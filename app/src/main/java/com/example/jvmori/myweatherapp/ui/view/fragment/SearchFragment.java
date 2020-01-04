@@ -208,8 +208,8 @@ public class SearchFragment extends DaggerFragment implements
     }
 
     private void navigateToWeatherFragment(WeatherParameters parameters) {
-        NavDirections directions = SearchFragmentDirections.actionSearchFragmentToWeatherFragment().setWeatherParam(parameters);
-        NavHostFragment.findNavController(this).navigate(directions);
+        //NavDirections directions = SearchFragmentDirections.actionSearchFragmentToWeatherFragment().setWeatherParam(parameters);
+       // NavHostFragment.findNavController(this).navigate(directions);
     }
 
 }

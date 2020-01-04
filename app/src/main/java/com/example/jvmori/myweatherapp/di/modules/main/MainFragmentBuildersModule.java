@@ -1,7 +1,8 @@
 package com.example.jvmori.myweatherapp.di.modules.main;
 
+import com.example.jvmori.myweatherapp.ui.view.fragment.CustomWeatherFragment;
 import com.example.jvmori.myweatherapp.ui.view.fragment.SearchFragment;
-import com.example.jvmori.myweatherapp.ui.view.fragment.WeatherFragment;
+import com.example.jvmori.myweatherapp.ui.view.fragment.GeoWeatherFragment;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -10,7 +11,10 @@ import dagger.android.ContributesAndroidInjector;
 public abstract class MainFragmentBuildersModule {
 
     @ContributesAndroidInjector
-    abstract WeatherFragment contributeWeatherFragment();
+    abstract GeoWeatherFragment contributeGeoWeatherFragment();
+
+    @ContributesAndroidInjector
+    abstract CustomWeatherFragment contributeCustomWeatherFragment();
 
 
     @ContributesAndroidInjector
