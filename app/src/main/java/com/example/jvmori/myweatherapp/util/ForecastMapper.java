@@ -14,8 +14,8 @@ public class ForecastMapper {
         return new ForecastEntity(
                 DateConverter.getDayOfWeek(response.getTimeText()),
                 null,
-                null,
-                null,
+                "1",
+                "-1",
                 new ArrayList<>()
         );
     }

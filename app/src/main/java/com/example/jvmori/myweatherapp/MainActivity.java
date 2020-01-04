@@ -26,11 +26,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerAppCompatActivity;
+
+import static com.example.jvmori.myweatherapp.ui.LifecycleBoundLocationManager.REQUEST_CHECK_SETTINGS;
 
 
 public class MainActivity extends DaggerAppCompatActivity {
@@ -63,6 +66,7 @@ public class MainActivity extends DaggerAppCompatActivity {
             lifecycleBoundLocationManager.getLastKnownLocation();
         } else
             requestPermissions();
+
     }
 
     private void bindLocationManager() {

@@ -2,7 +2,9 @@ package com.example.jvmori.myweatherapp.ui.view.fragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.data.WeatherUI;
 import com.example.jvmori.myweatherapp.data.forecast.ForecastEntity;
 import com.example.jvmori.myweatherapp.databinding.MainWeatherLayoutBinding;
+import com.example.jvmori.myweatherapp.ui.LifecycleBoundLocationManager;
 import com.example.jvmori.myweatherapp.ui.Resource;
 import com.example.jvmori.myweatherapp.ui.current.CurrentWeatherViewModel;
 import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
@@ -38,14 +41,12 @@ import dagger.android.support.DaggerFragment;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WeatherFragment extends DaggerFragment {
+public class WeatherFragment extends DaggerFragment implements LocationServiceDialog.ILocationServiceDialog {
 
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
     @Inject
     ILoadImage iLoadImage;
-
-    private LocationViewModel locationViewModel;
     private CurrentWeatherViewModel currentWeatherViewModel;
     private MainWeatherLayoutBinding binding;
 
@@ -65,6 +66,7 @@ public class WeatherFragment extends DaggerFragment {
         if (getActivity() != null && getActivity() instanceof MainActivity) {
             locationViewModel = ViewModelProviders.of(getActivity(), viewModelProviderFactory).get(LocationViewModel.class);
             observeLocationChanges();
+            observeLocationProviderStatus(((MainActivity) getActivity()).lifecycleBoundLocationManager);
         }
     }
 
@@ -92,14 +94,23 @@ public class WeatherFragment extends DaggerFragment {
 
     private void observeWeatherAndUpdateView() {
         currentWeatherViewModel.getCurrentWeather().observe(this, weather -> {
-            if (weather.status == Resource.Status.LOADING){
+            if (weather.status == Resource.Status.LOADING) {
                 loadingView();
-            }
-            else if (weather.status == Resource.Status.SUCCESS) {
+            } else if (weather.status == Resource.Status.SUCCESS) {
                 successView(weather);
-            }
-            else if (weather.status == Resource.Status.ERROR){
+            } else if (weather.status == Resource.Status.ERROR) {
                 errorView();
+            }
+        });
+    }
+
+    private void observeLocationProviderStatus(LifecycleBoundLocationManager lifecycleBoundLocationManager) {
+        lifecycleBoundLocationManager.deviceLocation().observe(this, locationResource -> {
+            if (locationResource.status == Resource.Status.ERROR) {
+                LocationServiceDialog dialog = new LocationServiceDialog();
+                dialog.setILocationServiceDialog(this);
+                assert this.getFragmentManager() != null;
+                dialog.show(this.getFragmentManager(), null);
             }
         });
     }
@@ -130,5 +141,16 @@ public class WeatherFragment extends DaggerFragment {
     private void navigateToSearchListener() {
         NavDirections directions = WeatherFragmentDirections.actionWeatherFragmentToSearchFragment();
         NavHostFragment.findNavController(this).navigate(directions);
+    }
+
+    @Override
+    public void onPositiveBtn() {
+        if (getActivity() != null)
+            getActivity().startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+    }
+
+    @Override
+    public void onCancel() {
+        currentWeatherViewModel.fetchCurrentWeather("Gdynia");
     }
 }

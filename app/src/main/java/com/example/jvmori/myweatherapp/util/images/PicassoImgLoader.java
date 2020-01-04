@@ -20,7 +20,6 @@ public class PicassoImgLoader implements ILoadImage {
         picasso.load(url)
                 .fit()
                 .centerCrop()
-                .error(R.drawable.ic_11)
                 .into(icon);
     }
 }

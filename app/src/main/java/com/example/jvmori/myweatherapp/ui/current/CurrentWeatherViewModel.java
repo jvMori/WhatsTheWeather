@@ -18,7 +18,9 @@ import com.example.jvmori.myweatherapp.data.forecast.Forecasts;
 import com.example.jvmori.myweatherapp.ui.Resource;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.function.Function;
 
 import javax.inject.Inject;
 
@@ -54,10 +56,15 @@ public class CurrentWeatherViewModel extends ViewModel {
     }
 
     public void fetchCurrentWeather(String city) {
-        //TODO: check if location has changed
-        repository.getCurrentWeatherByCity(city)
+        Flowable.zip(
+                repository.getCurrentWeatherByCity(city),
+                forecastRepository.getForecast(city),
+                (current, forecast) -> createWeather(current, forecast.getForecastList()))
                 .toObservable()
-                .subscribe();
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(currentWeatherUIObserver);
+
     }
 
     public void fetchWeatherByGeographic(Location location) {

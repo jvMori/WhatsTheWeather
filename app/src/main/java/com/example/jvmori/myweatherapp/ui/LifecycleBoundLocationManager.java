@@ -94,26 +94,13 @@ public class LifecycleBoundLocationManager implements
                     .addOnSuccessListener(location -> {
                         if (location == null) {
                             _deviceLocation.setValue(Resource.error("No location provider", null));
-                            showSettingsDialog(new ResolvableApiException(Status.RESULT_DEAD_CLIENT));
                         } else {
                             _deviceLocation.setValue(Resource.success(location));
                         }
                     })
                     .addOnFailureListener(error -> {
                         _deviceLocation.setValue(Resource.error(error.getMessage(), null));
-                        if (error instanceof ResolvableApiException) {
-                            showSettingsDialog((ResolvableApiException) error);
-                        }
                     });
-        }
-    }
-
-    private void showSettingsDialog(ResolvableApiException error) {
-        try {
-            error.startResolutionForResult(activity, REQUEST_CHECK_SETTINGS);
-            _providerStatus.setValue(ProviderStatus.disabled);
-        } catch (IntentSender.SendIntentException sendEx) {
-            //ignoring
         }
     }
 
