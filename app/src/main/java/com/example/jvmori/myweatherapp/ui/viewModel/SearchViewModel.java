@@ -23,28 +23,7 @@ public class SearchViewModel extends ViewModel {
         subject.onNext(query);
     }
 
-    public void listenForSearchChanges(){
-//        disposable.add(
-//                subject.debounce(300, TimeUnit.MILLISECONDS)
-//                        .filter( result -> !result.isEmpty())
-//                        .distinctUntilChanged()
-//                        .switchMap(query ->
-//                                weatherRepository.getResultsForCity(query)
-//                        )
-//                        .subscribeOn(Schedulers.io())
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribe(
-//                                searches -> {
-//                                    if (searches == null)  _cities.setValue(Resource.loading(null));
-//                                    _cities.setValue(Resource.success(searches));
-//                                },
-//                                throwable -> {
-//                                    _cities.setValue(Resource.error(throwable.getMessage(), null));
-//                                    Log.i("Error", "Something went wrong");
-//                                }
-//                        )
-//        );
-    }
+
 
     @Override
     protected void onCleared() {

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavDirections;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
 import com.example.jvmori.myweatherapp.data.network.response.Search;
+import com.example.jvmori.myweatherapp.databinding.SearchFragmentBinding;
 import com.example.jvmori.myweatherapp.ui.view.adapters.location.DeleteLocationItem;
 import com.example.jvmori.myweatherapp.ui.view.adapters.location.DeleteLocationItemOnSwipe;
 import com.example.jvmori.myweatherapp.ui.view.adapters.location.LocationAdapter;
@@ -42,14 +44,14 @@ import dagger.android.support.DaggerFragment;
  * A simple {@link Fragment} subclass.
  */
 public class SearchFragment extends DaggerFragment implements
-        SearchResultsAdapter.IOnItemClicked,
         LocationAdapter.IOnClickListener,
         DeleteLocationItemOnSwipe.IOnDeletedAction {
 
     private RecyclerView cities, locations;
     private ProgressBar progressBar;
     private SearchView searchView;
-   // private SearchViewModel searchViewModel;
+    private SearchFragmentBinding binding;
+    // private SearchViewModel searchViewModel;
     private ConstraintLayout constraintLayout;
     @Inject
     LocationAdapter locationAdapter;
@@ -66,100 +68,8 @@ public class SearchFragment extends DaggerFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        //searchViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(SearchViewModel.class);
-        return inflater.inflate(R.layout.fragment_search, container, false);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (getActivity() != null) {
-            //weatherViewModel = ViewModelProviders.of(getActivity(), viewModelProviderFactory).get(WeatherViewModel.class);
-           // weatherViewModel.allForecastsFromDb();
-//            weatherViewModel.allWeatherFromDb().observe(this, result ->
-//                    createLocationsAdapter(result)
-//            );
-        }
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        bindView(view);
-
-        searchView.setOnCloseListener(() -> {
-            cities.setVisibility(View.GONE);
-            locations.setVisibility(View.VISIBLE);
-            return false;
-        });
-        searchView.setOnSearchClickListener(v -> {
-            cities.setVisibility(View.VISIBLE);
-            locations.setVisibility(View.GONE);
-        });
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                WeatherParameters weatherParameters = new WeatherParameters(
-                        s,
-                        s,
-                        false,
-                        Const.FORECAST_DAYS
-                );
-                searchView.setQuery("", false);
-                searchView.setIconifiedByDefault(true);
-                searchView.clearFocus();
-                navigateToWeatherFragment(weatherParameters);
-                return true;
-            }
-            @Override
-            public boolean onQueryTextChange(String text) {
-               // searchViewModel.subjectOnNext(text);
-                return true;
-            }
-        });
-        //searchViewModel.listenForSearchChanges();
-
-//        searchViewModel.cities().observe(this, result -> {
-//            switch (result.status) {
-//                case LOADING:
-//                    progressBar.setVisibility(View.VISIBLE);
-//                    cities.setVisibility(View.GONE);
-//                    break;
-//
-//                case SUCCESS:
-//                    showSuggestions(result.data);
-//                    progressBar.setVisibility(View.GONE);
-//                    cities.setVisibility(View.VISIBLE);
-//                    break;
-//
-//                case ERROR:
-//                    progressBar.setVisibility(View.GONE);
-//                    break;
-//                default:
-//                    break;
-//            }
-//        });
-    }
-
-    private void bindView(@NonNull View view) {
-        searchView = view.findViewById(R.id.searchField);
-        cities = view.findViewById(R.id.cities);
-        locations = view.findViewById(R.id.locations);
-        constraintLayout = view.findViewById(R.id.searchLayout);
-        progressBar = view.findViewById(R.id.citiesProgressBar);
-    }
-
-    private void showSuggestions(List<Search> searchList) {
-        cities.setVisibility(View.VISIBLE);
-        locations.setVisibility(View.GONE);
-        createCitiesAdapter(searchList);
-    }
-
-    private void createCitiesAdapter(List<Search> searchList) {
-        SearchResultsAdapter adapter = new SearchResultsAdapter();
-        adapter.setSearchedResult(searchList, this);
-        cities.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
-        cities.setAdapter(adapter);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false);
+        return binding.getRoot();
     }
 
     private void createLocationsAdapter(List<ForecastEntry> forecastEntries) {
@@ -167,8 +77,8 @@ public class SearchFragment extends DaggerFragment implements
         locationAdapter.setiOnClickListener(this);
         locations.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
         locations.setAdapter(locationAdapter);
-       // deleteLocationItem.delete(locations);
-       // deleteLocationItem.setiOnDeletedAction(this);
+        // deleteLocationItem.delete(locations);
+        // deleteLocationItem.setiOnDeletedAction(this);
     }
 
     @Override
@@ -185,18 +95,6 @@ public class SearchFragment extends DaggerFragment implements
     }
 
     @Override
-    public void onSearchedItemClicked(Search item) {
-        String loc = item.getName().split(",")[0];
-        WeatherParameters weatherParameters = new WeatherParameters(
-                loc,
-                loc,
-                false,
-                Const.FORECAST_DAYS
-        );
-        navigateToWeatherFragment(weatherParameters);
-    }
-
-    @Override
     public void onLocationClicked(ForecastEntry forecastEntry) {
         WeatherParameters weatherParameters = new WeatherParameters(
                 forecastEntry.getLocation().mCityName,
@@ -209,7 +107,7 @@ public class SearchFragment extends DaggerFragment implements
 
     private void navigateToWeatherFragment(WeatherParameters parameters) {
         //NavDirections directions = SearchFragmentDirections.actionSearchFragmentToWeatherFragment().setWeatherParam(parameters);
-       // NavHostFragment.findNavController(this).navigate(directions);
+        // NavHostFragment.findNavController(this).navigate(directions);
     }
 
 }

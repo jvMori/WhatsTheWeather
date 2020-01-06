@@ -69,6 +69,12 @@ public class CurrentWeatherViewModel extends ViewModel {
                 .subscribe(currentWeatherUIObserver);
     }
 
+    public void getAllCities(){
+        repository.getAllWeather().subscribe(
+
+        );
+    }
+
     private Observable<WeatherUI> getWeatherUIObservable(Flowable<CurrentWeatherUI> currentWeatherByCity, Flowable<Forecasts> forecast2) {
         return Flowable.zip(
                 currentWeatherByCity,

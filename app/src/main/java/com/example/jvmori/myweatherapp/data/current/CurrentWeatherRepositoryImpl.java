@@ -8,12 +8,15 @@ import com.example.jvmori.myweatherapp.data.current.response.CurrentWeatherRespo
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.RoundUtil;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -35,6 +38,11 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
     @Override
     public void cleanup() {
         disposable.clear();
+    }
+
+    @Override
+    public Observable<List<CurrentWeatherUI>> getAllWeather() {
+        return dao.getAllWeather().observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).toObservable();
     }
 
     @Override
