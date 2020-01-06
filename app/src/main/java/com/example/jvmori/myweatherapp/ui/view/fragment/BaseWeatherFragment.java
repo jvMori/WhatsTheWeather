@@ -31,7 +31,7 @@ import dagger.android.support.DaggerFragment;
 public class BaseWeatherFragment extends DaggerFragment {
 
     protected MainWeatherLayoutBinding binding;
-    public CurrentWeatherViewModel currentWeatherViewModel;
+    CurrentWeatherViewModel currentWeatherViewModel;
     @Inject
     ViewModelProviderFactory factory;
 
@@ -81,6 +81,7 @@ public class BaseWeatherFragment extends DaggerFragment {
 
     private void successView(Resource<WeatherUI> weather) {
         binding.loading.setVisibility(View.GONE);
+        binding.errorLayout.setVisibility(View.GONE);
         binding.setCurrentWeatherData(weather.data);
         assert weather.data != null;
         createForecastView(weather.data.getForecastEntityList());

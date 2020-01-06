@@ -3,26 +3,18 @@ package com.example.jvmori.myweatherapp.ui.view.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.provider.Settings;
-import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jvmori.myweatherapp.MainActivity;
-import com.example.jvmori.myweatherapp.data.WeatherUI;
-import com.example.jvmori.myweatherapp.data.forecast.ForecastEntity;
 import com.example.jvmori.myweatherapp.ui.LifecycleBoundLocationManager;
 import com.example.jvmori.myweatherapp.ui.Resource;
-import com.example.jvmori.myweatherapp.ui.current.CurrentWeatherViewModel;
-import com.example.jvmori.myweatherapp.ui.view.adapters.ForecastAdapter;
-import com.example.jvmori.myweatherapp.ui.view.adapters.RecyclerViewOnItemTouchListener;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
-import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -37,6 +29,8 @@ public class GeoWeatherFragment extends BaseWeatherFragment implements LocationS
     @Inject
     ILoadImage iLoadImage;
 
+    private LifecycleBoundLocationManager lifecycleBoundLocationManager;
+
     private String defaultCity = "Gdynia";
 
     public GeoWeatherFragment() {
@@ -47,15 +41,21 @@ public class GeoWeatherFragment extends BaseWeatherFragment implements LocationS
     public void onAttach(Context context) {
         super.onAttach(context);
         if (getActivity() != null && getActivity() instanceof MainActivity) {
-            if (((MainActivity) getActivity()).lifecycleBoundLocationManager != null) {
-                observeLocationChanges();
-                observeLocationProviderStatus(((MainActivity) getActivity()).lifecycleBoundLocationManager);
-            }
+            lifecycleBoundLocationManager = ((MainActivity) getActivity()).lifecycleBoundLocationManager;
+        }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (lifecycleBoundLocationManager != null) {
+            observeLocationChanges();
+            observeLocationProviderStatus(lifecycleBoundLocationManager);
         }
     }
 
     private void observeLocationChanges() {
-        ((MainActivity) Objects.requireNonNull(getActivity())).lifecycleBoundLocationManager.deviceLocation().observe(this, location -> {
+        lifecycleBoundLocationManager.deviceLocation().observe(this, location -> {
             if (location != null && location.status == Resource.Status.SUCCESS && location.data != null) {
                 currentWeatherViewModel.fetchWeatherByGeographic(location.data);
             }

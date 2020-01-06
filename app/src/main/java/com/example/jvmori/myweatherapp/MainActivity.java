@@ -50,7 +50,7 @@ public class MainActivity extends DaggerAppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode,permissions,grantResults);
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            bindLocationManager();
+            //bindLocationManager();
             lifecycleBoundLocationManager.getLastKnownLocation();
         }
     }
@@ -59,10 +59,9 @@ public class MainActivity extends DaggerAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        bindLocationManager();
         bindView();
         if (hasLocationPermission()) {
-            bindLocationManager();
             lifecycleBoundLocationManager.getLastKnownLocation();
         } else
             requestPermissions();
