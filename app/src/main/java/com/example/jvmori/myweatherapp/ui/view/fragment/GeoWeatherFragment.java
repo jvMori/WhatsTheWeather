@@ -16,8 +16,6 @@ import com.example.jvmori.myweatherapp.ui.Resource;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
-import java.util.Objects;
-
 import javax.inject.Inject;
 
 /**
@@ -83,6 +81,6 @@ public class GeoWeatherFragment extends BaseWeatherFragment implements LocationS
     @Override
     public void onCancel() {
         binding.successView.locationIcon.setVisibility(View.GONE);
-        currentWeatherViewModel.fetchCurrentWeather(defaultCity);
+        currentWeatherViewModel.fetchWeatherForCity(defaultCity);
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.databinding.HomeFragmentBind;
+import com.example.jvmori.myweatherapp.databinding.MainActivityBinding;
 import com.example.jvmori.myweatherapp.ui.view.adapters.SlidePagerAdapter;
 
 import java.util.Objects;
@@ -36,12 +38,17 @@ public class HomeFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private void navigateToSearchFragment(View view) {
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.action_homeFragment_to_searchFragment);
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         if (this.getActivity() != null) {
             createPageAdapter();
         }
+        binding.ivSearch.setOnClickListener(this::navigateToSearchFragment);
     }
 
     private void createPageAdapter() {

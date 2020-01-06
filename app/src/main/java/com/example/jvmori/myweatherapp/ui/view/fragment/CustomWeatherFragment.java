@@ -10,6 +10,6 @@ public class CustomWeatherFragment extends BaseWeatherFragment {
     public void onStart() {
         super.onStart();
         binding.successView.locationIcon.setVisibility(View.GONE);
-        currentWeatherViewModel.fetchCurrentWeather(city);
+        currentWeatherViewModel.fetchWeatherForCity(city);
     }
 }

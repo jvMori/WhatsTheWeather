@@ -8,9 +8,11 @@ import android.location.Location;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.example.jvmori.myweatherapp.data.LocationProvider;
+import com.example.jvmori.myweatherapp.databinding.MainActivityBinding;
 import com.example.jvmori.myweatherapp.ui.LifecycleBoundLocationManager;
 import com.example.jvmori.myweatherapp.ui.Resource;
 import com.example.jvmori.myweatherapp.ui.view.fragment.LocationServiceDialog;
@@ -26,8 +28,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import javax.inject.Inject;
 
@@ -45,10 +50,11 @@ public class MainActivity extends DaggerAppCompatActivity {
     FusedLocationProviderClient fusedLocationProviderClient;
 
     public LifecycleBoundLocationManager lifecycleBoundLocationManager;
+    NavController controller;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             //bindLocationManager();
             lifecycleBoundLocationManager.getLastKnownLocation();
@@ -60,12 +66,10 @@ public class MainActivity extends DaggerAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bindLocationManager();
-        bindView();
         if (hasLocationPermission()) {
             lifecycleBoundLocationManager.getLastKnownLocation();
         } else
             requestPermissions();
-
     }
 
     private void bindLocationManager() {
@@ -86,11 +90,5 @@ public class MainActivity extends DaggerAppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
     }
-
-
-    private void bindView() {
-        ivSearch = findViewById(R.id.ivSearch);
-    }
-
 }
 

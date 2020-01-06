@@ -18,9 +18,8 @@ import com.example.jvmori.myweatherapp.data.forecast.Forecasts;
 import com.example.jvmori.myweatherapp.ui.Resource;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
-import java.lang.reflect.Method;
 import java.util.List;
-import java.util.function.Function;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -30,9 +29,9 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 
 public class CurrentWeatherViewModel extends ViewModel {
 
@@ -42,9 +41,32 @@ public class CurrentWeatherViewModel extends ViewModel {
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private MutableLiveData<Resource<WeatherUI>> _weather = new MutableLiveData<>();
+    private Subject<String> citySubject = PublishSubject.create();
 
     public LiveData<Resource<WeatherUI>> getCurrentWeather() {
         return _weather;
+    }
+
+    @Inject
+    public CurrentWeatherViewModel(CurrentWeatherRepository repository,
+                                   ForecastRepository forecastRepository,
+                                   ILoadImage imageLoader) {
+        this.repository = repository;
+        this.forecastRepository = forecastRepository;
+        CurrentWeatherViewModel.imageLoader = imageLoader;
+    }
+
+    public void searchCity(String query){
+        citySubject.onNext(query);
+    }
+
+    public void observeSearchCityResults() {
+        citySubject
+                .debounce(300, TimeUnit.MILLISECONDS)
+                .distinctUntilChanged()
+                .filter(query -> !query.isEmpty())
+                .switchMap(this::getObservableWeatherForCity)
+                .subscribe(currentWeatherUIObserver);
     }
 
     private Observable<WeatherUI> getWeatherUIObservable(Flowable<CurrentWeatherUI> currentWeatherByCity, Flowable<Forecasts> forecast2) {
@@ -57,21 +79,14 @@ public class CurrentWeatherViewModel extends ViewModel {
                 .toObservable();
     }
 
-
-    @Inject
-    public CurrentWeatherViewModel(CurrentWeatherRepository repository,
-                                   ForecastRepository forecastRepository,
-                                   ILoadImage imageLoader) {
-        this.repository = repository;
-        this.forecastRepository = forecastRepository;
-        CurrentWeatherViewModel.imageLoader = imageLoader;
+    private Observable<WeatherUI> getObservableWeatherForCity(String city) {
+        return getWeatherUIObservable(repository.getCurrentWeatherByCity(city), forecastRepository.getForecast(city))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
     }
 
-    public void fetchCurrentWeather(String city) {
-        getWeatherUIObservable(repository.getCurrentWeatherByCity(city), forecastRepository.getForecast(city))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(currentWeatherUIObserver);
+    public void fetchWeatherForCity(String city) {
+        getObservableWeatherForCity(city).subscribe(currentWeatherUIObserver);
     }
 
     public void fetchWeatherByGeographic(Location location) {
