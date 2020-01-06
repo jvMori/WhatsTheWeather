@@ -99,7 +99,7 @@
             android:layout_marginStart="40dp"
             android:layout_marginTop="56dp"
             android:gravity="center"
-            android:text='@{weather.currentWeatherUI.windSpeed + "km/h", default="9km/h"}'
+            android:text='@{weather.currentWeatherUI.windSpeed + " kph", default="9.1 kph"}'
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/humidityVal"
             app:layout_constraintHorizontal_bias="0.5"
