@@ -19,7 +19,7 @@
 
         <TextView
             android:id="@+id/city"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
@@ -27,9 +27,20 @@
             android:text='@{weather.currentWeatherUI.city, default="Sydney"}'
             android:textAppearance="@style/TextHeadline"
             android:textSize="34sp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/locationIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:tint="@color/design_default_color_background"
+            app:layout_constraintBottom_toBottomOf="@+id/city"
+            app:layout_constraintStart_toEndOf="@+id/city"
+            app:layout_constraintTop_toTopOf="@+id/city"
+            app:srcCompat="@drawable/location" />
 
         <TextView
             android:id="@+id/date"
