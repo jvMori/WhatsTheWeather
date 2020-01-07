@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -63,6 +64,33 @@ public class SearchFragment extends DaggerFragment {
     public void onStart() {
         super.onStart();
         currentWeatherViewModel.fetchAllWeather();
+        observeAllWeather();
+        currentWeatherViewModel.observeSearchCityResults();
+        setOnQueryTextChangeListener();
+        currentWeatherViewModel.getCurrentWeather().observe(this, result -> {
+            if (result.status == Resource.Status.SUCCESS){
+                //TODO: navigate to home fragment and specific tab in view pager
+                Log.i("data", result.data.toString());
+            }
+        });
+    }
+
+    private void setOnQueryTextChangeListener() {
+        binding.searchField.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                currentWeatherViewModel.searchCity(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+    }
+
+    private void observeAllWeather() {
         currentWeatherViewModel.getAllWeather().observe(this, resultt -> {
             if (resultt.status == Resource.Status.LOADING){
 
