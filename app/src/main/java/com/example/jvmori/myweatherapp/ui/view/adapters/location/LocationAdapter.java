@@ -7,16 +7,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.data.current.CurrentWeatherUI;
 import com.example.jvmori.myweatherapp.data.forecast.ForecastEntity;
+import com.example.jvmori.myweatherapp.databinding.LocationItemBinding;
 
 import java.util.List;
 
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder>
 {
-    private List<ForecastEntity> currentWeathers;
+    private List<CurrentWeatherUI> currentWeathers;
     private IOnClickListener iOnClickListener;
     private ILongClickListener iLongClickListener;
 
@@ -28,43 +31,34 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         this.iOnClickListener = iOnClickListener;
     }
 
-    public void setCurrentWeathers(List<ForecastEntity> currentWeathers) {
+    public void setCurrentWeathers(List<CurrentWeatherUI> currentWeathers) {
         this.currentWeathers = currentWeathers;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvCityName, tvCurrentTemp;
-        ImageView ivMarker, ivIcon;
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            tvCityName = itemView.findViewById(R.id.tvCurrLocItem);
-            tvCurrentTemp = itemView.findViewById(R.id.tvCurrTempLocItem);
-            ivMarker = itemView.findViewById(R.id.ivLocationMarker);
-            ivIcon = itemView.findViewById(R.id.ivIconLocItem);
+        private LocationItemBinding binding;
 
-            itemView.setOnClickListener(view -> {
-                int position = getAdapterPosition();
-                if (position != -1 && iOnClickListener != null)
-                    iOnClickListener.onLocationClicked(currentWeathers.get(position));
-            });
+        public ViewHolder(@NonNull LocationItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
 
-            itemView.setOnLongClickListener(view -> {
-
-                return true;
-            });
+        public void bind(CurrentWeatherUI currentWeatherUI){
+            binding.setCurrentWeather(currentWeatherUI);
+            binding.executePendingBindings();
         }
     }
 
     @NonNull
     @Override
     public LocationAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-       View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.location_item, viewGroup, false);
-       return  new ViewHolder(view);
+       LocationItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()), R.layout.location_item, viewGroup, false);
+       return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull LocationAdapter.ViewHolder viewHolder, int i) {
-
+        viewHolder.bind(currentWeathers.get(i));
     }
 
     @Override
