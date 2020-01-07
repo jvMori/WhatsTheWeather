@@ -3,7 +3,6 @@ package com.example.jvmori.myweatherapp.util;
 import androidx.room.TypeConverter;
 
 import com.example.jvmori.myweatherapp.data.current.response.Description;
-import com.example.jvmori.myweatherapp.data.db.entity.forecast.FutureWeather;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

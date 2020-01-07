@@ -6,19 +6,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.jvmori.myweatherapp.R;
-import com.example.jvmori.myweatherapp.data.db.entity.Location;
-import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
-import com.squareup.picasso.Picasso;
-
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.data.forecast.ForecastEntity;
+
+import java.util.List;
+
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder>
 {
-    private List<ForecastEntry> currentWeathers;
+    private List<ForecastEntity> currentWeathers;
     private IOnClickListener iOnClickListener;
     private ILongClickListener iLongClickListener;
 
@@ -30,7 +28,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         this.iOnClickListener = iOnClickListener;
     }
 
-    public void setCurrentWeathers(List<ForecastEntry> currentWeathers) {
+    public void setCurrentWeathers(List<ForecastEntity> currentWeathers) {
         this.currentWeathers = currentWeathers;
     }
 
@@ -51,9 +49,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             });
 
             itemView.setOnLongClickListener(view -> {
-                int position = getAdapterPosition();
-                if (position != -1 && iLongClickListener != null)
-                    iLongClickListener.onLongClick(currentWeathers.get(position).getLocation().mCityName);
+
                 return true;
             });
         }
@@ -68,21 +64,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull LocationAdapter.ViewHolder viewHolder, int i) {
-        viewHolder.itemView.setTag(currentWeathers.get(i));
-        String cityName = currentWeathers.get(i).getLocation().getName();
-        String currTemp = currentWeathers.get(i).getCurrentWeather().mTempC.toString();
-        Boolean isDeviceLoc = currentWeathers.get(i).isDeviceLocation;
-        if(isDeviceLoc){
-            viewHolder.ivMarker.setVisibility(View.VISIBLE);
-        }else{
-            viewHolder.ivMarker.setVisibility(View.INVISIBLE);
-        }
-        String url = "http:" + currentWeathers.get(i).getCurrentWeather().mCondition.getIcon();
-        Picasso.get()
-                .load(url)
-                .into(viewHolder.ivIcon);
-        viewHolder.tvCityName.setText(cityName);
-        viewHolder.tvCurrentTemp.setText(String.format("%s°C", currTemp));
+
     }
 
     @Override
@@ -90,24 +72,18 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         return currentWeathers.size();
     }
 
-    public Location getItemAtPosition(int position){
-        return currentWeathers.get(position).getLocation();
-    }
-    public ForecastEntry getWeatherAtPosition(int position){
-        return currentWeathers.get(position);
-    }
+
     public void removeItem(int position){
         currentWeathers.remove(position);
         notifyItemRemoved(position);
     }
 
-    public void restoreItem(ForecastEntry item, int position) {
-        currentWeathers.add(position, item);
-        notifyItemInserted(position);
+    public void restoreItem() {
+
     }
 
     public interface IOnClickListener {
-        void onLocationClicked(ForecastEntry forecastEntry);
+        void onLocationClicked(ForecastEntity forecastEntry);
     }
 
     public interface ILongClickListener{

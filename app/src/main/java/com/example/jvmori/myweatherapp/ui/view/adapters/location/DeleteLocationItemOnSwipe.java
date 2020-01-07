@@ -3,12 +3,9 @@ package com.example.jvmori.myweatherapp.ui.view.adapters.location;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jvmori.myweatherapp.data.db.entity.forecast.ForecastEntry;
-
 
 public class DeleteLocationItemOnSwipe implements DeleteLocationItem, RecyclerItemTouchHelper.IOnSwipeListener {
 
-    //private WeatherViewModel weatherViewModel;
     private LocationAdapter locationAdapter;
     private IOnDeletedAction iOnDeletedAction;
 
@@ -25,12 +22,7 @@ public class DeleteLocationItemOnSwipe implements DeleteLocationItem, RecyclerIt
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof LocationAdapter.ViewHolder){
             if (locationAdapter != null){
-                String loc  = locationAdapter.getItemAtPosition(position).mCityName;
-                final ForecastEntry deletedItem = locationAdapter.getWeatherAtPosition(position);
-                locationAdapter.removeItem(position);
-//                if (weatherViewModel != null)
-//                    weatherViewModel.deleteWeather(loc);
-                if(iOnDeletedAction != null) iOnDeletedAction.onDeleted(position, deletedItem);
+
             }
         }
     }
@@ -46,6 +38,6 @@ public class DeleteLocationItemOnSwipe implements DeleteLocationItem, RecyclerIt
     }
 
     public interface IOnDeletedAction{
-        void onDeleted(int deletedIndex, ForecastEntry deletedItem);
+        void onDeleted();
     }
 }
