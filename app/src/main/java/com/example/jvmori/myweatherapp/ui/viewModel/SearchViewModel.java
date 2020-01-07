@@ -12,4 +12,6 @@ public class SearchViewModel extends ViewModel {
     protected void onCleared() {
         disposable.clear();
     }
+
+
 }
