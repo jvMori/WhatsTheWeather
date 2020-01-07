@@ -3,7 +3,7 @@ package com.example.jvmori.myweatherapp.data.current;
 import android.location.Location;
 import android.util.Log;
 
-import com.example.jvmori.myweatherapp.data.NetworkBoundResource;
+import com.example.jvmori.myweatherapp.data.network.NetworkBoundResource;
 import com.example.jvmori.myweatherapp.data.current.response.CurrentWeatherResponse;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.RoundUtil;

@@ -2,7 +2,7 @@ package com.example.jvmori.myweatherapp.data.forecast;
 
 import android.location.Location;
 
-import com.example.jvmori.myweatherapp.data.NetworkBoundResource;
+import com.example.jvmori.myweatherapp.data.network.NetworkBoundResource;
 import com.example.jvmori.myweatherapp.data.forecast.response.ForecastResponse;
 import com.example.jvmori.myweatherapp.util.Const;
 import com.example.jvmori.myweatherapp.util.ForecastMapper;

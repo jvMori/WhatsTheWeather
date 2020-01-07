@@ -6,7 +6,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.jvmori.myweatherapp.ui.view.fragment.BaseWeatherFragment;
 import com.example.jvmori.myweatherapp.ui.view.fragment.CustomWeatherFragment;
 import com.example.jvmori.myweatherapp.ui.view.fragment.GeoWeatherFragment;
 

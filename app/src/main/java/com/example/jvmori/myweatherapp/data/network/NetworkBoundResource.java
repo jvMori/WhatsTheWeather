@@ -1,4 +1,4 @@
-package com.example.jvmori.myweatherapp.data;
+package com.example.jvmori.myweatherapp.data.network;
 
 import io.reactivex.FlowableEmitter;
 import io.reactivex.Maybe;
