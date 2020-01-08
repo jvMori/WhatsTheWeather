@@ -48,7 +48,10 @@ public class CurrentWeatherViewModel extends ViewModel {
     public LiveData<Resource<WeatherUI>> getCurrentWeather() {
         return _weather;
     }
-    public LiveData<Resource<List<CurrentWeatherUI>>> getAllWeather() {return  _allWeather;}
+
+    public LiveData<Resource<List<CurrentWeatherUI>>> getAllWeather() {
+        return _allWeather;
+    }
 
     @Inject
     public CurrentWeatherViewModel(CurrentWeatherRepository repository,
@@ -59,22 +62,22 @@ public class CurrentWeatherViewModel extends ViewModel {
         CurrentWeatherViewModel.imageLoader = imageLoader;
     }
 
-    public void searchCity(String query){
+    public void searchCity(String query) {
         citySubject.onNext(query);
     }
 
     public void observeSearchCityResults() {
         citySubject
-                .debounce(300, TimeUnit.MILLISECONDS)
-                .distinctUntilChanged()
                 .filter(query -> !query.isEmpty())
                 .switchMap(this::getObservableWeatherForCity)
+                .doOnNext(result ->
+                        Log.i("data", result.toString()))
                 .subscribe(currentWeatherUIObserver);
     }
 
-    public void fetchAllWeather(){
+    public void fetchAllWeather() {
         repository.getAllWeather().subscribe(
-            allWeatherObserver
+                allWeatherObserver
         );
     }
 
@@ -112,7 +115,10 @@ public class CurrentWeatherViewModel extends ViewModel {
     }
 
     private Observable<WeatherUI> getObservableWeatherForCity(String city) {
-        return getWeatherUIObservable(repository.getCurrentWeatherByCity(city), forecastRepository.getForecast(city))
+        return getWeatherUIObservable(
+                repository.getCurrentWeatherByCity(city),
+                forecastRepository.getForecast(city))
+                .doOnError(error -> Log.i("error", error.getLocalizedMessage()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
     }

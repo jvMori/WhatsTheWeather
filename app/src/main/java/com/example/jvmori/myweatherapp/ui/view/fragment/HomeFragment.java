@@ -18,6 +18,8 @@ import com.example.jvmori.myweatherapp.ui.view.adapters.SlidePagerAdapter;
 
 import java.util.Objects;
 
+import static com.example.jvmori.myweatherapp.util.Const.locationIndex;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -49,6 +51,10 @@ public class HomeFragment extends Fragment {
             createPageAdapter();
         }
         binding.ivSearch.setOnClickListener(this::navigateToSearchFragment);
+        if (getArguments() != null){
+            int index = getArguments().getInt(locationIndex);
+            binding.pages.setCurrentItem(index, true);
+        }
     }
 
     private void createPageAdapter() {

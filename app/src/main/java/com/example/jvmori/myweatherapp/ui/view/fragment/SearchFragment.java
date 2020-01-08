@@ -12,6 +12,8 @@ import androidx.appcompat.widget.SearchView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +24,7 @@ import com.example.jvmori.myweatherapp.ui.Resource;
 import com.example.jvmori.myweatherapp.ui.current.CurrentWeatherViewModel;
 import com.example.jvmori.myweatherapp.ui.view.adapters.location.LocationAdapter;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
+import com.example.jvmori.myweatherapp.util.Const;
 
 import java.util.List;
 
@@ -41,6 +44,7 @@ public class SearchFragment extends DaggerFragment {
     ViewModelProviderFactory viewModelProviderFactory;
 
     private CurrentWeatherViewModel currentWeatherViewModel;
+    private LocationAdapter adapter;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -69,10 +73,15 @@ public class SearchFragment extends DaggerFragment {
         setOnQueryTextChangeListener();
         currentWeatherViewModel.getCurrentWeather().observe(this, result -> {
             if (result.status == Resource.Status.SUCCESS){
-                //TODO: navigate to home fragment and specific tab in view pager
-                Log.i("data", result.data.toString());
+                navigateToHome(adapter.getItemCount() - 1);
             }
         });
+    }
+
+    private void navigateToHome(int index){
+        Bundle bundle = new Bundle();
+        bundle.putInt(Const.locationIndex, index);
+        Navigation.findNavController(this.binding.getRoot()).navigate(R.id.action_searchFragment_to_homeFragment, bundle);
     }
 
     private void setOnQueryTextChangeListener() {
@@ -105,7 +114,7 @@ public class SearchFragment extends DaggerFragment {
     }
 
     private void successView(List<CurrentWeatherUI> currentWeatherUIList){
-        LocationAdapter adapter = new LocationAdapter();
+        adapter = new LocationAdapter();
         adapter.setCurrentWeathers(currentWeatherUIList);
         binding.locations.setAdapter(adapter);
         binding.locations.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));

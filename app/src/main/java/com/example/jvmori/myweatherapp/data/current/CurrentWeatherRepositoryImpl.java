@@ -88,6 +88,8 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
         Completable.fromAction(() ->
                 dao.insert(item))
                 .subscribeOn(Schedulers.io())
+                .doOnError(error ->
+                        error.printStackTrace())
                 .subscribe();
     }
 
