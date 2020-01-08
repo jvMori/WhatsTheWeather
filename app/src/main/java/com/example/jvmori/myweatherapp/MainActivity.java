@@ -43,14 +43,12 @@ import static com.example.jvmori.myweatherapp.ui.LifecycleBoundLocationManager.R
 
 public class MainActivity extends DaggerAppCompatActivity {
 
-    ImageView ivSearch;
     @Inject
     LocationRequest locationRequest;
     @Inject
     FusedLocationProviderClient fusedLocationProviderClient;
 
     public LifecycleBoundLocationManager lifecycleBoundLocationManager;
-    NavController controller;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
