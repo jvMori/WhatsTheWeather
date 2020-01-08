@@ -72,13 +72,15 @@ public class SearchFragment extends DaggerFragment {
         currentWeatherViewModel.observeSearchCityResults();
         setOnQueryTextChangeListener();
         currentWeatherViewModel.getCurrentWeather().observe(this, result -> {
-            if (result.status == Resource.Status.SUCCESS){
+            if (result.status == Resource.Status.SUCCESS) {
                 navigateToHome(adapter.getItemCount() - 1);
+            } else if (result.status == Resource.Status.ERROR) {
+                Log.i("error", result.message);
             }
         });
     }
 
-    private void navigateToHome(int index){
+    private void navigateToHome(int index) {
         Bundle bundle = new Bundle();
         bundle.putInt(Const.locationIndex, index);
         Navigation.findNavController(this.binding.getRoot()).navigate(R.id.action_searchFragment_to_homeFragment, bundle);
@@ -101,19 +103,17 @@ public class SearchFragment extends DaggerFragment {
 
     private void observeAllWeather() {
         currentWeatherViewModel.getAllWeather().observe(this, resultt -> {
-            if (resultt.status == Resource.Status.LOADING){
+            if (resultt.status == Resource.Status.LOADING) {
 
-            }
-            else if (resultt.status == Resource.Status.SUCCESS){
-               successView(resultt.data);
-            }
-            else if (resultt.status == Resource.Status.ERROR){
+            } else if (resultt.status == Resource.Status.SUCCESS) {
+                successView(resultt.data);
+            } else if (resultt.status == Resource.Status.ERROR) {
 
             }
         });
     }
 
-    private void successView(List<CurrentWeatherUI> currentWeatherUIList){
+    private void successView(List<CurrentWeatherUI> currentWeatherUIList) {
         adapter = new LocationAdapter();
         adapter.setCurrentWeathers(currentWeatherUIList);
         binding.locations.setAdapter(adapter);

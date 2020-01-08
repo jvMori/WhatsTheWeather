@@ -61,6 +61,8 @@ public class ForecastMapper {
             forecasts.get(i).setMinTemp(Integer.toString((int) Math.floor(minTemp)));
             if (details.size() > 0 && maxIndex > -1)
                 forecasts.get(i).setIconUrl(details.get(maxIndex).getIconUrl());
+
+            if (forecasts.get(i).getIconUrl() == null) forecasts.get(i).setIconUrl("04c");
         }
     }
 
