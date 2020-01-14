@@ -86,8 +86,13 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
 
     private void saveInDb(CurrentWeatherUI item) {
         Completable.fromAction(() ->
-                dao.insert(item))
+                dao.update(item))
                 .subscribeOn(Schedulers.io())
+                .doOnComplete( () ->
+                        Log.i("complete", "done")
+                )
+                .doOnError(error ->
+                        Log.i("error", error.getLocalizedMessage()))
                 .subscribe();
     }
 
@@ -114,12 +119,12 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribeOn(Schedulers.io())
                             .doOnComplete(() ->
-                                Log.i("WEATHER", "completed! no such data in db"));
+                                    Log.i("WEATHER", "completed! no such data in db"));
                 }
 
                 @Override
                 protected void saveCallResult(CurrentWeatherUI data) {
-                        saveInDb(data);
+                    saveInDb(data);
                 }
 
                 @Override

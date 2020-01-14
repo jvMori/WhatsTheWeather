@@ -22,7 +22,7 @@ public class ForecastRepositoryImpl implements ForecastRepository {
 
     private ForecastNetworkDataSource networkDataSource;
     private ForecastDao localDataSource;
-    private CompositeDisposable disposable  = new CompositeDisposable();
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     @Inject
     public ForecastRepositoryImpl(ForecastNetworkDataSource networkDataSource, ForecastDao localDataSource) {
@@ -32,7 +32,7 @@ public class ForecastRepositoryImpl implements ForecastRepository {
 
     @Override
     public Flowable<Forecasts> getForecast(String location) {
-        return Flowable.create(emitter -> new NetworkBoundResource<Forecasts, ForecastResponse>(emitter, disposable ){
+        return Flowable.create(emitter -> new NetworkBoundResource<Forecasts, ForecastResponse>(emitter, disposable) {
 
             @Override
             protected boolean needRefresh(Forecasts data) {
@@ -67,19 +67,22 @@ public class ForecastRepositoryImpl implements ForecastRepository {
     }
 
     private Forecasts mapData(ForecastResponse data, Location location) {
-        String longitude = "";
-        String latitude = "";
-        if (location != null) {
-            longitude = Double.toString(RoundUtil.round(location.getLongitude(), 2));
-            latitude = Double.toString(RoundUtil.round(location.getLatitude(), 2));
+        if (data != null) {
+            String longitude = "";
+            String latitude = "";
+            if (location != null) {
+                longitude = Double.toString(RoundUtil.round(location.getLongitude(), 2));
+                latitude = Double.toString(RoundUtil.round(location.getLatitude(), 2));
+            }
+            return new Forecasts(
+                    ForecastMapper.mapForecasts(data.getForecast()),
+                    data.getCity().getCityName(),
+                    longitude,
+                    latitude,
+                    System.currentTimeMillis()
+            );
         }
-        return new Forecasts(
-                ForecastMapper.mapForecasts(data.getForecast()),
-                data.getCity().getCityName(),
-                longitude,
-                latitude,
-                System.currentTimeMillis()
-        );
+        return null;
     }
 
     private void saveData(Forecasts data) {
@@ -94,7 +97,7 @@ public class ForecastRepositoryImpl implements ForecastRepository {
 
     @Override
     public Flowable<Forecasts> getForecastByGeo(Location location) {
-        return Flowable.create(emitter -> new NetworkBoundResource<Forecasts, ForecastResponse>(emitter, disposable){
+        return Flowable.create(emitter -> new NetworkBoundResource<Forecasts, ForecastResponse>(emitter, disposable) {
 
             @Override
             protected boolean needRefresh(Forecasts data) {
