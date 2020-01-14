@@ -38,12 +38,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
                         .subscribe(data -> {
                             localDisposable.dispose();
                             saveCallResult(data);
-                            disposable.add(
-                                    getLocal()
-                                            .subscribeOn(Schedulers.io())
-                                            .observeOn(AndroidSchedulers.mainThread())
-                                            .subscribe(emitter::onNext)
-                            );
+                            emitter.onNext(data);
                         }, this::handleError)
         );
     }
