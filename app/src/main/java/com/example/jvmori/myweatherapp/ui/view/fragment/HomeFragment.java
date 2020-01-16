@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
@@ -14,16 +16,25 @@ import android.view.ViewGroup;
 import com.example.jvmori.myweatherapp.R;
 import com.example.jvmori.myweatherapp.databinding.HomeFragmentBind;
 import com.example.jvmori.myweatherapp.databinding.MainActivityBinding;
+import com.example.jvmori.myweatherapp.ui.Resource;
+import com.example.jvmori.myweatherapp.ui.current.CurrentWeatherViewModel;
 import com.example.jvmori.myweatherapp.ui.view.adapters.SlidePagerAdapter;
+import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 
 import static com.example.jvmori.myweatherapp.util.Const.locationIndex;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends DaggerFragment {
 
     private HomeFragmentBind binding;
 
@@ -31,6 +42,10 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
+    private CurrentWeatherViewModel currentWeatherViewModel;
+
+    @Inject
+    ViewModelProviderFactory factory;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,18 +62,34 @@ public class HomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (this.getActivity() != null) {
-            createPageAdapter();
-        }
+        currentWeatherViewModel = ViewModelProviders.of(this, factory).get(CurrentWeatherViewModel.class);
+        currentWeatherViewModel.fetchCities();
+        observeCitiesAndDisplayView();
         binding.ivSearch.setOnClickListener(this::navigateToSearchFragment);
-        if (getArguments() != null){
+        scrollToCurrentCity();
+    }
+
+    private void observeCitiesAndDisplayView() {
+        if (this.getActivity() != null) {
+            currentWeatherViewModel.getCities().observe(this, result -> {
+                if (result.status == Resource.Status.SUCCESS) {
+                    createPageAdapter(result.data);
+                } else if (result.status == Resource.Status.ERROR) {
+                    createPageAdapter(new ArrayList<>());
+                }
+            });
+        }
+    }
+
+    private void scrollToCurrentCity() {
+        if (getArguments() != null) {
             int index = getArguments().getInt(locationIndex);
             binding.pages.setCurrentItem(index, true);
         }
     }
 
-    private void createPageAdapter() {
-        SlidePagerAdapter adapter = new SlidePagerAdapter(getChildFragmentManager(), this.getLifecycle(), 2);
+    private void createPageAdapter(List<String> cities) {
+        SlidePagerAdapter adapter = new SlidePagerAdapter(getChildFragmentManager(), this.getLifecycle(), cities);
         binding.pages.setAdapter(adapter);
         binding.pages.setNestedScrollingEnabled(true);
     }

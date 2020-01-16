@@ -19,6 +19,7 @@ import com.example.jvmori.myweatherapp.ui.Resource;
 import com.example.jvmori.myweatherapp.util.images.ILoadImage;
 
 import java.io.Flushable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -47,6 +48,12 @@ public class CurrentWeatherViewModel extends ViewModel {
 
     public LiveData<Resource<WeatherUI>> getCurrentWeather() {
         return _weather;
+    }
+
+    private MutableLiveData<Resource<List<String>>> _cities = new MutableLiveData<>();
+
+    public LiveData<Resource<List<String>>> getCities() {
+        return _cities;
     }
 
     public LiveData<Resource<List<CurrentWeatherUI>>> getAllWeather() {
@@ -79,6 +86,23 @@ public class CurrentWeatherViewModel extends ViewModel {
         repository.getAllWeather().subscribe(
                 allWeatherObserver
         );
+    }
+
+    public void fetchCities() {
+        _cities.setValue(Resource.loading(null));
+        disposable.add(
+                repository.getAllWeather().map(this::mapper).subscribe(
+                        data -> {_cities.setValue(Resource.success(data));},
+                        error -> _cities.setValue(Resource.error(error.getLocalizedMessage(), null))
+                )
+        );
+    }
+
+    private List<String> mapper(List<CurrentWeatherUI> weatherUIS) {
+        List<String> cities = new ArrayList<>();
+        weatherUIS.forEach(el ->
+                cities.add(el.getCity()));
+        return cities;
     }
 
     private Observer<List<CurrentWeatherUI>> allWeatherObserver = new Observer<List<CurrentWeatherUI>>() {
