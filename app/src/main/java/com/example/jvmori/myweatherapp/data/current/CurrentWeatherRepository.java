@@ -12,4 +12,5 @@ public interface CurrentWeatherRepository {
     Flowable<CurrentWeatherUI> getCurrentWeatherByGeographic(Location location);
     Observable<List<CurrentWeatherUI>> getAllWeather();
     void cleanup();
+    void delete(String cityName);
 }

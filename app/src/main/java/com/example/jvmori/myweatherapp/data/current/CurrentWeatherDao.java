@@ -22,7 +22,7 @@ public abstract class CurrentWeatherDao {
     @Query("select * from current_weather where longitude like :lon AND latitude like :lat")
     public abstract Maybe<CurrentWeatherUI> getCurrentWeatherByGeographic(String lon, String lat);
 
-    @Query("select * from current_weather")
+    @Query("select * from current_weather order by city_name ASC")
     public abstract Maybe<List<CurrentWeatherUI>> getAllWeather();
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)

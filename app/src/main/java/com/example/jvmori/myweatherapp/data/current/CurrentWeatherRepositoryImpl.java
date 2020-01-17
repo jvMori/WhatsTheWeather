@@ -35,6 +35,14 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
         this.dao = dao;
     }
 
+    public void delete(String cityName){
+        Completable.fromAction(() -> dao.deleteAll(cityName))
+                .subscribeOn(Schedulers.io())
+                .doOnComplete(() -> Log.i("completed", "sad"))
+                .doOnError(error -> Log.i("error", error.getLocalizedMessage()))
+                .subscribe();
+    }
+
     @Override
     public void cleanup() {
         disposable.clear();

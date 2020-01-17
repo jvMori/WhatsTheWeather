@@ -9,7 +9,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.example.jvmori.myweatherapp.ui.view.fragment.CustomWeatherFragment;
 import com.example.jvmori.myweatherapp.ui.view.fragment.GeoWeatherFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SlidePagerAdapter extends FragmentStateAdapter
@@ -36,6 +35,8 @@ public class SlidePagerAdapter extends FragmentStateAdapter
 
     @Override
     public int getItemCount() {
+        if (cities.isEmpty())
+            return 1;
         return cities.size();
     }
 }

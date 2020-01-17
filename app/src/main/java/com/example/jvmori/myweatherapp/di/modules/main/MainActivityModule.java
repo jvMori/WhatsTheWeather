@@ -5,6 +5,8 @@ import android.location.LocationManager;
 
 import com.example.jvmori.myweatherapp.MainActivity;
 import com.example.jvmori.myweatherapp.di.scope.MainActivityScope;
+import com.example.jvmori.myweatherapp.ui.view.adapters.location.DeleteLocationItem;
+import com.example.jvmori.myweatherapp.ui.view.adapters.location.DeleteLocationItemOnSwipe;
 import com.example.jvmori.myweatherapp.ui.view.adapters.location.LocationAdapter;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -16,11 +18,11 @@ import dagger.Provides;
 @Module
 public class MainActivityModule {
 
-//    @Provides
-//    @MainActivityScope
-//    public DeleteLocationItem provideDeleteLocationItem(WeatherViewModel weatherViewModel, LocationAdapter locationAdapter) {
-//        return new DeleteLocationItemOnSwipe(weatherViewModel, locationAdapter);
-//    }
+    @Provides
+    @MainActivityScope
+    public DeleteLocationItem provideDeleteLocationItem(LocationAdapter locationAdapter) {
+        return new DeleteLocationItemOnSwipe(locationAdapter);
+    }
 
     @Provides
     @MainActivityScope

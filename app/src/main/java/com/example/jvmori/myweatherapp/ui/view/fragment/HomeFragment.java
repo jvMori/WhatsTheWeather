@@ -73,9 +73,14 @@ public class HomeFragment extends DaggerFragment {
         if (this.getActivity() != null) {
             currentWeatherViewModel.getCities().observe(this, result -> {
                 if (result.status == Resource.Status.SUCCESS) {
-                    createPageAdapter(result.data);
+                    if (result.data != null){
+                        if (result.data.isEmpty())
+                            createPageAdapter(new ArrayList<>());
+                        else
+                            createPageAdapter(result.data);
+                    }
                 } else if (result.status == Resource.Status.ERROR) {
-                    createPageAdapter(new ArrayList<>());
+
                 }
             });
         }

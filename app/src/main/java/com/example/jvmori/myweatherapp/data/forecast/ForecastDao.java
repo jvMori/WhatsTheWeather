@@ -4,6 +4,9 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
+
+import com.example.jvmori.myweatherapp.data.current.CurrentWeatherUI;
 
 import io.reactivex.Maybe;
 
@@ -15,6 +18,12 @@ public abstract class ForecastDao
 
     @Query("delete from forecast_table where city_name like :cityName")
     public abstract void deleteForecast(String cityName);
+
+    @Transaction
+    void update(Forecasts forecasts){
+        deleteForecast(forecasts.getCityName());
+        insert(forecasts);
+    }
 
     @Query("select * from forecast_table where city_name like :cityName")
     public abstract Maybe<Forecasts> getForecast(String cityName);

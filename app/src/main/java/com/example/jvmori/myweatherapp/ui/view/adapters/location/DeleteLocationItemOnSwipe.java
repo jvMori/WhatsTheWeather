@@ -14,15 +14,15 @@ public class DeleteLocationItemOnSwipe implements DeleteLocationItem, RecyclerIt
     }
 
     @Override
-    public void delete(RecyclerView recyclerView) {
+    public void deleteListener(RecyclerView recyclerView) {
         deleteOnSwipe(recyclerView);
     }
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof LocationAdapter.ViewHolder){
-            if (locationAdapter != null){
-
+            if (locationAdapter != null && iOnDeletedAction != null){
+                iOnDeletedAction.onDeleted(position);
             }
         }
     }
@@ -38,6 +38,6 @@ public class DeleteLocationItemOnSwipe implements DeleteLocationItem, RecyclerIt
     }
 
     public interface IOnDeletedAction{
-        void onDeleted();
+        void onDeleted(int position);
     }
 }

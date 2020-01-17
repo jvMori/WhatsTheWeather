@@ -72,6 +72,10 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         notifyItemRemoved(position);
     }
 
+    public String getCityName(int position){
+        return currentWeathers.get(position).getCity();
+    }
+
     public void restoreItem() {
 
     }

@@ -88,6 +88,11 @@ public class CurrentWeatherViewModel extends ViewModel {
         );
     }
 
+    public void deleteWeather(String cityName){
+        repository.delete(cityName);
+        forecastRepository.delete(cityName);
+    }
+
     public void fetchCities() {
         _cities.setValue(Resource.loading(null));
         disposable.add(

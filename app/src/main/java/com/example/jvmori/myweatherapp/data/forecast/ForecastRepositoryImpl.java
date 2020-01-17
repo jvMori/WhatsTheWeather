@@ -15,6 +15,7 @@ import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -28,6 +29,12 @@ public class ForecastRepositoryImpl implements ForecastRepository {
     public ForecastRepositoryImpl(ForecastNetworkDataSource networkDataSource, ForecastDao localDataSource) {
         this.networkDataSource = networkDataSource;
         this.localDataSource = localDataSource;
+    }
+
+    public void delete(String city){
+        Completable.fromAction(() -> localDataSource.deleteForecast(city))
+                .subscribeOn(Schedulers.io())
+                .subscribe();
     }
 
     @Override
@@ -87,8 +94,10 @@ public class ForecastRepositoryImpl implements ForecastRepository {
 
     private void saveData(Forecasts data) {
         Completable.fromAction(() ->
-                localDataSource.insert(data)
-        ).subscribeOn(Schedulers.io()).subscribe();
+                localDataSource.update(data)
+        ).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 
     private boolean shouldRefresh(Forecasts data) {

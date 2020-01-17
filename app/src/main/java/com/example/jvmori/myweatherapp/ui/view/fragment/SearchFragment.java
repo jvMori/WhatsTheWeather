@@ -18,10 +18,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jvmori.myweatherapp.R;
+import com.example.jvmori.myweatherapp.data.WeatherUI;
 import com.example.jvmori.myweatherapp.data.current.CurrentWeatherUI;
 import com.example.jvmori.myweatherapp.databinding.SearchFragmentBinding;
 import com.example.jvmori.myweatherapp.ui.Resource;
 import com.example.jvmori.myweatherapp.ui.current.CurrentWeatherViewModel;
+import com.example.jvmori.myweatherapp.ui.view.adapters.location.DeleteLocationItem;
+import com.example.jvmori.myweatherapp.ui.view.adapters.location.DeleteLocationItemOnSwipe;
 import com.example.jvmori.myweatherapp.ui.view.adapters.location.LocationAdapter;
 import com.example.jvmori.myweatherapp.ui.viewModel.ViewModelProviderFactory;
 import com.example.jvmori.myweatherapp.util.Const;
@@ -35,13 +38,15 @@ import dagger.android.support.DaggerFragment;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends DaggerFragment {
+public class SearchFragment extends DaggerFragment implements DeleteLocationItemOnSwipe.IOnDeletedAction {
 
     private SearchFragmentBinding binding;
     @Inject
     LocationAdapter locationAdapter;
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
+    @Inject
+    DeleteLocationItem deleteLocationItemHandler;
 
     private CurrentWeatherViewModel currentWeatherViewModel;
     private LocationAdapter adapter;
@@ -71,6 +76,7 @@ public class SearchFragment extends DaggerFragment {
         observeAllWeather();
         currentWeatherViewModel.observeSearchCityResults();
         setOnQueryTextChangeListener();
+        setupDeleteOnSwipe();
         currentWeatherViewModel.getCurrentWeather().observe(this, result -> {
             if (result.status == Resource.Status.SUCCESS) {
                 navigateToHome(adapter.getItemCount() - 1);
@@ -78,6 +84,11 @@ public class SearchFragment extends DaggerFragment {
                 Log.i("error", result.message);
             }
         });
+    }
+
+    private void setupDeleteOnSwipe() {
+        deleteLocationItemHandler.setiOnDeletedAction(this);
+        deleteLocationItemHandler.deleteListener(binding.locations);
     }
 
     private void navigateToHome(int index) {
@@ -118,5 +129,12 @@ public class SearchFragment extends DaggerFragment {
         adapter.setCurrentWeathers(currentWeatherUIList);
         binding.locations.setAdapter(adapter);
         binding.locations.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
+    }
+
+    @Override
+    public void onDeleted(int position) {
+        String cityName= adapter.getCityName(position);
+        adapter.removeItem(position);
+        currentWeatherViewModel.deleteWeather(cityName);
     }
 }
