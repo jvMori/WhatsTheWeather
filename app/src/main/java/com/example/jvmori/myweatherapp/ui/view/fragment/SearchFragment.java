@@ -79,7 +79,7 @@ public class SearchFragment extends DaggerFragment implements DeleteLocationItem
         setupDeleteOnSwipe();
         currentWeatherViewModel.getCurrentWeather().observe(this, result -> {
             if (result.status == Resource.Status.SUCCESS) {
-                navigateToHome(adapter.getItemCount() - 1);
+                navigateToHome(adapter.getItemCount());
             } else if (result.status == Resource.Status.ERROR) {
                 Log.i("error", result.message);
             }

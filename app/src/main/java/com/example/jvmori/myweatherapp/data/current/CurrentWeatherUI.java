@@ -19,6 +19,7 @@ public class CurrentWeatherUI {
     private String longitude;
     @NonNull
     private String latitude;
+    private boolean isGeolocation;
     private String country;
     private String mainDescription;
     private String detailedDescription;
@@ -30,11 +31,12 @@ public class CurrentWeatherUI {
     private String windSpeed;
     private Long timestamp;
 
-    public CurrentWeatherUI(Long timestamp, String city, String longitude, String latitude, String country, String mainDescription, String detailedDescription, String iconUrl, double mainTemp, String pressure, String humidity, String cloudness, String windSpeed) {
+    public CurrentWeatherUI(Long timestamp, String city, String longitude, String latitude, boolean isGeolocation, String country, String mainDescription, String detailedDescription, String iconUrl, double mainTemp, String pressure, String humidity, String cloudness, String windSpeed) {
         this.timestamp = timestamp;
         this.city = city;
         this.longitude = longitude;
         this.latitude = latitude;
+        this.isGeolocation = isGeolocation;
         this.country = country;
         this.mainDescription = mainDescription;
         this.detailedDescription = detailedDescription;
@@ -44,6 +46,14 @@ public class CurrentWeatherUI {
         this.humidity = humidity;
         this.cloudness = cloudness;
         this.windSpeed = windSpeed;
+    }
+
+    public boolean isGeolocation() {
+        return isGeolocation;
+    }
+
+    public void setGeolocation(boolean geolocation) {
+        isGeolocation = geolocation;
     }
 
     public String getDate(){

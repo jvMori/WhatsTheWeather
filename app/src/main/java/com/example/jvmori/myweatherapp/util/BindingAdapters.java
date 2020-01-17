@@ -8,6 +8,13 @@ import com.example.jvmori.myweatherapp.ui.Resource;
 
 public class BindingAdapters {
 
+    @BindingAdapter("app:isVisible")
+        public static void setVisibility(View view, boolean isVisible){
+        if (isVisible) view.setVisibility(View.VISIBLE);
+        else view.setVisibility(View.GONE);
+    }
+
+
     @BindingAdapter("app:showSuccessView")
     public static void showSuccessView(View view, Resource.Status status) {
         int visibility = View.GONE;

@@ -64,7 +64,7 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
 
             @Override
             protected CurrentWeatherUI mapper(CurrentWeatherResponse currentWeatherResponse) {
-                return dataMapper(currentWeatherResponse);
+                return dataMapper(currentWeatherResponse, false);
             }
 
 
@@ -137,7 +137,7 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
 
                 @Override
                 protected CurrentWeatherUI mapper(CurrentWeatherResponse data) {
-                    return dataMapper(data);
+                    return dataMapper(data, true);
                 }
 
                 @Override
@@ -148,7 +148,7 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
         }, BackpressureStrategy.LATEST);
     }
 
-    private CurrentWeatherUI dataMapper(CurrentWeatherResponse response) {
+    private CurrentWeatherUI dataMapper(CurrentWeatherResponse response, boolean isGeolocation) {
         if (response != null) {
             String lon = Double.toString(RoundUtil.round(response.getCoord().getLon(), 2));
             String lat = Double.toString(RoundUtil.round(response.getCoord().getLat(), 2));
@@ -157,6 +157,7 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
                     response.getName(),
                     lon,
                     lat,
+                    isGeolocation,
                     response.getSys().getCountry(),
                     response.getWeather().get(0).getMain(),
                     response.getWeather().get(0).getDescription(),
