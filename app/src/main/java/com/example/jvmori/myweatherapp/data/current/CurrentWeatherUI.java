@@ -10,7 +10,7 @@ import com.example.jvmori.myweatherapp.util.Const;
 
 import static com.example.jvmori.myweatherapp.util.DateConverter.getDateCurrentTimeZone;
 
-@Entity(tableName = "current_weather", primaryKeys = {"city_name", "longitude", "latitude"})
+@Entity(tableName = "current_weather", primaryKeys = {"city_name", "isGeolocation"})
 public class CurrentWeatherUI {
     @ColumnInfo(name = "city_name")
     @NonNull

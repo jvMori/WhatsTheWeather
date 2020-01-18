@@ -66,7 +66,6 @@ public class HomeFragment extends DaggerFragment {
         currentWeatherViewModel.fetchCities();
         observeCitiesAndDisplayView();
         binding.ivSearch.setOnClickListener(this::navigateToSearchFragment);
-        scrollToCurrentCity();
     }
 
     private void observeCitiesAndDisplayView() {
@@ -76,8 +75,11 @@ public class HomeFragment extends DaggerFragment {
                     if (result.data != null){
                         if (result.data.isEmpty())
                             createPageAdapter(new ArrayList<>());
-                        else
+                        else {
                             createPageAdapter(result.data);
+                            scrollToCurrentCity();
+                        }
+
                     }
                 } else if (result.status == Resource.Status.ERROR) {
 

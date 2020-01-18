@@ -77,6 +77,7 @@ public class CurrentWeatherViewModel extends ViewModel {
         citySubject
                 .filter(query -> !query.isEmpty())
                 .switchMap(this::getObservableWeatherForCity)
+                .doOnError(error -> Log.i("error", error.getLocalizedMessage()))
                 .doOnNext(result ->
                         Log.i("data", result.toString()))
                 .subscribe(currentWeatherUIObserver);
@@ -182,7 +183,12 @@ public class CurrentWeatherViewModel extends ViewModel {
 
         @Override
         public void onError(Throwable e) {
-            _weather.setValue(Resource.error(e.getMessage(), null));
+            try {
+
+            }
+            catch(Throwable ex){
+                _weather.setValue(Resource.error(e.getMessage(), null));
+            }
         }
 
         @Override

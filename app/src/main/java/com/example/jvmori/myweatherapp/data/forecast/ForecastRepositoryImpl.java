@@ -1,6 +1,7 @@
 package com.example.jvmori.myweatherapp.data.forecast;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.example.jvmori.myweatherapp.data.network.NetworkBoundResource;
 import com.example.jvmori.myweatherapp.data.forecast.response.ForecastResponse;
@@ -96,6 +97,7 @@ public class ForecastRepositoryImpl implements ForecastRepository {
         Completable.fromAction(() ->
                 localDataSource.update(data)
         ).subscribeOn(Schedulers.io())
+                .doOnError((error) -> Log.i("Error", error.getLocalizedMessage()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
     }

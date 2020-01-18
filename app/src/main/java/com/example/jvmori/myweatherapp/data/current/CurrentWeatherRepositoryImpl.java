@@ -50,7 +50,10 @@ public class CurrentWeatherRepositoryImpl implements CurrentWeatherRepository {
 
     @Override
     public Observable<List<CurrentWeatherUI>> getAllWeather() {
-        return dao.getAllWeather().observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).toObservable();
+        return dao.getAllWeather()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .toObservable();
     }
 
     @Override
